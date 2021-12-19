@@ -1,8 +1,17 @@
-compile: main.c
-	clang -Wall -Wfatal-errors main.c -o main
+COMP = clang
+FLAG = -Wall -Wfatal-errors
+#LIB = -lMLV
+OUTPUT = main
 
-run: compile
-	./main
+SRC_DIR = src
+# récupérer tous les noms de fichier en .c dans SRC_DIR
+SRC_FILES := $(shell find $(SRC_DIR) -name '*.c')
+#SRC = $(addsuffix .c, $(addprefix, $(SRC_DIR)/,$(SRC_FILES)))
 
-# cible: prerequis prerequis
-#	clang -o hello.c -I.
+.SILENT: build
+build: $(SRC_FILES)
+	$(COMP) $(FLAG) $(SRC_FILES) -o bin/$(OUTPUT)
+
+.SILENT: run
+run: build
+	bin/./$(OUTPUT)
