@@ -15,3 +15,5 @@ build: $(SRC_FILES)
 .SILENT: run
 run: build
 	bin/./$(OUTPUT)
+
+all: run
