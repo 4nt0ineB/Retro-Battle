@@ -1,9 +1,14 @@
 #include <stdio.h>
 #include "../headers/liste.h"
-#include "../headers/tower.h"
+
+
+
 
 int main() {
-    printf("Hello, World adresse : %lu!\n", (long) creer_cellule(4));
-    affiche();
+    int x = 4;
+    Liste l = alloue_cellule(&x, sizeof(x));
+    int w = *(int*) l->element;
+    printf("Hello, World adresse : %d!\n", w);
+
     return 0;
 }

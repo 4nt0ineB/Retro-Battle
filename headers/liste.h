@@ -4,15 +4,18 @@
 
 #ifndef L2_PROJET_C_LISTE_H
 #define L2_PROJET_C_LISTE_H
+
 typedef struct cel{
-    int val;
-    struct cel* next;
+    void* element;
+    struct cel* suivant;
 }Cellule, *Liste;
 
 /**
- * Description
- * @param val
+ * Créer une cellule de liste chaînée
+ * @param data un pointeur sur une donnée
+ * @param taille taille de la donnée
  * @return
  */
-Liste creer_cellule(int val);
+Liste alloue_cellule(void * data, size_t taille);
+
 #endif //L2_PROJET_C_LISTE_H
