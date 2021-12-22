@@ -24,35 +24,44 @@ Enemy * alloue_enemy(int type, int life, int line, int speed, int turn){
 }
 
 int enemy_add_next_line(Enemy * to_e, Enemy * from_e){
-    if(!from_e){
+    if(!from_e)
         return 0;
-    }
+    // pas la même ligne
+    if(to_e != NULL && to_e->line != from_e->line)
+        return 0;
     if(!to_e || !to_e->next_line){
         to_e->next_line = from_e;
+        from_e->prev_line = to_e;
         return 1;
     }
     return enemy_add_next_line(to_e->next_line, from_e);
 }
 
-/**
- * A DEPLACER DANS cli.c
- * DEBUG : Affiche les ennemis d'une même ligne même ligne
- * formatage : "LifeType"
- * @param enemy tête de ligne
- */
-void CLI_debug_display_enemies_line(Enemy * enemy){
-    while(enemy){
-        CLI_display_enemy(*enemy);
-        if(enemy->next_line)
-            printf("->");
-        enemy = enemy->next_line;
-    }
+Enemy * enemy_extract_from_line(Enemy * enemy){
+    enemy->prev_line->next_line = enemy->next_line;
+    enemy->next_line->prev_line = enemy->prev_line;
+    enemy->prev_line = enemy->next_line = NULL;
+    return enemy;
 }
 
-/**
- * A DEPLACER DANS cli.c
- * Affiche un ennemi
- */
-void CLI_display_enemy(Enemy enemy){
-    printf("%d%c", enemy.life, (char) enemy.type);
+void enemy_delete_from_line(Enemy * enemy){
+    free(enemy_extract_from_line(enemy));
 }
+
+
+int enemy_add_next(Enemy * to_e, Enemy * from_e){
+    if(!from_e){
+        return 0;
+    }
+    if(!to_e || !to_e->next_line){
+        to_e->next = from_e;
+        return 1;
+    }
+    return enemy_add_next_line(to_e->next, from_e);
+}
+
+
+
+
+
+
