@@ -6,7 +6,7 @@
 #include "stdio.h"
 #include "../headers/cli.h"
 
-void CLI_debug_display_enemies_line(Enemy * enemy){
+void CLI_debug_display_line(Enemy * enemy){
     while(enemy){
         CLI_display_enemy(*enemy);
         if(enemy->next_line)
@@ -15,6 +15,25 @@ void CLI_debug_display_enemies_line(Enemy * enemy){
     }
 }
 
+void CLI_debug_display_next(Enemy * enemy){
+    while(enemy){
+        CLI_display_enemy(*enemy);
+        if(enemy->next)
+            printf("->");
+        enemy = enemy->next;
+    }
+}
+
+
 void CLI_display_enemy(Enemy enemy){
     printf("%d%c", enemy.life, (char) enemy.type);
+}
+
+void CLI_display_full_enemy(Enemy enemy){
+    printf("{Type: %c"
+           ", Life: %d"
+           ", Line: %d"
+           ", Speed: %d"
+           ", Turn: %d}"
+            , (char) enemy.type, enemy.life, enemy.line, enemy.speed, enemy.turn);
 }

@@ -2,6 +2,7 @@ COMP = clang
 FLAG = -Wall -Wfatal-errors
 #LIB = -lMLV
 OUTPUT = main
+LEVEL_FILE = ./assets/level1.txt
 
 SRC_DIR = src
 # récupérer tous les noms de fichier en .c dans SRC_DIR
@@ -10,10 +11,10 @@ SRC_FILES := $(shell find $(SRC_DIR) -name '*.c')
 
 .SILENT: build
 build: $(SRC_FILES)
-	$(COMP) $(FLAG) $(SRC_FILES) -o bin/$(OUTPUT)
+	$(COMP) $(FLAG) $(SRC_FILES) -o bin/$(OUTPUT) -g
 
 .SILENT: run
 run: build
-	bin/./$(OUTPUT)
+	bin/./$(OUTPUT) $(LEVEL_FILE)
 
 all: run
