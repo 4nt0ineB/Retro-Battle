@@ -7,6 +7,15 @@
 #include "enemy.h"
 #include "stdio.h"
 
+#define MAX_LINE 7 ///< C'est le nombre max de lignes
+/**
+ * On prétend qu'une ligne à une taille max,
+ * car on a un écran fixe et une fonctionnalité
+ * qui noue permet de voir le niveau
+ * (pour l'instant)
+ */
+#define MAX_LINE_LENGTH 9
+
 /**
  * Lit un fichier de niveau
  * @param nom_fichier

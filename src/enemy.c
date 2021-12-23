@@ -138,3 +138,4 @@ void enemy_free_all(Enemy ** enemy) {
     }
     *enemy = NULL;
 }
+
