@@ -5,6 +5,8 @@
 #ifndef L2_PROJET_C_CLI_H
 #define L2_PROJET_C_CLI_H
 #include "enemy.h"
+#include "stdio.h"
+
 /**
  * A DEPLACER DANS cli.c
  * DEBUG : Affiche les ennemis d'une même ligne

@@ -10,7 +10,7 @@ SRC_DIR = src
 .SILENT: run
 
 clean:
-	rm $(OUTPUT)
+	rm $(OUTPUT) || true
 
 # récupérer tous les noms de fichier en .c dans SRC_DIR
 SRC_FILES := $(shell find $(SRC_DIR) -name '*.c')
@@ -23,6 +23,6 @@ run: build
 	./$(OUTPUT) $(LEVEL_FILE)
 
 memleak: clean build
-	valgrind --leak-check=full ./$(OUTPUT)
+	valgrind --leak-check=full --track-origins=yes ./$(OUTPUT)
 
 all: run

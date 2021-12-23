@@ -3,7 +3,7 @@
 //
 
 #include "../headers/settings.h"
-#include "../headers/cli.h"
+
 
 int lire_fichier_niveau(char * nom_fichier, int * money, Enemy ** enemy_list){
     FILE * fichier = NULL;
@@ -24,7 +24,7 @@ int lire_fichier_niveau(char * nom_fichier, int * money, Enemy ** enemy_list){
         if(!(enemy = alloue_enemy(e_type, 0, e_line, 0, e_tour))){
             return 0;
         }
-        enemy_add_next(enemy_list, enemy);
+        enemy_add(enemy_list, enemy);
         nbr_enemies += 1;
     }
     fclose(fichier);
@@ -47,7 +47,7 @@ int lire_fichier_types_enemy(char * nom_fichier, Enemy ** enemy_list){
              enemy_type->life = e_life;
              enemy_type->speed = e_speed;
          }else if((enemy_type = alloue_enemy(e_type, e_life, -1, e_speed, -1))){
-             enemy_add_next(enemy_list, enemy_type);
+             enemy_add(enemy_list, enemy_type);
              nbr_types += 1;
          }
      }

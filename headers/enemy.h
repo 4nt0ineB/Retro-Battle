@@ -2,6 +2,7 @@
 
 #ifndef L2_PROJET_C_ENEMY_H
 #define L2_PROJET_C_ENEMY_H
+#include <stdlib.h>
 
 /**
  * Les types d'ennemis.
@@ -21,14 +22,16 @@ typedef enum{
  * Modélise un ennemi.
  */
 typedef struct enemy{
-    int type; /**< Le type de l'ennemi*/
+    int type;  ///< Le type de l'ennemi
     int life;
     int line;
-    int position;
+    int position; ///<  et sur la ligne
     int speed;
     int turn;
-    struct enemy* next; /**< l'ennemi courant est apparu avant l'ennemi pointé par *next */
-    struct enemy *next_line, *prev_line; /**< les ennemis suivant (droite) et précédent (gauche) sur la ligne */
+    struct enemy* next; ///< l'ennemi courant est apparu avant l'ennemi pointé par *next
+    struct enemy *next_line; ///< les ennemis suivant (droite) sur la ligne
+    struct enemy *prev_line; ///< les ennemis  précédent (gauche) sur la ligne
+
 }Enemy;
 
 /**
@@ -59,6 +62,21 @@ int enemy_add_next_line(Enemy** to_e, Enemy * from_e);
  */
 int enemy_add_next(Enemy** to_e, Enemy* from_e);
 
+
+/**
+ * Ajoute un ennemi à une liste d'ennemis
+ * en respectant le concept de l'implémentation
+ *
+ * Apparition (next):
+ *      ->(x ligne 1)->(y ligne 2)->(z ligne1) \n
+ * Ligne (next_line):
+ *      (x ligne 1) <=> (z ligne1)
+ *
+ * @param to_e
+ * @param from_e
+ */
+void enemy_add(Enemy ** to_e, Enemy * from_e);
+
 /**
  * Extrait un ennemi de sa ligne
  * @param e_from adresse de la ligne d'ennemi depuis laquelle retirer l'ennemi
@@ -79,21 +97,17 @@ Enemy* enemy_extract_from_line(Enemy** e_from, Enemy * enemy);
 Enemy * enemy_extract_from_next(Enemy** e_from, Enemy * enemy);
 
 
-Enemy * enemy_extract_from_all(Enemy** e_from, Enemy * enemy);
+Enemy * enemy_extract(Enemy ** e_from, Enemy * enemy);
 
-
-/*
-void enemy_delete_from_line(Enemy** enemy);
-*/
 
 /**
- * Remplit les caractéristiques de l'ennemi
- * en fonction de son type
+ * Remplit les caractéristiques des ennemis
+ * en fonction de leur type
  * @param enemy un pointeur sur ennemi
- * @param e_type le type de l'ennemi
+ * @param e_type liste des types d'ennemis
  * @return 0 si une initialisation n'a pas pu être réalisée
  */
-int init_enemy(Enemy * enemy, Enemy * type_list);
+int init_enemies(Enemy * enemy, Enemy * type_list);
 
 /**
  *
@@ -105,11 +119,11 @@ int init_enemy(Enemy * enemy, Enemy * type_list);
  */
 Enemy * find_first_type_next(Enemy * enemy, ENEMY_TYPE e_type);
 
-
-void enemy_delete_line(Enemy** enemy);
-
-void enemy_delete_next(Enemy** enemy);
-
-void enemy_delete_all(Enemy** enemy);
-
+/**
+ * Libère toute une structure d'ennemis
+ * itère sur toute la chaîne (next) et
+ * free désalloue l'ennemi
+ * @param enemy
+ */
+void enemy_free_all(Enemy ** enemy);
 #endif //L2_PROJET_C_ENEMY_H

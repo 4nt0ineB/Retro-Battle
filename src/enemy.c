@@ -3,10 +3,6 @@
 //
 
 #include "../headers/enemy.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include "../headers/cli.h"
-
 
 Enemy * alloue_enemy(int type, int life, int line, int speed, int turn){
     Enemy * enemy = (Enemy *) malloc(sizeof(Enemy));
@@ -22,6 +18,31 @@ Enemy * alloue_enemy(int type, int life, int line, int speed, int turn){
         enemy->prev_line = NULL;
     }
     return enemy;
+}
+
+void enemy_add(Enemy ** to_e, Enemy * from_e){
+    enemy_add_next(&(* to_e), from_e);
+    Enemy * tmp = *to_e;
+    while(tmp){
+        if(tmp != from_e){
+            enemy_add_next_line(&tmp, from_e);
+        }
+        tmp = tmp->next;
+    }
+}
+
+int enemy_add_next(Enemy** to_e, Enemy* from_e){
+    if(!from_e)
+        return 0;
+    if(!(* to_e)){
+        (*to_e) = from_e;
+        return 1;
+    }
+    if(!(*to_e)->next){
+        (* to_e)->next = from_e;
+        return 1;
+    }
+    return enemy_add_next(&(* to_e)->next, from_e);
 }
 
 int enemy_add_next_line(Enemy ** to_e, Enemy * from_e){
@@ -44,27 +65,29 @@ int enemy_add_next_line(Enemy ** to_e, Enemy * from_e){
 }
 
 Enemy * enemy_extract_from_line(Enemy** e_from, Enemy * enemy) {
-
-    if(!(* e_from) || !enemy) return NULL;
-    if ((*e_from) == enemy) {
-
-        if(!(*e_from)->prev_line){
-            *e_from = (*e_from)->next_line;
-            enemy->next_line = NULL;
-        } else {
-            (*e_from)->next_line->prev_line = enemy->prev_line;
-            ((*e_from)->prev_line)->next_line = enemy->next_line;
+    if((*e_from) == enemy){
+        e_from = &(*e_from)->next_line;
+        enemy->next_line = NULL;
+        if(!e_from){
+            (*e_from)->prev_line = NULL;
         }
-        return enemy;
+    }else{
+        if(!enemy->next_line){
+            enemy->prev_line->next_line = NULL;
+            enemy->prev_line = NULL;
+        }else{
+            enemy->prev_line->next_line = enemy->next_line;
+            enemy->next_line->prev_line = enemy->prev_line;
+            enemy->prev_line = NULL;
+            enemy->next_line = NULL;
+        }
     }
-    return enemy_extract_from_line(&(* e_from)->next_line, enemy);
+    return enemy;
 }
 
 Enemy * enemy_extract_from_next(Enemy** e_from, Enemy * enemy){
-
     Enemy * tmp = (* e_from);
     if(tmp == enemy){
-        printf("\nlà %p : %p", *e_from, enemy);
         *e_from = tmp->next ? tmp->next : NULL;
         return enemy;
     }
@@ -78,38 +101,11 @@ Enemy * enemy_extract_from_next(Enemy** e_from, Enemy * enemy){
     return NULL;
 }
 
-Enemy * enemy_extract_from_all(Enemy** e_from, Enemy * enemy){
-    if(!(* e_from) || !enemy) return NULL;
-
-    printf("TOUR \n");
-    Enemy * tmp = enemy;
-    Enemy ** tmp2 = e_from;
-    enemy_extract_from_all(&(* tmp2)->next, tmp);
-    //CLI_display_enemy(*(*e_from));printf("\n");
-    enemy_extract_from_all(&(* tmp2)->next_line, tmp);
-    enemy_extract_from_next(tmp2, tmp);
-    enemy_extract_from_line(tmp2, tmp);
-
+Enemy * enemy_extract(Enemy ** e_from, Enemy * enemy){
+    if(!e_from || !enemy) return NULL;
+    enemy_extract_from_line(e_from, enemy);
+    enemy_extract_from_next(&(* e_from), enemy);
     return enemy;
-}
-
-/*void enemy_delete_from_line(Enemy** enemy){
-    free(enemy_extract_from_line(enemy));
-}*/
-
-
-int enemy_add_next(Enemy** to_e, Enemy* from_e){
-    if(!from_e)
-        return 0;
-    if(!(* to_e)){
-        (*to_e) = from_e;
-        return 1;
-    }
-    if(!(*to_e)->next){
-        (* to_e)->next = from_e;
-        return 1;
-    }
-    return enemy_add_next(&(* to_e)->next, from_e);
 }
 
 Enemy * find_first_type_next(Enemy * enemy, ENEMY_TYPE e_type){
@@ -118,34 +114,27 @@ Enemy * find_first_type_next(Enemy * enemy, ENEMY_TYPE e_type){
     return find_first_type_next(enemy->next, e_type);
 }
 
-
-int init_enemy(Enemy * enemy_list, Enemy * type_list){
+int init_enemies(Enemy * enemy_list, Enemy * type_list){
     if(!enemy_list) return 0;
-    Enemy * e_type = find_first_type_next(type_list, enemy_list->type);
-    if(!e_type)
-        return 0;
-    enemy_list->life = e_type->life;
-    enemy_list->speed = e_type->speed;
+    Enemy * e_type = NULL;
+    Enemy * tmp = enemy_list;
+    while(tmp){
+        e_type = find_first_type_next(type_list, enemy_list->type);
+        if(!e_type) return 0;
+        tmp->life = e_type->life;
+        tmp->speed = e_type->speed;
+        tmp = tmp->next;
+    }
     return 1;
 }
 
-void enemy_delete_line(Enemy** enemy){
-    if(!(* enemy)) return;
-    enemy_delete_line(&(*enemy)->next_line);
-    free((*enemy));
-}
-
-void delete_next(Enemy ** enemy){
-    if(!(* enemy)) return;
-    enemy_delete_line(&(*enemy)->next);
-    free((*enemy));
-}
-
-void enemy_delete_all(Enemy** enemy){
-    /*if(!(* enemy)) return;
-    enemy_delete_all((* enemy)->next);
-    enemy_delete_all((* enemy)->next_line);
-    enemy_extract_from_all();
-    enemy_extract_from_all((*enemy)->next_line);
-    free((* enemy));*/
+void enemy_free_all(Enemy ** enemy) {
+    Enemy *tmp = (*enemy);
+    Enemy *tmp2;
+    while (tmp) {
+        tmp2 = tmp->next;
+        free(tmp);
+        tmp = tmp2;
+    }
+    *enemy = NULL;
 }

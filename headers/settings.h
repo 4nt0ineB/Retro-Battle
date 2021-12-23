@@ -26,6 +26,4 @@ int lire_fichier_niveau(char * nom_fichier, int * money, Enemy ** enemy_list);
  */
 int lire_fichier_types_enemy(char * nom_fichier, Enemy ** enemy_list);
 
-
-
 #endif //L2_PROJET_C_SETTINGS_H

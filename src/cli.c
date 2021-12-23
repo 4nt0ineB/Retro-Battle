@@ -2,15 +2,13 @@
 // Created by antoine on 22/12/2021.
 //
 
-#include "../headers/enemy.h"
-#include "stdio.h"
 #include "../headers/cli.h"
 
 void CLI_debug_display_line(Enemy * enemy){
     while(enemy){
         CLI_display_enemy(*enemy);
         if(enemy->next_line)
-            printf("->");
+            printf("<=>");
         enemy = enemy->next_line;
     }
 }
@@ -24,8 +22,8 @@ void CLI_debug_display_next(Enemy * enemy){
     }
 }
 
-
 void CLI_display_enemy(Enemy enemy){
+    //printf("{Life:%d,Type:%c,Line:%d}", enemy.life, (char) enemy.type, enemy.line);
     printf("%d%c", enemy.life, (char) enemy.type);
 }
 
