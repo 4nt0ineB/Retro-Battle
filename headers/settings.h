@@ -5,6 +5,8 @@
 #ifndef L2_PROJET_C_SETTINGS_H
 #define L2_PROJET_C_SETTINGS_H
 #include "enemy.h"
+#include "enemy_type.h"
+#include "DListe.h"
 #include "stdio.h"
 
 #define MAX_LINE 7 ///< C'est le nombre max de lignes
@@ -33,6 +35,15 @@ int lire_fichier_niveau(char * nom_fichier, int * money, Enemy ** enemy_list);
  * lié via l'attribut "next"
  * @return
  */
-int lire_fichier_types_enemy(char * nom_fichier, Enemy ** enemy_list);
+DListe lire_fichier_types_enemy(char * nom_fichier);
+
+/**
+ * Renvoie une liste
+ * @param nom_fichier
+ * @return
+ */
+DListe lire_fichier_effets(char * nom_fichier);
+
+
 
 #endif //L2_PROJET_C_SETTINGS_H

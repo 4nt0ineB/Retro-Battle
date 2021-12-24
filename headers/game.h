@@ -14,7 +14,10 @@
 typedef struct {
     Enemy* enemies; ///< Structure des ennemies
     //Tower* towers;
+    int money;
 } Game;
+
+
 
 
 #endif //L2_PROJET_C_GAME_H

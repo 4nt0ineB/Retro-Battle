@@ -3,20 +3,8 @@
 #ifndef L2_PROJET_C_ENEMY_H
 #define L2_PROJET_C_ENEMY_H
 #include <stdlib.h>
+#include "effect.h"
 
-/**
- * Les types d'ennemis.
- * La valeur d'un type
- * est l'indice de la lettre
- * le représentant en ASCII
- */
-typedef enum{
-    ENEMY_E = (int) 'E',
-    ENEMY_D = (int) 'D',
-    ENEMY_S = (int) 'S',
-    ENEMY_M = (int) 'M',
-    ENEMY_B = (int) 'B'
-} ENEMY_TYPE;
 
 /**
  * Modélise un ennemi.
@@ -28,10 +16,10 @@ typedef struct enemy{
     int position; ///<  et sur la ligne
     int speed;
     int turn;
+
     struct enemy* next; ///< l'ennemi courant est apparu avant l'ennemi pointé par *next
     struct enemy *next_line; ///< les ennemis suivant (droite) sur la ligne
     struct enemy *prev_line; ///< les ennemis  précédent (gauche) sur la ligne
-
 }Enemy;
 
 /**
@@ -43,7 +31,7 @@ typedef struct enemy{
  * @param turn le tour d'apparition
  * @return un pointeur sur un ennemi
  */
-Enemy * alloue_enemy(int type, int life, int line, int speed, int turn);
+Enemy * alloue_enemy(int type, int life, int line, int position, int speed, int turn);
 
 /**
  * Lie l'ennemi à un suivant sur la ligne (à la fin de la liste)
@@ -96,7 +84,12 @@ Enemy* enemy_extract_from_line(Enemy** e_from, Enemy * enemy);
  */
 Enemy * enemy_extract_from_next(Enemy** e_from, Enemy * enemy);
 
-
+/**
+ * Extrait un ennemi de toute la structure
+ * @param e_from
+ * @param enemy
+ * @return l'adresse de l'ennemi enlevé, NULL sinon
+ */
 Enemy * enemy_extract(Enemy ** e_from, Enemy * enemy);
 
 
@@ -117,7 +110,7 @@ int init_enemies(Enemy * enemy, Enemy * type_list);
  * @param e_type
  * @return
  */
-Enemy * find_first_type_next(Enemy * enemy, ENEMY_TYPE e_type);
+Enemy * find_first_type_next(Enemy * enemy, int e_type);
 
 /**
  * Libère toute une structure d'ennemis
@@ -126,4 +119,7 @@ Enemy * find_first_type_next(Enemy * enemy, ENEMY_TYPE e_type);
  * @param enemy
  */
 void enemy_free_all(Enemy ** enemy);
+
+
+
 #endif //L2_PROJET_C_ENEMY_H

@@ -4,7 +4,9 @@
 
 #include "../headers/enemy.h"
 
-Enemy * alloue_enemy(int type, int life, int line, int speed, int turn){
+
+
+Enemy * alloue_enemy(int type, int life, int line, int position, int speed, int turn){
     Enemy * enemy = (Enemy *) malloc(sizeof(Enemy));
     if(enemy){
         enemy->type = type;
@@ -13,12 +15,14 @@ Enemy * alloue_enemy(int type, int life, int line, int speed, int turn){
         enemy->position = 0;
         enemy->speed = speed;
         enemy->turn = turn;
+
         enemy->next = NULL;
         enemy->next_line = NULL;
         enemy->prev_line = NULL;
     }
     return enemy;
 }
+
 
 void enemy_add(Enemy ** to_e, Enemy * from_e){
     enemy_add_next(&(* to_e), from_e);
@@ -108,10 +112,19 @@ Enemy * enemy_extract(Enemy ** e_from, Enemy * enemy){
     return enemy;
 }
 
-Enemy * find_first_type_next(Enemy * enemy, ENEMY_TYPE e_type){
+Enemy * find_first_type_next(Enemy * enemy, int e_type){
     if(!enemy || enemy->type == e_type)
         return enemy;
     return find_first_type_next(enemy->next, e_type);
+}
+
+
+Enemy * get_enemy_by_position(Enemy * enemy, int line, int position){
+    if(!enemy) return NULL;
+    if(enemy->line == line && enemy->position == position){
+        return enemy;
+    }
+    return NULL;
 }
 
 int init_enemies(Enemy * enemy_list, Enemy * type_list){

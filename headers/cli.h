@@ -35,6 +35,7 @@ void CLI_display_enemy(Enemy enemy);
 void CLI_display_full_enemy(Enemy enemy);
 
 
+
 #endif //L2_PROJET_C_CLI_H
 
 

@@ -4,7 +4,6 @@
 
 #include "../headers/settings.h"
 
-
 int lire_fichier_niveau(char * nom_fichier, int * money, Enemy ** enemy_list){
     FILE * fichier = NULL;
     int nbr_enemies = 0;
@@ -54,7 +53,7 @@ int lire_fichier_niveau(char * nom_fichier, int * money, Enemy ** enemy_list){
         }else{
             histo_ennemy[e_line][e_tour] = 1;
         }
-        if(!(enemy = alloue_enemy(e_type, 0, e_line, 0, e_tour))){
+        if(!(enemy = alloue_enemy(e_type, 0, e_line, MAX_LINE_LENGTH, 0, e_tour))){
             return 0;
         }
         enemy_add(enemy_list, enemy);
@@ -65,10 +64,13 @@ int lire_fichier_niveau(char * nom_fichier, int * money, Enemy ** enemy_list){
     return nbr_enemies;
 }
 
-int lire_fichier_types_enemy(char * nom_fichier, Enemy ** enemy_list){
+DListe lire_fichier_types_enemy(char * nom_fichier){
+    DListe e_types = NULL;
+    DListe cel;
+    Enemy_type * enemy_type = NULL;
     FILE * fichier = NULL;
     int nbr_types = 0;
-    Enemy * enemy_type = NULL;
+
     char e_type = 0;
     int e_life = -1, e_speed = -1;
     // ouverture du fichier
@@ -76,15 +78,31 @@ int lire_fichier_types_enemy(char * nom_fichier, Enemy ** enemy_list){
         return 0;
     // lecture des types
     while(fscanf(fichier, "%c %d %d ", &e_type, &e_life, &e_speed)== 3){
-         enemy_type = find_first_type_next((*enemy_list), e_type);
-         if((enemy_type)){
-             enemy_type->life = e_life;
-             enemy_type->speed = e_speed;
-         }else if((enemy_type = alloue_enemy(e_type, e_life, -1, e_speed, -1))){
-             enemy_add(enemy_list, enemy_type);
+         DListe e_types_tmp = e_types;
+         while(e_types_tmp){
+             if( (*((Enemy_type *) e_types_tmp->element)).id == (int) e_type){
+                 fprintf(stderr
+                         , "\nMauvais formatage des types"
+                           "\n[%c %d %d] ce type d'ennemis à déjà été déclaré.\n"
+                         , e_type, e_life, e_speed);
+                 exit(1);
+             }
+             e_types_tmp = e_types_tmp->suivant;
+         }
+         if((enemy_type = enemy_type_alloue(e_type, e_life, e_speed))){
+             cel = alloue_DCellule(enemy_type);
+             if(!cel){
+                 fprintf(stderr,"Impossible d'allouer le type d'ennemi.");
+                 exit(0);
+             }
+             DListe_ajouter_fin(&e_types, cel);
              nbr_types += 1;
+         }else{
+             fprintf(stderr,"Impossible d'allouer le type d'ennemi.");
+             exit(1);
          }
      }
     fclose(fichier);
-    return nbr_types;
+    return e_types;
 }
+
