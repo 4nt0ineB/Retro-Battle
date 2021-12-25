@@ -3,7 +3,7 @@
 //
 
 #include "../headers/enemy.h"
-
+#include "../headers/cli.h"
 
 
 Enemy * alloue_enemy(int type, int life, int line, int position, int speed, int turn){
@@ -12,7 +12,7 @@ Enemy * alloue_enemy(int type, int life, int line, int position, int speed, int 
         enemy->type = type;
         enemy->life = life;
         enemy->line = line;
-        enemy->position = 0;
+        enemy->position = position;
         enemy->speed = speed;
         enemy->turn = turn;
 
@@ -40,10 +40,12 @@ int enemy_add_next(Enemy** to_e, Enemy* from_e){
         return 0;
     if(!(* to_e)){
         (*to_e) = from_e;
+        from_e->next = NULL;
         return 1;
     }
     if(!(*to_e)->next){
         (* to_e)->next = from_e;
+        from_e->next = NULL;
         return 1;
     }
     return enemy_add_next(&(* to_e)->next, from_e);
@@ -52,12 +54,11 @@ int enemy_add_next(Enemy** to_e, Enemy* from_e){
 int enemy_add_next_line(Enemy ** to_e, Enemy * from_e){
     if(!from_e)
         return 0;
-    // pas la même ligne
     if((* to_e) == NULL){
         (* to_e) = from_e;
         return 1;
     }
-    // N'est pas ajouté si pas la même ligne
+    // l'ennemi n'est pas ajouté si pas la même ligne
     if((*to_e) != NULL && (*to_e)->line != from_e->line)
         return 0;
     if(!(*to_e)->next_line){
@@ -118,14 +119,18 @@ Enemy * find_first_type(Enemy * enemy, int e_type){
     return find_first_type(enemy->next, e_type);
 }
 
-
 Enemy * get_enemy_by_position(Enemy * enemy, int line, int position){
     if(!enemy) return NULL;
-    if(enemy->line == line && enemy->position == position){
-        return enemy;
+    Enemy * tmp = enemy;
+    while(tmp){
+        if(tmp->line == line && tmp->position == position){
+            return enemy;
+        }
+        tmp = tmp->next;
     }
     return NULL;
 }
+
 
 int init_enemies(Enemy * enemy_list, DListe enemy_types){
     if(!enemy_list) return 0;
@@ -138,7 +143,6 @@ int init_enemies(Enemy * enemy_list, DListe enemy_types){
             e_type_tmp = e_type_tmp->suivant;
         }
         if(!e_type_tmp){
-            printf("goy\n");
             fprintf(stderr
                     , "\nLe type %c n'a pas été définit.\n"
                     , tmp->type);

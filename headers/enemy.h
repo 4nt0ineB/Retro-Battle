@@ -113,6 +113,16 @@ int init_enemies(Enemy * enemy, DListe enemy_types);
 Enemy * find_first_type(Enemy * enemy, int e_type);
 
 /**
+ * Retourne l'adresse de l'ennemi pour pour coordonnées
+ * données, s'il existe
+ * @param enemy
+ * @param line
+ * @param position
+ * @return un pointeur sur Enemy
+ */
+Enemy * get_enemy_by_position(Enemy * enemy, int line, int position);
+
+/**
  * Libère toute une structure d'ennemis
  * itère sur toute la chaîne (next) et
  * free désalloue l'ennemi

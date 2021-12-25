@@ -31,7 +31,8 @@ void CLI_display_full_enemy(Enemy enemy){
     printf("{Type: %c"
            ", Life: %d"
            ", Line: %d"
+           ", Position %d"
            ", Speed: %d"
            ", Turn: %d}"
-            , (char) enemy.type, enemy.life, enemy.line, enemy.speed, enemy.turn);
+            , (char) enemy.type, enemy.life, enemy.line, enemy.position, enemy.speed, enemy.turn);
 }

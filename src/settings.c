@@ -25,7 +25,7 @@ Enemy * lire_fichier_niveau(char * nom_fichier, int * money){
     // lecture des apparitions d'ennemis dans le niveau
     while(fscanf(fichier, "%d %d %c ", &e_tour, &e_line, &e_type) == 3){
         /**
-         * @todo à placer dans une fonction de gestion des erreurs
+         * @todo à placer dans une fonction de classe de gestions des erreurs ?
          */
         if(last_tour > e_tour){
             fprintf(stderr

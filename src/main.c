@@ -23,7 +23,7 @@ int main() {
     CLI_debug_display_line(e_1);
     // free
     enemy_free_all(&e_1);*/
-   
+
     // test DListe
     printf("\n[#########] ---------- Test implémentation DListe ---------- [#########]\n");
     int * x = (int *) malloc(sizeof(int));
@@ -85,6 +85,30 @@ int main() {
     printf("\nL'élément à bien été supprimé\n");
 
 
+    // Game
+    // à déclarer dans play() dans game_master.c
+    Game game = {NULL, money};
+    printf("\nListe des ennemis du niveau:\n");
+    CLI_debug_display_next(e_1);
+    printf("\nTentative d'ajout de deux ennemis:\n");
+
+    // ! Tester avec des valeurs pertinentes !
+    if(!game_add_enemy(&game, &e_1)){ // va fonctionner
+        printf("\nIl existe déjà une entité à cette endroit.\n");
+    }else{
+        printf("\nL'ennemi à été ajouté\n");
+    }
+    if(!game_add_enemy(&game, &e_1)){
+        printf("\nIl existe déjà une entité à cette endroit.\n");
+    }else{
+        printf("\nL'ennemi à été ajouté\n");
+    }
+
+    printf("\nAffichage des ennemis en jeu:\n");
+    CLI_debug_display_next(game.enemies);
+    printf("\n");
+    CLI_debug_display_next(e_1);
+
     printf("\n[#########] ---------- Test configuration des tourelles ---------- [#########]\n");
     // test lecture type tower //
     nom_fichier = "./data/tower_types";
@@ -102,13 +126,10 @@ int main() {
     printf("\nAffichage du premier type de tourelle:\n");
     entity_type_display_full(* ((Entity_type *) (*t_types).element), TOWER);
 
-    // Game
-    // à déclarer dans play() dans game_master.c
-    //Game game = {NULL, money};
 
-
-
+    printf("\n");
     // free
+    enemy_free_all(&game.enemies);
     entity_type_dliste_free(&types);
     entity_type_dliste_free(&t_types);
     enemy_free_all(&e_1);
