@@ -36,12 +36,12 @@ Enemy * lire_fichier_niveau(char * nom_fichier, int * money){
         }else if(e_tour < 1 || e_tour > MAX_LINE_LENGTH){
             fprintf(stderr
                     , "\nMauvais formatage du niveau:"
-                      "\n[%d %d %c] Le maximum de tours est %d.\n"
+                      "\n[%d %d %c] Le maximum de tours est %d, le minimum est 1.\n"
                     , e_tour, e_line, e_type, MAX_LINE_LENGTH);
             exit(1);
         }else if(e_line < 1 || e_line > MAX_LINE) {
             fprintf(stderr, "\nMauvais formatage du niveau:"
-                            "\n[%d %d %c] La maximum de ligne est %d.\n", e_tour, e_line, e_type, MAX_LINE);
+                            "\n[%d %d %c] La maximum de lignes est %d, le minimum est 1.\n", e_tour, e_line, e_type, MAX_LINE);
             return NULL;
         }
         if(histo_ennemy[e_line][e_tour]){

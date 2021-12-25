@@ -130,6 +130,12 @@ Enemy * get_enemy_by_position(Enemy * enemy, int line, int position);
  */
 void enemy_free_all(Enemy ** enemy);
 
-
+/**
+ * Retourne un pointeur sur la chaine de
+ * caractère de la représentation de l'ennemi
+ * @param enemy
+ * @return
+ */
+char * enemy_toString(Enemy enemy);
 
 #endif //L2_PROJET_C_ENEMY_H

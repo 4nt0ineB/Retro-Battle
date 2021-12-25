@@ -19,6 +19,7 @@ typedef enum{
     , SLOW
     , SPEED
     , FREEZE
+    , SWITCHPLACE
 }EFFECT_TYPE;
 
 /**

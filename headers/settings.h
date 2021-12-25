@@ -11,12 +11,12 @@
 
 #define MAX_LINE 7 ///< C'est le nombre max de lignes
 /**
- * On prétend qu'une ligne à une taille max,
+ * On prétend qu'une ligne à une taille max (pour l'instant),
  * car on a un écran fixe et une fonctionnalité
  * qui noue permet de voir le niveau
- * (pour l'instant)
+ *
  */
-#define MAX_LINE_LENGTH 9
+#define MAX_LINE_LENGTH 26
 
 /**
  * Lit un fichier de niveau

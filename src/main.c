@@ -104,10 +104,49 @@ int main() {
         printf("\nL'ennemi à été ajouté\n");
     }
 
+    // Ajout de tous les ennemis pour test
+    //game_add_enemy(&game, &e_1->next);
+
+    Enemy * enemy_tmp = e_1;
+
+    if(game_add_enemy(&game, &enemy_tmp)){
+        printf("SUCCESS\n");
+    }else {
+        printf("ECHEC\n");
+    }
+    if(game_add_enemy(&game, &enemy_tmp)){
+        printf("SUCCESS\n");
+    }else {
+        printf("ECHEC\n");
+    }
+
+    // problème boucle succes / pas succes free fuite mémoire
+    /*Enemy * enemy_tmp = e_1;
+    Enemy * enemy_tmp_next;
+    while(enemy_tmp){
+        enemy_tmp_next = enemy_tmp->next;
+        if(game_add_enemy(&game, &enemy_tmp)){
+            printf("SUCCESS\n");
+        }else {
+            printf("ECHEC \n");
+        }
+        enemy_tmp= enemy_tmp_next;
+
+    }*/
+    CLI_debug_display_next(e_1);
+    enemy_free_all(&enemy_tmp);
+
+
+
     printf("\nAffichage des ennemis en jeu:\n");
     CLI_debug_display_next(game.enemies);
     printf("\n");
     CLI_debug_display_next(e_1);
+
+    printf("\n\n");
+    CLI_display_game(game);
+    enemy_free_all(&game.enemies);
+
 
     printf("\n[#########] ---------- Test configuration des tourelles ---------- [#########]\n");
     // test lecture type tower //
@@ -127,16 +166,13 @@ int main() {
     entity_type_display_full(* ((Entity_type *) (*t_types).element), TOWER);
 
 
+
     printf("\n");
     // free
-    enemy_free_all(&game.enemies);
     entity_type_dliste_free(&types);
     entity_type_dliste_free(&t_types);
-    enemy_free_all(&e_1);
     DListe_delete(&l);
     free(extr);
-    enemy_free_all(&e_1);
-
     printf("\n");
     return 0;
 }

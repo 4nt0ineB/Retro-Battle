@@ -13,6 +13,7 @@ char * effect_type_toString(EFFECT_TYPE effect){
             , "SLOW"
             , "SPEED"
             , "FREEZE"
+            , "SWITCHPLACE"
     };
     return libelle[effect];
 
@@ -34,7 +35,7 @@ char * effect_type_toString(EFFECT_TYPE effect){
 
 int string_to_effect_type(char * libelle){
     int i = DAMAGE;
-    for(; i < FREEZE; i++){
+    for(; i < SWITCHPLACE; i++){
         if(strcmp(effect_type_toString(i), libelle))
             return i;
     }

@@ -29,11 +29,6 @@ int game_add_enemy(Game * game, Enemy ** enemy){
     if(game_get_entity_by_position(*game, (*enemy)->line, (*enemy)->position,&ntt)){
         return 0;
     }
-    Enemy * extr = enemy_extract(&(*enemy), *enemy);
-    //CLI_debug_display_line(extr);
-   // CLI_debug_display_next(enemy_extract(&(*enemy), *enemy));
-    enemy_add(&game->enemies, &(*extr));
-    //printf("ADRESSE %p\n", game->enemies);
-
+    enemy_add(&game->enemies, enemy_extract(&(*enemy), *enemy));
     return 1;
 }

@@ -4,6 +4,7 @@
 
 #include "../headers/cli.h"
 
+
 void CLI_debug_display_line(Enemy * enemy){
     while(enemy){
         CLI_display_enemy(*enemy);
@@ -23,8 +24,9 @@ void CLI_debug_display_next(Enemy * enemy){
 }
 
 void CLI_display_enemy(Enemy enemy){
-    //printf("{Life:%d,Type:%c,Line:%d}", enemy.life, (char) enemy.type, enemy.line);
-    printf("%d%c", enemy.life, (char) enemy.type);
+    char * str =  enemy_toString(enemy);
+    printf("%s", str);
+    free(str);
 }
 
 void CLI_display_full_enemy(Enemy enemy){
@@ -35,4 +37,50 @@ void CLI_display_full_enemy(Enemy enemy){
            ", Speed: %d"
            ", Turn: %d}"
             , (char) enemy.type, enemy.life, enemy.line, enemy.position, enemy.speed, enemy.turn);
+}
+
+void CLI_display_game(Game game){
+    char * view[MAX_LINE+1][MAX_LINE_LENGTH+1] = {0};
+    int i, j;
+    // initialisation de la vue
+    for(i = 1; i <= MAX_LINE; i++){
+        for(j = 1; j <= MAX_LINE_LENGTH; j++){
+            view[i][j] = (char *) malloc(3 * sizeof(char));
+            strcpy(view[i][j], ".");
+        }
+    }
+    // Ajout des tourelles
+    /*
+    Tower * t_tmp = game.towers;
+    while(e_tmp){
+        free(view[t_tmp->line][e_tmp->position]);
+        view[t_tmp->line][e_tmp->position] = tower_toString(*t_tmp);
+        t_tmp = t_tmp->next;
+    }
+     */
+    // Ajout des ennemis
+    Enemy * e_tmp = game.enemies;
+    while(e_tmp){
+        free(view[e_tmp->line][e_tmp->position]);
+        view[e_tmp->line][e_tmp->position] = enemy_toString(*e_tmp);
+        e_tmp = e_tmp->next;
+    }
+
+    // affichage de la vue
+    printf("\e[1;1H\e[2J");
+    for(i = 1; i <= MAX_LINE; i++){
+        printf("%d|", i);
+        for(j = 1; j <= MAX_LINE_LENGTH; j++){
+            printf(" %2s", view[i][j]);
+        }
+        printf("\n");
+    }
+
+    // free
+    for(i = 1; i <= MAX_LINE; i++){
+        for(j = 1; j <= MAX_LINE_LENGTH; j++){
+            free(view[i][j]);
+        }
+    }
+    //printf("\e[1;1H\e[2J");
 }

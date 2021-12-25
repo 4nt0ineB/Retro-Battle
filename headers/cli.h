@@ -6,6 +6,9 @@
 #define L2_PROJET_C_CLI_H
 #include "enemy.h"
 #include "stdio.h"
+#include "game.h"
+#include "settings.h"
+#include "string.h"
 
 /**
  * A DEPLACER DANS cli.c
@@ -34,6 +37,11 @@ void CLI_display_enemy(Enemy enemy);
  */
 void CLI_display_full_enemy(Enemy enemy);
 
+/**
+ * Affiche le jeu
+ * @param game
+ */
+void CLI_display_game(Game game);
 
 
 #endif //L2_PROJET_C_CLI_H

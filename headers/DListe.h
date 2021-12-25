@@ -9,6 +9,13 @@
 /**
  * Implémentation d'une liste doublement chainée
  * générique
+ * ( Note perso:
+ * le type size_t n'est apparemment
+ * pas interchangeable avec unsigned int par exemple
+ * size_t est plu susceptible d'être portable)
+ *
+ * On choisira ici de stocker un pointeur
+ * sur une donnée déjà allouée.
  */
 typedef struct DCel{
     void * element;
@@ -16,17 +23,12 @@ typedef struct DCel{
     struct DCel * precedent;
 } DCellule, * DListe;
 
-/*
- * Le type size_t n'est apparemment
- * pas interchangeable avec unsigned int par exemple
- * size_t est plu susceptible d'être portable
- *
- * Rq: avec void *
- * pour lire la valeur d'un int passé par pointeur:
- * int x = *(int *) l->element;
+/**
+ * Alloue une DCellule
+ * @param data
+ * @return un pointeur sur la cellule
  */
 DListe alloue_DCellule(void * data);
-
 
 /**
  * Ajout en fin de liste
