@@ -4,7 +4,7 @@
 #define L2_PROJET_C_ENEMY_H
 #include <stdlib.h>
 #include "effect.h"
-
+#include "entity_type.h"
 
 /**
  * Modélise un ennemi.
@@ -100,7 +100,7 @@ Enemy * enemy_extract(Enemy ** e_from, Enemy * enemy);
  * @param e_type liste des types d'ennemis
  * @return 0 si une initialisation n'a pas pu être réalisée
  */
-int init_enemies(Enemy * enemy, DListe * enemy_types);
+int init_enemies(Enemy * enemy, DListe enemy_types);
 
 /**
  *
@@ -110,7 +110,7 @@ int init_enemies(Enemy * enemy, DListe * enemy_types);
  * @param e_type
  * @return
  */
-Enemy * find_first_type_next(Enemy * enemy, int e_type);
+Enemy * find_first_type(Enemy * enemy, int e_type);
 
 /**
  * Libère toute une structure d'ennemis

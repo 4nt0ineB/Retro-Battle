@@ -66,49 +66,49 @@ Enemy * lire_fichier_niveau(char * nom_fichier, int * money){
     return enemy_list;
 }
 
-DListe lire_fichier_types_enemy(char * nom_fichier){
-    DListe e_types = NULL;
+DListe lire_fichier_types(char * nom_fichier){
+    DListe types = NULL;
     DListe cel;
-    Enemy_type * enemy_type = NULL;
+    Entity_type * enemy_type = NULL;
     FILE * fichier = NULL;
-    char e_type = 0;
-    int e_life = -1, e_speed = -1;
+    char type = 0;
+    int v1 = -1, v2 = -1;
     // ouverture du fichier
     if(!(fichier = fopen(nom_fichier, "r")))
         return NULL;
     // lecture des types
-    while(fscanf(fichier, "%c %d %d ", &e_type, &e_life, &e_speed)== 3){
-         DListe e_types_tmp = e_types;
+    while(fscanf(fichier, "%c %d %d ", &type, &v1, &v2) == 3){
+         DListe e_types_tmp = types;
          // erreurs
          while(e_types_tmp){
-             if( ((Enemy_type *) e_types_tmp->element)->id == (int) e_type){
+             if( ((Entity_type *) e_types_tmp->element)->id == (int) type){
                  fprintf(stderr
                          , "\nMauvais formatage des types"
                            "\n[%c %d %d] ce type d'ennemis à déjà été déclaré.\n"
-                         , e_type, e_life, e_speed);
+                         , type, v1, v2);
                  return NULL;
              }
              e_types_tmp = e_types_tmp->suivant;
          }
          //
-         if((enemy_type = enemy_type_alloue(e_type, e_life, e_speed))){
+         if((enemy_type = entity_type_alloue(type, v1, v2))){
              cel = alloue_DCellule(enemy_type);
              if(!cel){
-                 fprintf(stderr,"Impossible d'allouer le type d'ennemi.");
+                 fprintf(stderr,"Impossible d'allouer le type d'entité.");
                  return NULL;
              }
-             DListe_ajouter_fin(&e_types, cel);
          }else{
-             fprintf(stderr,"Impossible d'allouer le type d'ennemi.");
+             fprintf(stderr,"Impossible d'allouer le type d'entité.");
              return NULL;
          }
+        DListe_ajouter_fin(&types, cel);
      }
     fclose(fichier);
-    return e_types;
+    return types;
 }
 
-int lire_fichier_effets(char * nom_fichier, DListe enemy_types){
-    if(!enemy_types) return 0;
+int lire_fichier_effets(char * nom_fichier, DListe types){
+    if(!types) return 0;
     FILE * fichier = NULL;
     Effect * effect = NULL;
     DListe l = NULL;
@@ -117,7 +117,7 @@ int lire_fichier_effets(char * nom_fichier, DListe enemy_types){
 
     char e_type;
     // :/ risque de segfault
-    char * effect_type = malloc((MAX_EFFECT_LIBELLE+1) * sizeof (char));
+    char effect_type[MAX_EFFECT_LIBELLE] = {0};
     int increment, set, target, range, l_range, h_range, r_range,
     b_range, front;
     EFFECT_TYPE type_effet = 0;
@@ -130,6 +130,7 @@ int lire_fichier_effets(char * nom_fichier, DListe enemy_types){
         type_effet = string_to_effect_type(effect_type);
         if(!type_effet){
             fprintf(stderr,"Le type d'effet %s n'existe pas.", effect_type);
+            fclose(fichier);
             return 0;
         }
         effect = effect_alloue(
@@ -138,23 +139,27 @@ int lire_fichier_effets(char * nom_fichier, DListe enemy_types){
                 );
         if(!effect){
             fprintf(stderr,"Impossible d'allouer l'effet.\n");
+            fclose(fichier);
             return 0;
         }
         // on récupère le type d'ennemi
-        l = enemy_types;
-        while(l && ((Enemy_type *) l->element)->id != e_type){
+        l = types;
+        while(l && ((Entity_type *) l->element)->id != e_type){
             l = l->suivant;
         }
         if(!l){
             fprintf(stderr,"Le type d'ennemi %c n'a pas été définit.", e_type);
+            free(effect);
+            fclose(fichier);
             return 0;
         }
-        if(!enemy_type_add_effect(((Enemy_type *) l->element), effect)){
+        if(!entity_type_add_effect(((Entity_type *) l->element), effect)){
             fprintf(stderr,"Impossible d'ajouter l'effet.\n");
+            free(effect);
+            fclose(fichier);
             return 0;
         }
     }
-    printf("success\n");
     fclose(fichier);
     return 1;
 }

@@ -5,7 +5,7 @@
 #ifndef L2_PROJET_C_SETTINGS_H
 #define L2_PROJET_C_SETTINGS_H
 #include "enemy.h"
-#include "enemy_type.h"
+#include "entity_type.h"
 #include "DListe.h"
 #include "stdio.h"
 
@@ -28,19 +28,20 @@ Enemy * lire_fichier_niveau(char * nom_fichier, int * money);
 
 /**
  * Lis le fichier de définition
- * des types d'ennemis
+ * des types d'ennemis ou tourelles
  * @param nom_fichier
  * @return DListe des types d'ennemis indiqués dans le fichier
  */
-DListe lire_fichier_types_enemy(char * nom_fichier);
+DListe lire_fichier_types(char * nom_fichier);
 
 /**
  * Lit le fichier de définitions des effets par type et les associes
  * et ajoute les effets aux types, d'une liste de types d'ennemis
+ * ou de tourelles
  * @param nom_fichier
  * @return 1 si tous les effets on pu être ajoutés
  */
-int lire_fichier_effets(char * nom_fichier, DListe enemy_types);
+int lire_fichier_effets(char * nom_fichier, DListe types);
 
 
 

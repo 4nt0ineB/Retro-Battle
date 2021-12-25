@@ -23,6 +23,6 @@ run: build
 	./$(OUTPUT) $(LEVEL_FILE)
 
 memleak: clean build
-	valgrind --leak-check=full --track-origins=yes ./$(OUTPUT)
+	valgrind --leak-check=full --track-origins=yes --show-leak-kinds=all ./$(OUTPUT)
 
 all: run

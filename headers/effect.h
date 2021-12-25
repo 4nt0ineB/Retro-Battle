@@ -49,7 +49,7 @@ typedef struct {
     int set; ///< Valeur à définir != incrémenter
     int target; ///< 0=Enemy, 1=Tower, 2=Tout le monde
     int range; ///< portée (zone de rayon range) de l'effet sur les target
-    int l_range; ///< portée de l'effet (sur les targets), à gauche
+    int l_range; ///< portée de l'effet (nombre minimum de targets à toucher si possible (pas de limite de )), à gauche
     int h_range; ///< portée de l'effet (sur les targets), en haut
     int r_range; ///< portée de l'effet (sur les targets), à droite
     int b_range; ///< portée de l'effet (sur les targets), en bas

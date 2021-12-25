@@ -112,10 +112,10 @@ Enemy * enemy_extract(Enemy ** e_from, Enemy * enemy){
     return enemy;
 }
 
-Enemy * find_first_type_next(Enemy * enemy, int e_type){
+Enemy * find_first_type(Enemy * enemy, int e_type){
     if(!enemy || enemy->type == e_type)
         return enemy;
-    return find_first_type_next(enemy->next, e_type);
+    return find_first_type(enemy->next, e_type);
 }
 
 
@@ -127,18 +127,25 @@ Enemy * get_enemy_by_position(Enemy * enemy, int line, int position){
     return NULL;
 }
 
-int init_enemies(Enemy * enemy_list, DListe * enemy_types){
+int init_enemies(Enemy * enemy_list, DListe enemy_types){
     if(!enemy_list) return 0;
-    Enemy * e_type = NULL;
+    DListe e_type_tmp = NULL;
     Enemy * tmp = enemy_list;
-    /*
-     * @todo Ici mon goy
-     */
+
     while(tmp){
-        e_type = find_first_type_next(enemy_types, enemy_list->type);
-        if(!e_type) return 0;
-        tmp->life = e_type->life;
-        tmp->speed = e_type->speed;
+        e_type_tmp = enemy_types;
+        while(e_type_tmp && ((Entity_type *) e_type_tmp->element)->id == tmp->type){
+            e_type_tmp = e_type_tmp->suivant;
+        }
+        if(!e_type_tmp){
+            printf("goy\n");
+            fprintf(stderr
+                    , "\nLe type %c n'a pas été définit.\n"
+                    , tmp->type);
+            return 0;
+        }
+        tmp->life = ((Entity_type *) e_type_tmp->element)->v1;
+        tmp->speed = ((Entity_type *) e_type_tmp->element)->v2;
         tmp = tmp->next;
     }
     return 1;
