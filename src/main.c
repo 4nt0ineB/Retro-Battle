@@ -4,6 +4,7 @@
 #include "../headers/enemy.h"
 #include "../headers/cli.h"
 #include "../headers/settings.h"
+#include "../headers/enemy_type.h"
 #include "../headers/game.h"
 #include "../headers/effect.h"
 #include "../headers/DListe.h"
@@ -12,9 +13,9 @@
 int main() {
     // test enemy //
     Enemy * e_1 = NULL;
-    Enemy * e_2 = alloue_enemy(ENEMY_D, 4, 2, MAX_LINE_LENGTH, 1, 1);
-    Enemy * e_3 = alloue_enemy(ENEMY_M, 4, 2, MAX_LINE_LENGTH-1, 1, 1);
-    Enemy * e_4 = alloue_enemy(ENEMY_M, 4, 1, MAX_LINE_LENGTH-2, 1, 1);
+    Enemy * e_2 = alloue_enemy(65, 4, 2, MAX_LINE_LENGTH, 1, 1);
+    Enemy * e_3 = alloue_enemy(66, 4, 2, MAX_LINE_LENGTH-1, 1, 1);
+    Enemy * e_4 = alloue_enemy(67, 4, 1, MAX_LINE_LENGTH-2, 1, 1);
     enemy_add(&e_1, e_2);
     enemy_add(&e_1, e_3);
     enemy_add(&e_1, e_4); // pas ajouté, car par la même ligne
@@ -25,20 +26,22 @@ int main() {
 
 
 
-    // lecture des caractéristiques d'effets
+    // test DListe
     int * x = (int *) malloc(sizeof(int));
     *x = 4;
     DListe l = alloue_DCellule(x);
     int w = *(int*) l->element;
-    printf("Hello, World adresse : %d!\n", w);
-    printf("%s", effect_toString(0));
+    printf("\n\nHello, World adresse : %d!\n", w);
+    printf("%s", effect_type_toString(0));
     DListe_delete(&l);
 
+    // lecture des caractéristiques d'effets
+
+
     // test fichier niveau //
-    e_1 = NULL;
     int money = 0;
     char * nom_fichier = "./data/level1";
-    lire_fichier_niveau(nom_fichier, &money, &e_1);
+    e_1 = lire_fichier_niveau(nom_fichier, &money);
     printf("\n----------Test lecture fichier: \n");
     CLI_debug_display_next(e_1);
     printf("\n");
@@ -57,8 +60,18 @@ int main() {
         printf("%c \n",(char) ((Enemy_type *) tmp->element)->id);
         tmp = tmp->suivant;
     }
-    enemy_type_dliste_free(&types);
-    enemy_free_all(&e_1);
+
+    // association des effets aux types
+    nom_fichier = "./data/effects_by_enemy_types";
+    lire_fichier_effets(nom_fichier, types);
+    enemy_type_display_full(* ((Enemy_type *) (*types).element));
+
+    // association des caractéristiques aux ennemis par type //
+
+    /*
+     * @todo initialiser les ennemis selon leurs types
+     * @todo free() des différentes structure allouées
+     */
 
     return 0;
     // association des caractéristiques des ennemis par type //
@@ -92,12 +105,13 @@ int main() {
 
 
     // free
+    enemy_type_dliste_free(&types);
+    enemy_free_all(&e_1);
     DListe_delete(&l);
     free(extr);
-    enemy_free_all(&e_1);
-    enemy_free_all(&enemy_types_list);
+    enemy_free_all(&e_1);*/
 
     printf("\n");
-    return 0;*/
+    return 0;
 }
 //enemy->prev_line = enemy->next_line = NULL;

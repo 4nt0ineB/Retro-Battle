@@ -6,14 +6,19 @@
 #define L2_PROJET_C_EFFECT_H
 #include "DListe.h"
 #include <string.h>
+#include <stdio.h>
 #define MAX_EFFECT_LIBELLE 25
 
+
+/**
+ * Les effets implémentés
+ */
 typedef enum{
-    DAMAGE,
-    HEAL,
-    SLOW,
-    SPEED,
-    FREEZE,
+    DAMAGE = 1
+    , HEAL
+    , SLOW
+    , SPEED
+    , FREEZE
 }EFFECT_TYPE;
 
 /**
@@ -21,7 +26,18 @@ typedef enum{
  * @param effect
  * @return
  */
-char * effect_toString(EFFECT_TYPE effect);
+char * effect_type_toString(EFFECT_TYPE effect);
+
+/**
+ * Renvoie le type d'effet
+ * si une chaine de caractère correspond
+ * au libellé de celui-ci
+ * @param libelle
+ * @return l'indice du type n'est jamais 0
+ * et si 0 est renvoyé, la chaîne de caractère ne
+ * ne correspond à aucun type
+ */
+int string_to_effect_type(char * libelle);
 
 /**
  * Les ennemis sont comme des cartes.
@@ -64,9 +80,12 @@ Effect * effect_alloue(
         int h_range,
         int r_range,
         int b_range,
-        int front
-        );
+        int front);
 
-
+/**
+ * Affiche la description de l'effet
+ * @param effect
+ */
+void effect_display_full(Effect effect);
 
 #endif //L2_PROJET_C_EFFECT_H

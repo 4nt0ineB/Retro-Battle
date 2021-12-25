@@ -14,26 +14,26 @@ Enemy_type * enemy_type_alloue(int id, int life, int speed){
     }
     return e_type;
 }
+
 int enemy_type_add_effect(Enemy_type * e_type, Effect * effect){
     if(!e_type) return 0;
-    DListe effect_tmp = *e_type->effects;
+    DListe effect_tmp = e_type->effects;
     while(effect_tmp){
         if( (*((Effect *) effect_tmp->element)).type == effect->type){
             return 0;
         }
+        effect_tmp = effect_tmp->suivant;
     }
     DListe cel = alloue_DCellule(effect);
     if(!cel){
         return 0;
     }
-    DListe_ajouter_fin(e_type->effects, cel);
+    DListe_ajouter_fin(&e_type->effects, cel);
     return 1;
 }
 
-
-
 void type_enemy_free(Enemy_type * e_type){
-    if(e_type->effects) DListe_delete(e_type->effects);
+    if(e_type->effects) DListe_delete(&e_type->effects);
     free(e_type);
 }
 
@@ -47,4 +47,22 @@ void enemy_type_dliste_free(DListe * l){
         tmp = suivant;
     }
     *l = NULL;
+}
+
+void enemy_type_display_full(Enemy_type e_type){
+    printf(
+            "|---- Enemy type : %c\n"
+           "| Life: %d\n"
+           "| Speed: %d\n"
+           , e_type.id, e_type.life, e_type.speed
+    );
+    printf("| Effects: ");
+    DListe cel = e_type.effects;
+    while(cel){
+        effect_display_full(*((Effect *) cel->element));
+        if(cel->suivant){
+            printf(", ");
+        }
+        cel = cel->suivant;
+    }
 }

@@ -127,12 +127,15 @@ Enemy * get_enemy_by_position(Enemy * enemy, int line, int position){
     return NULL;
 }
 
-int init_enemies(Enemy * enemy_list, Enemy * type_list){
+int init_enemies(Enemy * enemy_list, DListe * enemy_types){
     if(!enemy_list) return 0;
     Enemy * e_type = NULL;
     Enemy * tmp = enemy_list;
+    /*
+     * @todo Ici mon goy
+     */
     while(tmp){
-        e_type = find_first_type_next(type_list, enemy_list->type);
+        e_type = find_first_type_next(enemy_types, enemy_list->type);
         if(!e_type) return 0;
         tmp->life = e_type->life;
         tmp->speed = e_type->speed;

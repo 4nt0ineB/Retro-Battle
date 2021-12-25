@@ -22,27 +22,25 @@
  * Lit un fichier de niveau
  * @param nom_fichier
  * @param money retour du montant d'argent disponible au début du niveau
- * @param enemy_list liste ou sont stockés les ennemis
- * @return le nombre d'ennemis dans le niveau
+ * @return Structure d'ennemis (type, line et turn initialisés)
  */
-int lire_fichier_niveau(char * nom_fichier, int * money, Enemy ** enemy_list);
+Enemy * lire_fichier_niveau(char * nom_fichier, int * money);
 
 /**
- * Lis le fichier définition des types
- * d'ennemis
+ * Lis le fichier de définition
+ * des types d'ennemis
  * @param nom_fichier
- * @param enemy_list les ennemis sont stocké comme objet enemy
- * lié via l'attribut "next"
- * @return
+ * @return DListe des types d'ennemis indiqués dans le fichier
  */
 DListe lire_fichier_types_enemy(char * nom_fichier);
 
 /**
- * Renvoie une liste
+ * Lit le fichier de définitions des effets par type et les associes
+ * et ajoute les effets aux types, d'une liste de types d'ennemis
  * @param nom_fichier
- * @return
+ * @return 1 si tous les effets on pu être ajoutés
  */
-DListe lire_fichier_effets(char * nom_fichier);
+int lire_fichier_effets(char * nom_fichier, DListe enemy_types);
 
 
 

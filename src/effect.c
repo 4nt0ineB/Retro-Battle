@@ -4,15 +4,16 @@
 
 #include "../headers/effect.h"
 
-char * effect_toString(EFFECT_TYPE effect){
+char * effect_type_toString(EFFECT_TYPE effect){
+    if(effect == 0) return NULL;
     char * libelle[] = {
-            "DAMAGE"
+            "UNDEFINED"
+            , "DAMAGE"
             , "HEAL"
             , "SLOW"
             , "SPEED"
             , "FREEZE"
     };
-
     return libelle[effect];
 
     /*// on veut éviter de remplir la pile à chaque appel
@@ -29,6 +30,15 @@ char * effect_toString(EFFECT_TYPE effect){
     stpcpy(libelles[4], "FREEZE");
     return libelles[effect];
      */
+}
+
+int string_to_effect_type(char * libelle){
+    int i = DAMAGE;
+    for(; i < FREEZE; i++){
+        if(strcmp(effect_type_toString(i), libelle))
+            return i;
+    }
+    return 0;
 }
 
 Effect * effect_alloue(
@@ -60,3 +70,9 @@ Effect * effect_alloue(
     return effect;
 }
 
+void effect_display_full(Effect effect){
+    printf(
+            "{Type: %s}"
+            , effect_type_toString(effect.type)
+    );
+}

@@ -100,7 +100,7 @@ Enemy * enemy_extract(Enemy ** e_from, Enemy * enemy);
  * @param e_type liste des types d'ennemis
  * @return 0 si une initialisation n'a pas pu être réalisée
  */
-int init_enemies(Enemy * enemy, Enemy * type_list);
+int init_enemies(Enemy * enemy, DListe * enemy_types);
 
 /**
  *
