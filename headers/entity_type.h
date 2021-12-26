@@ -21,6 +21,7 @@ typedef enum {
  * et d'effets.
  */
 typedef struct{
+    char * name;
     int id; ///< sont identifiant
     int v1; ///< la vie initiale
     int v2; ///< sa vitesse initiale
@@ -28,16 +29,16 @@ typedef struct{
 } Entity_type;
 
 /**
- * Alloue un type d'ennemi
+ * Alloue un type d'entité
  * @param id
  * @param life
  * @param speed
  * @return
  */
-Entity_type * entity_type_alloue(int id, int v1, int v2);
+Entity_type * entity_type_alloue(char * name, int id, int v1, int v2);
 
 /**
- * Ajoute un effet au type d'ennemi
+ * Ajoute un effet au type d'entité
  * @param e_type
  * @param effect
  * @return
@@ -45,23 +46,17 @@ Entity_type * entity_type_alloue(int id, int v1, int v2);
 int entity_type_add_effect(Entity_type * e_type, Effect * effect);
 
 /**
- * Libère une structure Enemy_type
+ * Libère une un type d'entité
  * @param e_type
  */
 void entity_type_free(Entity_type * e_type);
 
 /**
- * Libère une DListe de type d'ennemis
+ * Libère une DListe de types d'entités
  * @param l
  */
 void entity_type_dliste_free(DListe * l);
 
-/**
- * Affiche la description du type d'ennemi
- * @param e_type
- */
-void entity_type_display_full(Entity_type e_type, ENTITY ntt);
 
-void enemy_type_display(Entity_type e_type);
-void tower_type_display(Entity_type e_type);
+
 #endif //L2_PROJET_C_ENTITY_TYPE_H

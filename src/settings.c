@@ -32,6 +32,7 @@ Enemy * lire_fichier_niveau(char * nom_fichier, int * money){
                     , "\nMauvais formatage du niveau:"
                       "\n[%d %d %c] La définition des ennemis se fait dans l'ordre croissant des tours.\n"
                     , e_tour, e_line, e_type);
+            fclose(fichier);
             return NULL;
         }else if(e_tour < 1 || e_tour > MAX_LINE_LENGTH){
             fprintf(stderr
@@ -42,6 +43,7 @@ Enemy * lire_fichier_niveau(char * nom_fichier, int * money){
         }else if(e_line < 1 || e_line > MAX_LINE) {
             fprintf(stderr, "\nMauvais formatage du niveau:"
                             "\n[%d %d %c] La maximum de lignes est %d, le minimum est 1.\n", e_tour, e_line, e_type, MAX_LINE);
+            fclose(fichier);
             return NULL;
         }
         if(histo_ennemy[e_line][e_tour]){
@@ -49,6 +51,7 @@ Enemy * lire_fichier_niveau(char * nom_fichier, int * money){
                     , "\nMauvais formatage du niveau:"
                             "\n[%d %d %c] il existe déjà un ennemi sur cette ligne pour ce tour.\n"
                     , e_tour, e_line, e_type);
+            fclose(fichier);
             return NULL;
         }else{
             histo_ennemy[e_line][e_tour] = 1;
@@ -71,34 +74,46 @@ DListe lire_fichier_types(char * nom_fichier){
     DListe cel;
     Entity_type * enemy_type = NULL;
     FILE * fichier = NULL;
-    char type = 0;
+    char name[25];
+    char * alloc_name = NULL;
+    char type_id = 0;
     int v1 = -1, v2 = -1;
     // ouverture du fichier
     if(!(fichier = fopen(nom_fichier, "r")))
         return NULL;
     // lecture des types
-    while(fscanf(fichier, "%c %d %d ", &type, &v1, &v2) == 3){
+    while(fscanf(fichier, "%25s %c %d %d", name, &type_id, &v1, &v2) == 4){
+        // allocation d'un nouveau nom sur le tas
+         alloc_name = (char *) malloc(26 * sizeof(char));
+         strcpy(alloc_name, name);
          DListe e_types_tmp = types;
          // erreurs
+         // on regarde si l'identifiant a déjà été défini
          while(e_types_tmp){
-             if( ((Entity_type *) e_types_tmp->element)->id == (int) type){
+             if( ((Entity_type *) e_types_tmp->element)->id == (int) type_id){
                  fprintf(stderr
                          , "\nMauvais formatage des types"
-                           "\n[%c %d %d] ce type d'ennemis à déjà été déclaré.\n"
-                         , type, v1, v2);
+                           "\n[%c %d %d] ce type_id d'ennemis à déjà été déclaré.\n"
+                         , type_id, v1, v2);
+                 fclose(fichier);
+                 free(alloc_name);
                  return NULL;
              }
              e_types_tmp = e_types_tmp->suivant;
          }
          //
-         if((enemy_type = entity_type_alloue(type, v1, v2))){
+         if((enemy_type = entity_type_alloue(alloc_name, type_id, v1, v2))){
              cel = alloue_DCellule(enemy_type);
              if(!cel){
-                 fprintf(stderr,"Impossible d'allouer le type d'entité.");
+                 fprintf(stderr,"Impossible d'allouer le type_id d'entité.");
+                 fclose(fichier);
+                 free(alloc_name);
                  return NULL;
              }
          }else{
-             fprintf(stderr,"Impossible d'allouer le type d'entité.");
+             fprintf(stderr,"Impossible d'allouer le type_id d'entité.");
+             fclose(fichier);
+             free(alloc_name);
              return NULL;
          }
         DListe_ajouter_fin(&types, cel);
@@ -148,7 +163,7 @@ int lire_fichier_effets(char * nom_fichier, DListe types){
             l = l->suivant;
         }
         if(!l){
-            fprintf(stderr,"Le type d'ennemi %c n'a pas été définit.", e_type);
+            fprintf(stderr,"Le type %c n'a pas été définit.", e_type);
             free(effect);
             fclose(fichier);
             return 0;

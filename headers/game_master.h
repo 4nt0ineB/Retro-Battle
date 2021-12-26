@@ -11,7 +11,9 @@
 #include "enemy.h"
 #include "settings.h"
 
+
 int gm_move(Game * game, void * entity, ENTITY ntt);
+
 int gm_move_all(Game * game);
 
 #endif //L2_PROJET_C_GAME_MASTER_H

@@ -38,6 +38,32 @@ void CLI_display_enemy(Enemy enemy);
  */
 void CLI_display_full_enemy(Enemy enemy);
 
+void CLI_enemy_type_display(Entity_type e_type);
+void CLI_tower_type_display(Entity_type e_type);
+
+
+/**
+ * Affiche la description du type d'entité
+ * @param e_type
+ */
+void CLI_entity_type_display_full(Entity_type e_type, ENTITY ntt);
+
+/**
+ *
+ */
+void CLI_display_help();
+
+/**
+ *
+ */
+void CLI_display_menu();
+
+/*
+ *
+ */
+void CLI_display_tower_menu();
+
+
 /**
  * Affiche le jeu
  * @param game

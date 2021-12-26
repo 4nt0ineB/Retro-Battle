@@ -23,6 +23,45 @@ void CLI_debug_display_next(Enemy * enemy){
     }
 }
 
+
+void CLI_enemy_type_display(Entity_type e_type){
+    printf(
+            "|---- Enemy type : %c\n"
+            "| Name: %s\n"
+            "| Life: %d\n"
+            "| Speed: %d\n"
+            , e_type.id, e_type.name, e_type.v1, e_type.v2
+    );
+}
+
+void CLI_tower_type_display(Entity_type e_type){
+    printf(
+            "|---- Tower type : %c\n"
+            "| Name: %s\n"
+            "| Life: %d\n"
+            "| Price: %d\n"
+            , e_type.id, e_type.name, e_type.v1, e_type.v2
+    );
+}
+
+void CLI_entity_type_display_full(Entity_type e_type, ENTITY ntt){
+
+    if(ntt == TOWER){
+        CLI_tower_type_display(e_type);
+    }else if(ntt == ENEMY){
+        CLI_enemy_type_display(e_type);
+    }
+    printf("| Effects: ");
+    DListe cel = e_type.effects;
+    while(cel){
+        effect_display_full(*((Effect *) cel->element));
+        if(cel->suivant){
+            printf(", ");
+        }
+        cel = cel->suivant;
+    }
+}
+
 void CLI_display_enemy(Enemy enemy){
     char * str =  enemy_toString(enemy);
     printf("%s", str);
@@ -37,6 +76,20 @@ void CLI_display_full_enemy(Enemy enemy){
            ", Speed: %d"
            ", Turn: %d}"
             , (char) enemy.type, enemy.life, enemy.line, enemy.position, enemy.speed, enemy.turn);
+}
+
+void CLI_display_help(){
+
+}
+
+void CLI_display_menu(){
+    printf("MENU"
+           "\n] Next turn (n)\n");
+    printf("\nChoice ? :");
+}
+
+void CLI_display_tower_menu(){
+
 }
 
 void CLI_display_game(Game game){

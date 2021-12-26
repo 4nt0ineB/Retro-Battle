@@ -60,7 +60,7 @@ int main() {
     nom_fichier = "./data/effects_by_enemy_types";
     lire_fichier_effets(nom_fichier, types);
     printf("\nAffichage du premier type d'ennemis:\n");
-    entity_type_display_full(* ((Entity_type *) (*types).element), ENEMY);
+    CLI_entity_type_display_full(* ((Entity_type *) (*types).element), ENEMY);
 
     // association des caractéristiques des ennemis par type //
     init_enemies(e_1, types);
@@ -159,19 +159,24 @@ int main() {
     nom_fichier = "./data/effects_by_tower_types";
     lire_fichier_effets(nom_fichier, t_types);
     printf("\nAffichage du premier type de tourelle:\n");
-    entity_type_display_full(* ((Entity_type *) (*t_types).element), TOWER);
+    CLI_entity_type_display_full(* ((Entity_type *) (*t_types).element), TOWER);
 
     // affichage du jeu
     printf("\n\n");
     CLI_display_game(game);
-    gm_move_all(&game);
     printf("\n");
-    CLI_display_game(game);
+    char choice = 'n';
 
+    while(choice == 'n'){
+        CLI_display_game(game);
+        CLI_display_menu();
+        scanf(" %c", &choice);
+        gm_move_all(&game);
+    }
+
+    //free
+    printf("\n");
     enemy_free_all(&game.enemies);
-
-    printf("\n");
-    // free
     entity_type_dliste_free(&types);
     entity_type_dliste_free(&t_types);
     DListe_delete(&l);
