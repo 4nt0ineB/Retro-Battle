@@ -5,7 +5,7 @@ OUTPUT = main
 LEVEL_FILE = ./assets/level1.txt
 
 SRC_DIR = src
-.silent: clean
+.SILENT: clean
 .SILENT: build
 .SILENT: run
 
