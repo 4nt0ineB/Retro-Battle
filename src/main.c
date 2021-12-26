@@ -8,6 +8,7 @@
 #include "../headers/game.h"
 #include "../headers/effect.h"
 #include "../headers/DListe.h"
+#include "../headers/game_master.h"
 
 
 int main() {
@@ -136,16 +137,11 @@ int main() {
     CLI_debug_display_next(e_1);
     enemy_free_all(&enemy_tmp);
 
-
-
     printf("\nAffichage des ennemis en jeu:\n");
     CLI_debug_display_next(game.enemies);
     printf("\n");
     CLI_debug_display_next(e_1);
 
-    printf("\n\n");
-    CLI_display_game(game);
-    enemy_free_all(&game.enemies);
 
 
     printf("\n[#########] ---------- Test configuration des tourelles ---------- [#########]\n");
@@ -165,7 +161,14 @@ int main() {
     printf("\nAffichage du premier type de tourelle:\n");
     entity_type_display_full(* ((Entity_type *) (*t_types).element), TOWER);
 
+    // affichage du jeu
+    printf("\n\n");
+    CLI_display_game(game);
+    gm_move_all(&game);
+    printf("\n");
+    CLI_display_game(game);
 
+    enemy_free_all(&game.enemies);
 
     printf("\n");
     // free

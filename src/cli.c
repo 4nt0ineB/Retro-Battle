@@ -45,7 +45,7 @@ void CLI_display_game(Game game){
     // initialisation de la vue
     for(i = 1; i <= MAX_LINE; i++){
         for(j = 1; j <= MAX_LINE_LENGTH; j++){
-            view[i][j] = (char *) malloc(3 * sizeof(char));
+            view[i][j] = (char *) malloc(10 * sizeof(char));
             strcpy(view[i][j], ".");
         }
     }

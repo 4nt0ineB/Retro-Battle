@@ -25,6 +25,7 @@ Enemy * alloue_enemy(int type, int life, int line, int position, int speed, int 
 
 
 void enemy_add(Enemy ** to_e, Enemy * from_e){
+    // pas de vérification de position dans cette fonction
     enemy_add_next(&(* to_e), from_e);
     Enemy * tmp = *to_e;
     while(tmp){
@@ -131,6 +132,16 @@ Enemy * get_enemy_by_position(Enemy * enemy, int line, int position){
     return NULL;
 }
 
+int enemy_set_position(Enemy * enemy, int line, int position){
+    /*// on prévient la modification erronée de l'agencement
+    // interne de la structure enemy
+    if(!enemy || enemy->next || enemy->next_line || enemy->prev_line)
+        return 0;*/
+    if(!enemy) return 0;
+    enemy->line = line;
+    enemy->position = position;
+    return 1;
+}
 
 int init_enemies(Enemy * enemy_list, DListe enemy_types){
     if(!enemy_list) return 0;

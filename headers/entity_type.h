@@ -11,7 +11,7 @@
 typedef enum {
   TOWER,
   ENEMY
-} ENTITIES;
+} ENTITY;
 
 /**
  * Représentation d'un type d'entité (tower ou enemy)
@@ -60,7 +60,7 @@ void entity_type_dliste_free(DListe * l);
  * Affiche la description du type d'ennemi
  * @param e_type
  */
-void entity_type_display_full(Entity_type e_type, ENTITIES ntt);
+void entity_type_display_full(Entity_type e_type, ENTITY ntt);
 
 void enemy_type_display(Entity_type e_type);
 void tower_type_display(Entity_type e_type);

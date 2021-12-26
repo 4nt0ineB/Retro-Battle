@@ -22,7 +22,7 @@ typedef struct {
  * Remarque l'ennemi doit être extrait de la précédente
  * structure dans laquelle il était si l'ajout à été réalisé.
  * @param game
- * @param level_enemies
+ * @param enemy Remarque: Enemy ** car il est possiblement la tête d'une liste d'ennemis
  * @return 1 si la mise en jeu à été réalisé
  */
 int game_add_enemy(Game * game, Enemy ** enemy);
@@ -35,6 +35,8 @@ int game_add_enemy(Game * game, Enemy ** enemy);
  * @param ntt valeur de retour : le type d'entité à été renvoyé via @return
  * @return pointeur void * sur l'entité (enemy ou tower) de type @param ntt, ou NULL
  */
-void * game_get_entity_by_position(Game game, int line, int position, ENTITIES * ntt);
+void * game_get_entity_by_position(Game game, int line, int position, ENTITY * ntt);
+
+int game_move_entity(Game * game, void * entity, ENTITY ntt, int line, int position);
 
 #endif //L2_PROJET_C_GAME_H

@@ -49,7 +49,7 @@ void entity_type_dliste_free(DListe * l){
     *l = NULL;
 }
 
-void entity_type_display_full(Entity_type e_type, ENTITIES ntt){
+void entity_type_display_full(Entity_type e_type, ENTITY ntt){
     if(ntt == TOWER){
         tower_type_display(e_type);
     }else if(ntt == ENEMY){

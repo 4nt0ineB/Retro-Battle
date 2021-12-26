@@ -122,6 +122,17 @@ Enemy * find_first_type(Enemy * enemy, int e_type);
  */
 Enemy * get_enemy_by_position(Enemy * enemy, int line, int position);
 
+
+/**
+ * Déplace l'ennemi dans la direction souhaitée
+ * @param enemy
+ * @param x
+ * @param y
+ * @return
+ */
+int enemy_set_position(Enemy * enemy, int x, int y);
+
+
 /**
  * Libère toute une structure d'ennemis
  * itère sur toute la chaîne (next) et

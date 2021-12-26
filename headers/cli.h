@@ -5,10 +5,11 @@
 #ifndef L2_PROJET_C_CLI_H
 #define L2_PROJET_C_CLI_H
 #include "enemy.h"
-#include "stdio.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include "game.h"
 #include "settings.h"
-#include "string.h"
+#include <string.h>
 
 /**
  * A DEPLACER DANS cli.c
