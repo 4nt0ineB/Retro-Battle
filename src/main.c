@@ -149,16 +149,3 @@ int main() {
     return 0;
 }
 //enemy->prev_line = enemy->next_line = NULL;
-/*
-7 3 E
-8 2 E
-8 7 E
-8 5 E
-8 4 E
-9 1 E
-9 2 E
-9 3 E
-9 4 E
-9 5 E
-9 6 E
-9 7 E*/
