@@ -119,6 +119,55 @@ int main() {
     printf("\nMise a jour de la liste d'ajout:\n");
     CLI_debug_display_next(e_1);
     printf("\n");
+
+    if(game_add_enemy(&game, &e_1)){
+        printf("SUCCESS\n");
+    }else {
+        printf("ECHEC\n");
+    }
+    printf("\nMise a jour de la liste d'ajout:\n");
+    CLI_debug_display_next(e_1);
+    printf("\n");
+    if(game_add_enemy(&game, &e_1)){
+        printf("SUCCESS\n");
+    }else {
+        printf("ECHEC\n");
+    }
+    printf("\nMise a jour de la liste d'ajout:\n");
+    CLI_debug_display_next(e_1);
+    printf("\n");
+    if(game_add_enemy(&game, &e_1)){
+        printf("SUCCESS\n");
+    }else {
+        printf("ECHEC\n");
+    }
+    printf("\nMise a jour de la liste d'ajout:\n");
+    CLI_debug_display_next(e_1);
+    printf("\n");
+    if(game_add_enemy(&game, &e_1)){
+        printf("SUCCESS\n");
+    }else {
+        printf("ECHEC\n");
+    }
+    printf("\nMise a jour de la liste d'ajout:\n");
+    CLI_debug_display_next(e_1);
+    printf("\n");
+    if(game_add_enemy(&game, &e_1)){
+        printf("SUCCESS\n");
+    }else {
+        printf("ECHEC\n");
+    }
+    printf("\nMise a jour de la liste d'ajout:\n");
+    CLI_debug_display_next(e_1);
+    printf("\n");
+    if(game_add_enemy(&game, &e_1)){
+        printf("SUCCESS\n");
+    }else {
+        printf("ECHEC\n");
+    }
+    printf("\nMise a jour de la liste d'ajout:\n");
+    CLI_debug_display_next(e_1);
+    printf("\n");
     /*if(game_add_enemy(&game, &enemy_tmp)){
         printf("SUCCESS\n");
     }else {
@@ -140,9 +189,7 @@ int main() {
     }*/
     //enemy_free_all(&e_1);
 
-    printf("\nAffichage des ennemis en jeu:\n");
-    CLI_debug_display_next(game.enemies);
-    printf("\n");
+
 
 
 
@@ -189,10 +236,20 @@ int main() {
     printf("\n");
     while(choice == 'n'){
         CLI_display_game(game);
+        // ajout enemy
+        printf("Adresse liste attente : %p\n", &(*e_1));
+        printf("\nAffichage des ennemis en jeu:\n");
+        CLI_debug_display_next(game.enemies);
+        printf("yay\n");
+        // maj liste ajout
+        printf("\nMise a jour de la liste d'ajout:\n");
+        CLI_debug_display_next(e_1);
+        printf("\n");
+        //
         CLI_display_menu();
         scanf(" %c", &choice);
         gm_move_all(&game);
-        gm_add_entities(&game, (void*) &e_1, ENEMY);
+        gm_add_entities(&game, &e_1);
     }
 
     //free

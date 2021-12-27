@@ -26,19 +26,77 @@ int gm_move_all(Game * game){
     return 1;
 }
 
-int gm_add_entities(Game * game, void ** entities, ENTITY ntt){
-    Enemy * enemy_tmp = (*entities);
-    Enemy * enemy_tmp_next;
-    while(enemy_tmp) {
-        printf("Bop\n");
-        enemy_tmp_next = enemy_tmp->next;
-        if (ntt == ENEMY && game_add_enemy(game, &enemy_tmp)) {
+int gm_add_entities(Game * game, Enemy ** entities){
+    printf("ICICICI : ");
+    printf("Adresse liste attente : %p\n", &(*entities));
+    printf("\n");
+    Enemy ** enemy_tmp = (Enemy **)entities;
+    Enemy ** enemy_tmp_next;
+    while((*enemy_tmp)) {
+        printf("Bopi\n");
+        enemy_tmp_next = &(*enemy_tmp)->next;
+        printf("Adresse liste attente : %p\n", (*enemy_tmp_next));
+        if(enemy_tmp_next && (*enemy_tmp_next))
+            printf("Adresse liste attente : %c\n", (char) (*enemy_tmp_next)->type);
+        printf("bop\n");
+        if (game_add_enemy(game, enemy_tmp)) {
             printf("SUCCESS\n");
         } else {
             printf("ECHEC \n");
+            enemy_tmp = enemy_tmp_next;
+            if(!(*enemy_tmp_next)) break;
+
         }
-        enemy_tmp = enemy_tmp_next;
     }
 
     return 1;
 }
+
+/*int gm_add_entities(Game * game, void * entities, ENTITY ntt){
+    printf("ICICICI : ");
+    CLI_debug_display_next((*(Enemy **) entities));
+    printf("\n");
+    Enemy ** enemy_tmp = (Enemy **)entities;
+    Enemy ** enemy_tmp_next;
+    while(enemy_tmp) {
+        printf("Bopi\n");
+        enemy_tmp_next = &((*enemy_tmp)->next);
+        if ((*enemy_tmp_next) && ntt == ENEMY && game_add_enemy(game, enemy_tmp)) {
+            printf("SUCCESS\n");
+        } else {
+            printf("ECHEC \n");
+            enemy_tmp = enemy_tmp_next;
+            if(!(*enemy_tmp_next)) break;
+
+        }
+    }
+
+    return 1;
+}*/
+
+/*int gm_add_entities(Game * game, void * entities, ENTITY ntt){
+    printf("ICICICI : ");
+    printf("Adresse liste attente : %p\n", &(*entities));
+    printf("\n");
+    Enemy ** enemy_tmp = (Enemy **)entities;
+    Enemy ** enemy_tmp_next;
+    while((*enemy_tmp)) {
+        printf("Bopi\n");
+        enemy_tmp_next = &(*enemy_tmp)->next;
+        printf("Adresse liste attente : %p\n", (*enemy_tmp_next));
+        if(enemy_tmp_next && (*enemy_tmp_next))
+            printf("Adresse liste attente : %c\n", (char) (*enemy_tmp_next)->type);
+        printf("bop\n");
+        if ((*enemy_tmp_next) && ntt == ENEMY &&
+        game_add_enemy(game, enemy_tmp)) {
+            printf("SUCCESS\n");
+        } else {
+            printf("ECHEC \n");
+            enemy_tmp = enemy_tmp_next;
+            if(!(*enemy_tmp_next)) break;
+
+        }
+    }
+
+    return 1;
+}*/

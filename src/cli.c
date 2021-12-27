@@ -15,6 +15,7 @@ void CLI_debug_display_line(Enemy * enemy){
 }
 
 void CLI_debug_display_next(Enemy * enemy){
+    printf("PLANTAGE %p\n", enemy);
     while(enemy){
         CLI_display_enemy(*enemy);
         if(enemy->next)
@@ -63,6 +64,7 @@ void CLI_entity_type_display_full(Entity_type e_type, ENTITY ntt){
 }
 
 void CLI_display_enemy(Enemy enemy){
+
     char * str =  enemy_toString(enemy);
     printf("%s", str);
     free(str);
