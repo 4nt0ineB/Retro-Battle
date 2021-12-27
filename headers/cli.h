@@ -49,19 +49,19 @@ void CLI_tower_type_display(Entity_type e_type);
 void CLI_entity_type_display_full(Entity_type e_type, ENTITY ntt);
 
 /**
- *
+ * @todo affichage des aides
  */
 void CLI_display_help();
 
 /**
- *
+ * Affiche le menu
  */
 void CLI_display_menu();
 
 /*
- *
+ * Affiche le menu de selection des tourelles
  */
-void CLI_display_tower_menu();
+void CLI_display_tower_menu(DListe entity_types_list);
 
 
 /**

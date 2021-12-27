@@ -89,8 +89,15 @@ void CLI_display_menu(){
     printf("\nChoice ? :");
 }
 
-void CLI_display_tower_menu(){
-
+void CLI_display_tower_menu(DListe entity_types_list){
+    printf("Which tower do you want to deploy ?\n");
+    DListe t_tmp = entity_types_list;
+    while(t_tmp){
+        printf("%c : %s\n",(char) ((Entity_type *) t_tmp->element)->id, ((Entity_type *) t_tmp->element)->name);
+        t_tmp = t_tmp->suivant;
+    }
+    printf("\ns : start\n");
+    printf("Your choice ? : ");
 }
 
 void CLI_display_game(Game game){

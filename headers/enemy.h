@@ -35,20 +35,20 @@ Enemy * alloue_enemy(int type, int life, int line, int position, int speed, int 
 
 /**
  * Lie l'ennemi à un suivant sur la ligne (à la fin de la liste)
- * @param to_e La ligne d'ennemis
- * @param from_e l'ennemi à lier
+ * @param dest La ligne d'ennemis
+ * @param src l'ennemi à lier
  * @return 0 si l'ennemi à ajouté n'est pas sur la même ligne
  */
-int enemy_add_next_line(Enemy** to_e, Enemy * from_e);
+int enemy_add_next_line(Enemy** dest, Enemy * src);
 
 /**
  * Ajoute un ennemi en fin d'une liste d'ennemis (next)
  * (fin de liste)
- * @param to_e tête de liste
- * @param from_e l'ennemi à ajouter
+ * @param dest tête de liste
+ * @param src l'ennemi à ajouter
  * @return 0 ou 1
  */
-int enemy_add_next(Enemy** to_e, Enemy* from_e);
+int enemy_add_next(Enemy** dest, Enemy* src);
 
 
 /**
@@ -60,34 +60,34 @@ int enemy_add_next(Enemy** to_e, Enemy* from_e);
  * Ligne (next_line):
  *      (x ligne 1) <=> (z ligne1)
  *
- * @param to_e
- * @param from_e
+ * @param dest
+ * @param src
  */
-void enemy_add(Enemy ** to_e, Enemy * from_e);
+void enemy_add(Enemy ** dest, Enemy * src);
 
 /**
  * Extrait un ennemi de sa ligne
- * @param e_from adresse de la ligne d'ennemi depuis laquelle retirer l'ennemi
- * @param enemy adresse de l'ennemi à retirer
+ * @param dest adresse de la ligne d'ennemi depuis laquelle retirer l'ennemi
+ * @param src adresse de l'ennemi à retirer
  * @return l'ennemi s'il se trouvait dans la ligne, NULL sinon
  */
-Enemy* enemy_extract_from_line(Enemy** e_from, Enemy * enemy);
+Enemy* enemy_extract_from_line(Enemy** dest, Enemy * src);
 
 /**
  * Extrait un ennemi d'une liste (next)
- * @param e_from adresse de la ligne d'ennemi depuis laquelle retirer l'ennemi
- * @param enemy adresse de l'ennemi à retirer
+ * @param dest adresse de la ligne d'ennemi depuis laquelle retirer l'ennemi
+ * @param src adresse de l'ennemi à retirer
  * @return l'adresse de l'ennemi s'il se trouvait dans la ligne, NULL sinon
- * @param e_from
- * @param enemy
+ * @param dest
+ * @param src
  * @return
  */
 Enemy * enemy_extract_from_next(Enemy** e_from, Enemy * enemy);
 
 /**
  * Extrait un ennemi de toute la structure
- * @param e_from
- * @param enemy
+ * @param dest
+ * @param src
  * @return l'adresse de l'ennemi enlevé, NULL sinon
  */
 Enemy * enemy_extract(Enemy ** e_from, Enemy * enemy);
@@ -110,7 +110,7 @@ int init_enemies(Enemy * enemy, DListe enemy_types);
  * @param e_type
  * @return
  */
-Enemy * find_first_type(Enemy * enemy, int e_type);
+Enemy * enemy_find_first_type(Enemy * enemy, int e_type);
 
 /**
  * Retourne l'adresse de l'ennemi pour pour coordonnées
@@ -120,7 +120,7 @@ Enemy * find_first_type(Enemy * enemy, int e_type);
  * @param position
  * @return un pointeur sur Enemy
  */
-Enemy * get_enemy_by_position(Enemy * enemy, int line, int position);
+Enemy * enemy_get_by_position(Enemy * enemy, int line, int position);
 
 
 /**

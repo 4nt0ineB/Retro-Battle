@@ -8,7 +8,7 @@
 
 void * game_get_entity_by_position(Game game, int line, int position, ENTITY * ntt){
     void * entity = NULL;
-    if(((entity = get_enemy_by_position(game.enemies, line, position)) )){
+    if(((entity = enemy_get_by_position(game.enemies, line, position)) )){
         *ntt = ENEMY;
         return entity;
     }

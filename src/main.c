@@ -95,7 +95,7 @@ int main() {
     DListe t_types = lire_fichier_types(nom_fichier);
     DListe t_tmp = t_types;
     while(t_tmp){
-        printf("%c, ",(char) ((Entity_type *) t_tmp->element)->id);
+        printf("%c=%s, ",(char) ((Entity_type *) t_tmp->element)->id, ((Entity_type *) t_tmp->element)->name);
         t_tmp = t_tmp->suivant;
     }
 
@@ -126,15 +126,20 @@ int main() {
     }*/
 
     // affichage du jeu
-    char choice = 'n';
+    char choice = '.';
     int turn = 1; /*  @todo créer une classe game_state pour le tour, les points, les stats, etc...  */
-    while(choice == 'n'){
+    while((1)){
         CLI_display_game(game);
+        CLI_display_tower_menu(t_types);
         CLI_display_menu();
         scanf(" %c", &choice);
-        gm_move_all(&game);
-        gm_add_entities(&game, &waiting_enemies, turn);
-        turn+=1;
+        if(choice == 'n') {
+            gm_move_all(&game);
+            gm_add_entities(&game, &waiting_enemies, turn);
+            turn += 1;
+        }else if(choice == 'q'){
+            break;
+        }
     }
 
     // free //

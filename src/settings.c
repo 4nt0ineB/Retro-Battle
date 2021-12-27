@@ -87,6 +87,15 @@ DListe lire_fichier_types(char * nom_fichier){
          alloc_name = (char *) malloc(26 * sizeof(char));
          strcpy(alloc_name, name);
          DListe e_types_tmp = types;
+         if(type_id == 'q'){
+             fprintf(stderr
+                     , "\nIdentifiant 's' non autorisé." // voir menu (CLI) de choix des tourelles
+                       "\n[%c %d %d] ce type_id d'ennemis à déjà été déclaré.\n"
+                     , type_id, v1, v2);
+             fclose(fichier);
+             free(alloc_name);
+             return NULL;
+         }
          // erreurs
          // on regarde si l'identifiant a déjà été défini
          while(e_types_tmp){

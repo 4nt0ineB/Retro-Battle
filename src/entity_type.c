@@ -20,15 +20,13 @@ int entity_type_add_effect(Entity_type * e_type, Effect * effect){
     if(!e_type) return 0;
     DListe effect_tmp = e_type->effects;
     while(effect_tmp){
-        if( (*((Effect *) effect_tmp->element)).type == effect->type){
+        if( (*((Effect *) effect_tmp->element)).type == effect->type)
             return 0;
-        }
         effect_tmp = effect_tmp->suivant;
     }
     DListe cel = alloue_DCellule(effect);
-    if(!cel){
+    if(!cel)
         return 0;
-    }
     DListe_ajouter_fin(&e_type->effects, cel);
     return 1;
 }

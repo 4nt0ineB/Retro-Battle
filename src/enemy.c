@@ -3,7 +3,6 @@
 //
 
 #include "../headers/enemy.h"
-#include "../headers/cli.h"
 
 
 Enemy * alloue_enemy(int type, int life, int line, int position, int speed, int turn){
@@ -24,72 +23,72 @@ Enemy * alloue_enemy(int type, int life, int line, int position, int speed, int 
 }
 
 
-void enemy_add(Enemy ** to_e, Enemy * from_e){
+void enemy_add(Enemy ** dest, Enemy * src){
     // pas de vérification de position dans cette fonction
-    enemy_add_next(&(* to_e), from_e);
-    Enemy * tmp = *to_e;
+    enemy_add_next(&(* dest), src);
+    Enemy * tmp = *dest;
     while(tmp){
-        if(tmp != from_e){
-            enemy_add_next_line(&tmp, from_e);
+        if(tmp != src){
+            enemy_add_next_line(&tmp, src);
             return;
         }
         tmp = tmp->next;
     }
 }
 
-int enemy_add_next(Enemy** to_e, Enemy* from_e){
-    if(!from_e)
+int enemy_add_next(Enemy** dest, Enemy* src){
+    if(!src)
         return 0;
-    if(!(* to_e)){
-        (*to_e) = from_e;
-        from_e->next = NULL;
+    if(!(* dest)){
+        (*dest) = src;
+        src->next = NULL;
         return 1;
     }
-    if(!(*to_e)->next){
-        (* to_e)->next = from_e;
-        from_e->next = NULL;
+    if(!(*dest)->next){
+        (* dest)->next = src;
+        src->next = NULL;
         return 1;
     }
-    return enemy_add_next(&(* to_e)->next, from_e);
+    return enemy_add_next(&(* dest)->next, src);
 }
 
-int enemy_add_next_line(Enemy ** to_e, Enemy * from_e){
-    if(!from_e)
+int enemy_add_next_line(Enemy ** dest, Enemy * src){
+    if(!src)
         return 0;
-    if((* to_e) == NULL){
-        (* to_e) = from_e;
+    if((* dest) == NULL){
+        (* dest) = src;
         return 1;
     }
     // l'ennemi n'est pas ajouté si pas la même ligne
-    if((*to_e) != NULL && (*to_e)->line != from_e->line)
+    if((*dest) != NULL && (*dest)->line != src->line)
         return 0;
-    if(!(*to_e)->next_line){
-        (*to_e)->next_line = from_e;
-        from_e->prev_line = (* to_e);
+    if(!(*dest)->next_line){
+        (*dest)->next_line = src;
+        src->prev_line = (* dest);
         return 1;
     }
-    return enemy_add_next_line(&(* to_e)->next_line, from_e);
+    return enemy_add_next_line(&(* dest)->next_line, src);
 }
 
-Enemy * enemy_extract_from_line(Enemy** e_from, Enemy * enemy) {
-    if((*e_from) == enemy){
-        e_from = &(*e_from)->next_line;
-        enemy->next_line = NULL;
-        if(!e_from){
-            (*e_from)->prev_line = NULL;
+Enemy * enemy_extract_from_line(Enemy** dest, Enemy * src) {
+    if((*dest) == src){
+        dest = &(*dest)->next_line;
+        src->next_line = NULL;
+        if(!dest){
+            (*dest)->prev_line = NULL;
         }
     }else{
-        if(!enemy->next_line){
-            enemy->prev_line->next_line = NULL;
-            enemy->prev_line = NULL;
+        if(!src->next_line){
+            src->prev_line->next_line = NULL;
+            src->prev_line = NULL;
         }else{
-            enemy->prev_line->next_line = enemy->next_line;
-            enemy->next_line->prev_line = enemy->prev_line;
-            enemy->prev_line = NULL;
-            enemy->next_line = NULL;
+            src->prev_line->next_line = src->next_line;
+            src->next_line->prev_line = src->prev_line;
+            src->prev_line = NULL;
+            src->next_line = NULL;
         }
     }
-    return enemy;
+    return src;
 }
 
 Enemy * enemy_extract_from_next(Enemy** e_from, Enemy * enemy){
@@ -115,13 +114,13 @@ Enemy * enemy_extract(Enemy ** e_from, Enemy * enemy){
     return enemy;
 }
 
-Enemy * find_first_type(Enemy * enemy, int e_type){
+Enemy * enemy_find_first_type(Enemy * enemy, int e_type){
     if(!enemy || enemy->type == e_type)
         return enemy;
-    return find_first_type(enemy->next, e_type);
+    return enemy_find_first_type(enemy->next, e_type);
 }
 
-Enemy * get_enemy_by_position(Enemy * enemy, int line, int position){
+Enemy * enemy_get_by_position(Enemy * enemy, int line, int position){
     if(!enemy) return NULL;
     Enemy * tmp = enemy;
     while(tmp){
