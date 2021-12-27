@@ -27,28 +27,18 @@ int gm_move_all(Game * game){
 }
 
 int gm_add_entities(Game * game, Enemy ** entities){
-    printf("ICICICI : ");
-    printf("Adresse liste attente : %p\n", &(*entities));
-    printf("\n");
     Enemy ** enemy_tmp = (Enemy **)entities;
     Enemy ** enemy_tmp_next;
     while((*enemy_tmp)) {
-        printf("Bopi\n");
         enemy_tmp_next = &(*enemy_tmp)->next;
-        printf("Adresse liste attente : %p\n", (*enemy_tmp_next));
-        if(enemy_tmp_next && (*enemy_tmp_next))
-            printf("Adresse liste attente : %c\n", (char) (*enemy_tmp_next)->type);
-        printf("bop\n");
         if (game_add_enemy(game, enemy_tmp)) {
-            printf("SUCCESS\n");
+            // succès d'ajout, l'ennemi courant est l'ancien suivant
+            // on ne fait rien
         } else {
-            printf("ECHEC \n");
+            // échec d'ajout, on passe au suivant
             enemy_tmp = enemy_tmp_next;
-            if(!(*enemy_tmp_next)) break;
-
         }
     }
-
     return 1;
 }
 
