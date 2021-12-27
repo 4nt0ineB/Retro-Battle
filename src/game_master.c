@@ -26,12 +26,15 @@ int gm_move_all(Game * game){
     return 1;
 }
 
-int gm_add_entities(Game * game, Enemy ** entities){
+int gm_add_entities(Game * game, Enemy ** entities, int turn){
     Enemy ** enemy_tmp = (Enemy **)entities;
     Enemy ** enemy_tmp_next;
     while((*enemy_tmp)) {
         enemy_tmp_next = &(*enemy_tmp)->next;
-        if (game_add_enemy(game, enemy_tmp)) {
+        // on veut tours les ennemis dont le tour d'apparition a été passé
+        // ou dont c'est le tour d'apparition
+        // (file d'attente)
+        if ((*enemy_tmp)->turn <= turn && game_add_enemy(game, enemy_tmp)) {
             // succès d'ajout, l'ennemi courant est l'ancien suivant
             // on ne fait rien
         } else {

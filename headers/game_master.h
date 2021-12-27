@@ -29,6 +29,6 @@ int gm_move(Game * game, void * entity, ENTITY ntt);
 int gm_move_all(Game * game);
 
 
-int gm_add_entities(Game * game, Enemy ** entities);
+int gm_add_entities(Game * game, Enemy ** entities, int turn);
 
 #endif //L2_PROJET_C_GAME_MASTER_H

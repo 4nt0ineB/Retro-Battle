@@ -31,6 +31,7 @@ void enemy_add(Enemy ** to_e, Enemy * from_e){
     while(tmp){
         if(tmp != from_e){
             enemy_add_next_line(&tmp, from_e);
+            return;
         }
         tmp = tmp->next;
     }

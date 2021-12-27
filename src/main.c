@@ -41,8 +41,9 @@ int main() {
     char * nom_fichier = "./data/level1";
     Enemy * waiting_enemies = lire_fichier_niveau(nom_fichier, &money);
     CLI_debug_display_next(waiting_enemies);
+
     printf("\n");
-    CLI_display_full_enemy(*waiting_enemies);
+    CLI_display_full_enemy(*waiting_enemies);printf("\n");
     printf("\n");
 
     printf("\n[#########] ---------- Test configuration des ennemis ---------- [#########]\n");
@@ -68,6 +69,7 @@ int main() {
     CLI_display_full_enemy(*waiting_enemies);
     printf("\nAffichage de la liste d'apparition initialisée:\n");
     CLI_debug_display_next(waiting_enemies);
+    printf("\n");
 
     // verification implémentation //
     printf("\n-------------------- Effectivité de l'implémentation:\n");
@@ -77,13 +79,13 @@ int main() {
     CLI_debug_display_line(waiting_enemies->next);
 
     // suppression //
-    printf("\n-------------------- Test de suppression\n");
+    /*printf("\n-------------------- Test de suppression\n");
     printf("On souhaite extraire le premier élément de tout le chainage:\n");
     Enemy * extr = enemy_extract(&waiting_enemies, waiting_enemies);
     CLI_debug_display_next(waiting_enemies);
     printf("\nLigne 1 premier element: \n");
     CLI_debug_display_line(waiting_enemies);
-    printf("\nL'élément à bien été supprimé\n");
+    printf("\nL'élément à bien été supprimé\n");*/
 
 
     printf("\n[#########] ---------- Test configuration des tourelles ---------- [#########]\n");
@@ -107,10 +109,10 @@ int main() {
     // Game
     // à déclarer dans play() dans game_master.c
     Game game = {NULL, money};
-    printf("\nListe des ennemis du niveau:\n");
+
+    /*printf("\nListe des ennemis du niveau:\n");
     CLI_debug_display_next(waiting_enemies);
     printf("\nTentative d'ajout de deux ennemis:\n");
-
     // ! Tester avec des valeurs pertinentes !
     if(!game_add_enemy(&game, &waiting_enemies)){ // va fonctionner
         printf("\nIl existe déjà une entité à cette endroit.\n");
@@ -121,19 +123,18 @@ int main() {
         printf("\nIl existe déjà une entité à cette endroit.\n");
     }else{
         printf("\nL'ennemi à été ajouté\n");
-    }
-    // affichage du jeu
-    printf("\n\n");
-    CLI_display_game(game);
-    printf("\n");
-    char choice = 'n';
+    }*/
 
+    // affichage du jeu
+    char choice = 'n';
+    int turn = 1; /*  @todo créer une classe game_state pour le tour, les points, les stats, etc...  */
     while(choice == 'n'){
         CLI_display_game(game);
         CLI_display_menu();
         scanf(" %c", &choice);
         gm_move_all(&game);
-        gm_add_entities(&game, &waiting_enemies);
+        gm_add_entities(&game, &waiting_enemies, turn);
+        turn+=1;
     }
 
     // free //
@@ -143,8 +144,21 @@ int main() {
     entity_type_dliste_free(&types);
     entity_type_dliste_free(&t_types);
     DListe_delete(&l);
-    free(extr);
+    //free(extr);
     printf("\n");
     return 0;
 }
 //enemy->prev_line = enemy->next_line = NULL;
+/*
+7 3 E
+8 2 E
+8 7 E
+8 5 E
+8 4 E
+9 1 E
+9 2 E
+9 3 E
+9 4 E
+9 5 E
+9 6 E
+9 7 E*/
