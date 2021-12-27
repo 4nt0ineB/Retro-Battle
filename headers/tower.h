@@ -56,7 +56,7 @@ Tower * tower_alloue_cel(int type, int life, int line, int position, int price);
  * @param add cellule ajouter de type Tower  
  * @return int 
  */
-int ajout_tower(Tower * t, int * argent, int prix, Tower add);
+int ajout_tower(Tower * t, int * argent, int prix, Tower * add);
 
 /**
  * @brief 
@@ -65,4 +65,4 @@ int ajout_tower(Tower * t, int * argent, int prix, Tower add);
  * @param del element a suprimmer
  * @return int 
  */
-int del_tower(Tower * t, Tower del);
+int del_tower(Tower * t, Tower * del);

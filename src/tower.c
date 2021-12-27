@@ -12,48 +12,41 @@
  * 
  */
 
-/**
+
 Tower * tower_alloue_cel(int type, int life, int line, int position, int price){
     Tower  *t = (Tower *) malloc(sizeof(Tower));
-    if((*t).type == NULL) return (*t);
-
-    (*t).type = type;
-    (*t).life = life;
-    (*t).line = line;
-    (*t).position = position;
-    (*t).price = price;
-    (*t).next = NULL;
- 
-    return (*t);
+    if(t){
+        t->type = type;
+        t->life = life;
+        t->line = line;
+        t->position = position;
+        t->price = price;
+        t->next = NULL;
+    }
+    return t;
 }
 
 
-int ajout_tower(Tower * t, int argent, int prix, Tower add){
+int ajout_tower(Tower * t, int * argent, int prix, Tower * add){
     if(*argent < prix) return 0;
 
     *argent = *argent - prix;
 
-    *t->next = add;
+    t->next = add;
 
     return 1;
 
 }
-**/
 
-int del_tower(Tower * t, Tower del){
-    while((*t)->next != del){
-        (*t) = (*t)->next;
+
+int del_tower(Tower * t, Tower * del){
+    while(t->next != del){
+        t = t->next;
     }
 
-    if((*t)->next != del) return 0;
-    free((*t)->next);
-    (*t)->next = del->next;
+    if(t->next != del) return 0;
+    free(t->next);
+    t->next = del->next;
 
     return 1;
 }
-
-t = tower_alloue_cel( 1, 1, 1, 1, 1);
-
-ajout_tower(*t, 1, 1, t);
-
-del_tower(* t, t);
