@@ -15,7 +15,6 @@ void CLI_debug_display_line(Enemy * enemy){
 }
 
 void CLI_debug_display_next(Enemy * enemy){
-    printf("PLANTAGE %p\n", enemy);
     while(enemy){
         CLI_display_enemy(*enemy);
         if(enemy->next)

@@ -128,21 +128,8 @@ int main() {
     printf("\n");
     char choice = 'n';
 
-    printf("\nblip\n");
-    CLI_debug_display_next(waiting_enemies);
-    printf("\n");
     while(choice == 'n'){
         CLI_display_game(game);
-        // ajout enemy
-        printf("Adresse liste attente : %p\n", &(*waiting_enemies));
-        printf("\nAffichage des ennemis en jeu:\n");
-        CLI_debug_display_next(game.enemies);
-        printf("yay\n");
-        // maj liste ajout
-        printf("\nMise a jour de la liste d'ajout:\n");
-        CLI_debug_display_next(waiting_enemies);
-        printf("\n");
-        //
         CLI_display_menu();
         scanf(" %c", &choice);
         gm_move_all(&game);
