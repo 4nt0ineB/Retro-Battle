@@ -132,7 +132,9 @@ void CLI_display_game(Game game){
     // free
     for(i = 1; i <= MAX_LINE; i++){
         for(j = 1; j <= MAX_LINE_LENGTH; j++){
-            free(view[i][j]);
+            if(view[i][j]){
+                free(view[i][j]);
+            }
         }
     }
     //printf("\e[1;1H\e[2J");

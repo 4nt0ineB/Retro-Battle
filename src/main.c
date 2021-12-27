@@ -107,19 +107,23 @@ int main() {
 
     // Ajout de tous les ennemis pour test
     //game_add_enemy(&game, &e_1->next);
+    printf("\nEnnemmis dans la liste d'ajout:\n");
+    CLI_debug_display_next(e_1);
+    printf("\n");
 
-    Enemy * enemy_tmp = e_1;
-
-    if(game_add_enemy(&game, &enemy_tmp)){
+    if(game_add_enemy(&game, &e_1)){
         printf("SUCCESS\n");
     }else {
         printf("ECHEC\n");
     }
-    if(game_add_enemy(&game, &enemy_tmp)){
+    printf("\nMise a jour de la liste d'ajout:\n");
+    CLI_debug_display_next(e_1);
+    printf("\n");
+    /*if(game_add_enemy(&game, &enemy_tmp)){
         printf("SUCCESS\n");
     }else {
         printf("ECHEC\n");
-    }
+    }*/
 
     // problème boucle succes / pas succes free fuite mémoire
     /*Enemy * enemy_tmp = e_1;
@@ -134,17 +138,15 @@ int main() {
         enemy_tmp= enemy_tmp_next;
 
     }*/
-    CLI_debug_display_next(e_1);
-    enemy_free_all(&enemy_tmp);
+    //enemy_free_all(&e_1);
 
     printf("\nAffichage des ennemis en jeu:\n");
     CLI_debug_display_next(game.enemies);
     printf("\n");
-    CLI_debug_display_next(e_1);
 
 
 
-    printf("\n[#########] ---------- Test configuration des tourelles ---------- [#########]\n");
+    /*printf("\n[#########] ---------- Test configuration des tourelles ---------- [#########]\n");
     // test lecture type tower //
     nom_fichier = "./data/tower_types";
     printf("\n-------------------- Test lecture fichier types de tourelles: \n");
@@ -160,25 +162,44 @@ int main() {
     lire_fichier_effets(nom_fichier, t_types);
     printf("\nAffichage du premier type de tourelle:\n");
     CLI_entity_type_display_full(* ((Entity_type *) (*t_types).element), TOWER);
-
+*/
     // affichage du jeu
     printf("\n\n");
     CLI_display_game(game);
     printf("\n");
     char choice = 'n';
 
+
+    // problème boucle succes / pas succes free fuite mémoire
+    /*Enemy * enemy_tmp = e_1;
+    Enemy * enemy_tmp_next;
+    while(enemy_tmp){
+        enemy_tmp_next = enemy_tmp->next;
+        if(game_add_enemy(&game, &enemy_tmp)){
+            printf("SUCCESS\n");
+        }else {
+            printf("ECHEC \n");
+        }
+        enemy_tmp= enemy_tmp_next;
+
+    }*/
+
+    printf("\nblip\n");
+    CLI_debug_display_next(e_1);
+    printf("\n");
     while(choice == 'n'){
         CLI_display_game(game);
         CLI_display_menu();
         scanf(" %c", &choice);
         gm_move_all(&game);
+        gm_add_entities(&game, (void*) &e_1, ENEMY);
     }
 
     //free
     printf("\n");
     enemy_free_all(&game.enemies);
     entity_type_dliste_free(&types);
-    entity_type_dliste_free(&t_types);
+    //entity_type_dliste_free(&t_types);
     DListe_delete(&l);
     free(extr);
     printf("\n");

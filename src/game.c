@@ -26,6 +26,7 @@ int game_add_enemy(Game * game, Enemy ** enemy){
     if(!enemy) return 0;
     // on vérifie qu'une entité n'existe pas déjà à cette position
     ENTITY ntt;
+    CLI_display_full_enemy(*(*enemy));printf("\n");
     if(game_get_entity_by_position(*game, (*enemy)->line, (*enemy)->position,&ntt)){
         return 0;
     }
