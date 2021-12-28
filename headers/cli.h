@@ -4,16 +4,18 @@
 
 #ifndef L2_PROJET_C_CLI_H
 #define L2_PROJET_C_CLI_H
-#include "enemy.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include "enemy.h"
+
 #include "game.h"
 #include "settings.h"
-#include <string.h>
+#include "cli_couleurs.h"
 
 //** actions des menus
 typedef enum {
-    SHOW_WAVE = 1,
+    SHOW_WAVE = '1',
     BUILD_DEFENSE,
     ENEMIES_INFO,
     TOWERS_INFO,
@@ -21,7 +23,10 @@ typedef enum {
 } LEVEL_MENU_ACTION;
 //**
 
-
+/**
+ * Replace l'affichage du terminal en haut
+ */
+void CLI_clear_screen();
 /**
  * A DEPLACER DANS cli.c
  * DEBUG : Affiche les ennemis d'une même ligne
@@ -69,12 +74,25 @@ void CLI_display_help();
  */
 void CLI_display_level_menu();
 
+/**
+ * Affiche le menu du niveau
+ * @return l'action choisie
+ */
 LEVEL_MENU_ACTION CLI_scan_choice_level_menu();
 
+/**
+ * affiche la vague d'ennemis du niveau
+ * @param l
+ */
 void CLI_show_wave(Enemy * l);
 
-DListe * CLI_menu_entities_types(DListe entity_types);
+/**
+ * Affiche les types d'entités sous forme de menu
+ * @param entity_types
+ */
+void CLI_menu_entities_types(DListe entity_types);
 
+DListe CLI_scan_choice_entity_types_menu(DListe * entity_type);
 
 
 /**
@@ -83,6 +101,10 @@ DListe * CLI_menu_entities_types(DListe entity_types);
  */
 void CLI_display_game(Game game);
 
+/**
+ * Affiche le titre du jeu
+ */
+void CLI_display_title();
 
 #endif //L2_PROJET_C_CLI_H
 

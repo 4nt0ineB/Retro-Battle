@@ -4,6 +4,9 @@
 
 #include "../headers/cli.h"
 
+void CLI_clear_screen(){
+    printf(CLEAR "");
+}
 
 void CLI_debug_display_line(Enemy * enemy){
     while(enemy){
@@ -85,26 +88,29 @@ void CLI_display_help(){
 
 void CLI_display_level_menu(){
     printf("____ MENU _________________________"
-           "\n| 1) See enemies incoming wave"
-           "\n| 2) Prepare defense"
-           "\n| 3) Enemies info"
-           "\n| 4) Towers info"
-           "\n| 5) Start"
+           "\n 1" GREEN " ► " RESET "See the incoming wave"
+           "\n 2" GREEN " ► " RESET "Prepare defense"
+           "\n 3" GREEN " ► " RESET "Enemies info"
+           "\n 4" GREEN " ► " RESET "Towers info"
+           "\n 5" GREEN " ► " RESET "Start"
     );
     printf("\nChoice ? : ");
 }
 
 LEVEL_MENU_ACTION CLI_scan_choice_level_menu(){
-    int choice = 0;
+    char choice[2] = {0};
     CLI_display_level_menu();
-    while((scanf(" %d", &choice) != 1)  || choice < SHOW_WAVE || choice > START_LEVEL){
-        printf("Wrong choice, try again.\n");
+    while((scanf(" %1s", choice) != 1)  || *choice < SHOW_WAVE || *choice > START_LEVEL){
+        CLI_clear_screen();
+        printf(BORED "Wrong choice, try again.\n" RESET);
         CLI_display_level_menu();
+        choice[0] = 0;
     }
-    return choice;
+    return (LEVEL_MENU_ACTION) *choice;
 }
 
 void CLI_show_wave(Enemy * l){
+    printf(BOGREEN "Incoming wave of enemies \n\n" RESET);
     char * view[MAX_LINE+1][MAX_LINE_LENGTH+1] = {0};
     int i, j;
     // initialisation de la vue
@@ -124,11 +130,14 @@ void CLI_show_wave(Enemy * l){
     }
 
     // affichage de la vue
-    printf("\e[1;1H\e[2J");
     for(i = 1; i <= MAX_LINE; i++){
         printf("%d|", i);
         for(j = 1; j <= MAX_LINE_LENGTH; j++){
-            printf(" %4s", view[i][j]);
+            if(*view[i][j] == '('){
+                printf(BORED" %2s"RESET, &view[i][j][1]);
+            }else{
+                printf(" %2s", view[i][j]);
+            }
         }
         printf("\n");
     }
@@ -144,15 +153,36 @@ void CLI_show_wave(Enemy * l){
 
 }
 
-DListe * CLI_menu_entities_types(DListe entity_types){
-
+void CLI_menu_entities_types(DListe entity_types){
     DListe t_tmp = entity_types;
     while(t_tmp){
         printf("%c : %s\n",(char) ((Entity_type *) t_tmp->element)->id, ((Entity_type *) t_tmp->element)->name);
         t_tmp = t_tmp->suivant;
     }
     printf("Your choice ? : ");
-    return NULL;
+}
+
+DListe CLI_scan_choice_entity_types_menu(DListe * entity_types){
+    char choice[2] = {0};
+    DListe tmp = NULL;
+    do{
+        tmp = *entity_types;
+
+        CLI_menu_entities_types(*entity_types);
+        if(scanf(" %1s", choice) == 1){
+            while(tmp){
+                if((int) *choice == ((Entity_type *) tmp->element)->id)
+                    break;
+                tmp = tmp->suivant;
+            }
+        }
+        if(!tmp){
+            CLI_clear_screen();
+            printf(BORED "Wrong choice, try again.\n" RESET);
+        }
+
+    }while(!tmp);
+    return &(*tmp);
 }
 
 void CLI_display_game(Game game){
@@ -183,11 +213,16 @@ void CLI_display_game(Game game){
     }
 
     // affichage de la vue
-    printf("\e[1;1H\e[2J");
     for(i = 1; i <= MAX_LINE; i++){
         printf("%d|", i);
         for(j = 1; j <= MAX_LINE_LENGTH; j++){
-            printf(" %4s", view[i][j]);
+            if(*view[i][j] == '['){
+                printf(BOGREEN" %2s"RESET, &view[i][j][1]);
+            }else if(*view[i][j] == '('){
+                printf(BORED" %2s"RESET, &view[i][j][1]);
+            }else{
+                printf(" %2s", view[i][j]);
+            }
         }
         printf("\n");
     }
@@ -201,4 +236,17 @@ void CLI_display_game(Game game){
         }
     }
     //printf("\e[1;1H\e[2J");
+}
+
+void CLI_display_title(){
+    printf(""
+           GREEN
+           "\n ██████╗██╗  ██╗██╗██████╗ ███████╗    ██╗   ██╗███████╗    ██╗   ██╗██╗██████╗ ██╗   ██╗███████╗"
+           "\n██╔════╝██║  ██║██║██╔══██╗██╔════╝    ██║   ██║██╔════╝    ██║   ██║██║██╔══██╗██║   ██║██╔════╝"
+           "\n██║     ███████║██║██████╔╝███████╗    ██║   ██║███████╗    ██║   ██║██║██████╔╝██║   ██║███████╗"
+           "\n██║     ██╔══██║██║██╔═══╝ ╚════██║    ╚██╗ ██╔╝╚════██║    ╚██╗ ██╔╝██║██╔══██╗██║   ██║╚════██║"
+           "\n╚██████╗██║  ██║██║██║     ███████║     ╚████╔╝ ███████║     ╚████╔╝ ██║██║  ██║╚██████╔╝███████║"
+           "\n ╚═════╝╚═╝  ╚═╝╚═╝╚═╝     ╚══════╝      ╚═══╝  ╚══════╝      ╚═══╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝"
+           RESET
+           );
 }

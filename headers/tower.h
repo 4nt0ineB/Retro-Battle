@@ -86,4 +86,12 @@ int tower_set_position(Tower * tower, int line, int position);
  * @return
  */
 char * tower_toString(Tower tower);
+
+/**
+ * Libère une structure de tourelles
+ * (next)
+ * @param towers
+ */
+void tower_free_all(Tower ** towers);
+
 #endif //L2_PROJET_C_TOWER_H

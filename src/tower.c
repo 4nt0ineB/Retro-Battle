@@ -95,6 +95,17 @@ int tower_set_position(Tower * tower, int line, int position){
 char * tower_toString(Tower tower){
     //    printf("{Life:%d,Type:%c,Line:%d,Position:%d}\n", tower.life, (char) tower.type, tower.line, tower.position);
     char * str = (char *) malloc(20 * sizeof(char));
-    sprintf(str, "[%d%c]", tower.life, (char) tower.type);
+    sprintf(str, "[%d%c", tower.life, (char) tower.type);
     return str;
+}
+
+void tower_free_all(Tower ** towers){
+    Tower *tmp = (*towers);
+    Tower *tmp2;
+    while (tmp) {
+        tmp2 = tmp->next;
+        free(tmp);
+        tmp = tmp2;
+    }
+    *towers = NULL;
 }
