@@ -113,7 +113,7 @@ int init_enemies(Enemy * enemy, DListe enemy_types);
 Enemy * enemy_find_first_type(Enemy * enemy, int e_type);
 
 /**
- * Retourne l'adresse de l'ennemi pour pour coordonnées
+ * Retourne l'adresse de l'ennemi pour des coordonnées
  * données, s'il existe
  * @param enemy
  * @param line

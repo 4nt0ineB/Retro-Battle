@@ -12,130 +12,80 @@
 
 
 int main() {
-   /* // test enemy //
-    Enemy * waiting_enemies = NULL;
-    Enemy * e_2 = alloue_enemy(65, 4, 2, MAX_LINE_LENGTH, 1, 1);
-    Enemy * e_3 = alloue_enemy(66, 4, 2, MAX_LINE_LENGTH-1, 1, 1);
-    Enemy * e_4 = alloue_enemy(67, 4, 1, MAX_LINE_LENGTH-2, 1, 1);
-    enemy_add(&waiting_enemies, e_2);
-    enemy_add(&waiting_enemies, e_3);
-    enemy_add(&waiting_enemies, e_4); // pas ajouté, car par la même ligne
-    printf("Ligne %d: ", waiting_enemies->line);
-    CLI_debug_display_line(waiting_enemies);
-    // free
-    enemy_free_all(&waiting_enemies);*/
 
-    // test DListe
-    printf("\n[#########] ---------- Test implémentation DListe ---------- [#########]\n");
-    int * x = (int *) malloc(sizeof(int));
-    *x = 4;
-    DListe l = alloue_DCellule(x);
-    int w = *(int*) l->element;
-    printf("\n\nHello, World adresse : %d!\n", w);
-    printf("%s", effect_type_toString(0));
-    DListe_delete(&l);
 
     // test fichier niveau //
-    printf("\n[#########] ---------- Test lectures d'un niveau ---------- [#########]\n");
+    printf("\n[#########] ---------- Lectures d'un niveau ---------- [#########]\n");
     int money = 0;
     char * nom_fichier = "./data/level1";
     Enemy * waiting_enemies = lire_fichier_niveau(nom_fichier, &money);
-    CLI_debug_display_next(waiting_enemies);
 
-    printf("\n");
-    CLI_display_full_enemy(*waiting_enemies);printf("\n");
-    printf("\n");
-
-    printf("\n[#########] ---------- Test configuration des ennemis ---------- [#########]\n");
+    printf("\n[#########] ---------- Configuration des ennemis ---------- [#########]\n");
     // test lecture type enemy //
     nom_fichier = "./data/enemy_types";
-    printf("\n-------------------- Test lecture fichier types ennemis: \n");
+    printf("\n lecture fichier types ennemis \n");
     DListe types = lire_fichier_types(nom_fichier);
-    DListe tmp = types;
-    while(tmp){
-        printf("%c, ",(char) ((Entity_type *) tmp->element)->id);
-        tmp = tmp->suivant;
-    }
 
     // association des effets aux types
     nom_fichier = "./data/effects_by_enemy_types";
     lire_fichier_effets(nom_fichier, types);
-    printf("\nAffichage du premier type d'ennemis:\n");
-    CLI_entity_type_display_full(* ((Entity_type *) (*types).element), ENEMY);
 
     // association des caractéristiques des ennemis par type //
+    printf("\n initialisation des ennemis d'après leur type\n");
     init_enemies(waiting_enemies, types);
-    printf("\nCaractéristiques du premier ennemis remplies:\n");
-    CLI_display_full_enemy(*waiting_enemies);
-    printf("\nAffichage de la liste d'apparition initialisée:\n");
-    CLI_debug_display_next(waiting_enemies);
-    printf("\n");
 
-    // verification implémentation //
-    printf("\n-------------------- Effectivité de l'implémentation:\n");
-    printf("Ligne 1 premier element: \n");
-    CLI_debug_display_line(waiting_enemies);
-    printf("\nLigne 1 deuxième element: \n");
-    CLI_debug_display_line(waiting_enemies->next);
-
-    // suppression //
-    /*printf("\n-------------------- Test de suppression\n");
-    printf("On souhaite extraire le premier élément de tout le chainage:\n");
-    Enemy * extr = enemy_extract(&waiting_enemies, waiting_enemies);
-    CLI_debug_display_next(waiting_enemies);
-    printf("\nLigne 1 premier element: \n");
-    CLI_debug_display_line(waiting_enemies);
-    printf("\nL'élément à bien été supprimé\n");*/
-
-
-    printf("\n[#########] ---------- Test configuration des tourelles ---------- [#########]\n");
+    printf("\n[#########] ---------- Configuration des tourelles ---------- [#########]\n");
     // test lecture type tower //
     nom_fichier = "./data/tower_types";
-    printf("\n-------------------- Test lecture fichier types de tourelles: \n");
+    printf("\n Lecture fichier des types de tourelles: \n");
     DListe t_types = lire_fichier_types(nom_fichier);
-    DListe t_tmp = t_types;
-    while(t_tmp){
-        printf("%c=%s, ",(char) ((Entity_type *) t_tmp->element)->id, ((Entity_type *) t_tmp->element)->name);
-        t_tmp = t_tmp->suivant;
-    }
 
     // association des effets aux types
     nom_fichier = "./data/effects_by_tower_types";
+    printf("\n association des effets aux type de tourelles: \n");
     lire_fichier_effets(nom_fichier, t_types);
-    printf("\nAffichage du premier type de tourelle:\n");
-    CLI_entity_type_display_full(* ((Entity_type *) (*t_types).element), TOWER);
 
-    printf("\n[#########] ---------- Test affichage du jeu ---------- [#########]\n");
+    printf("\n[#########] ---------- Lancement du jeu ---------- [#########]\n");
     // Game
     // à déclarer dans play() dans game_master.c
-    Game game = {NULL, money};
-
-    /*printf("\nListe des ennemis du niveau:\n");
-    CLI_debug_display_next(waiting_enemies);
-    printf("\nTentative d'ajout de deux ennemis:\n");
-    // ! Tester avec des valeurs pertinentes !
-    if(!game_add_enemy(&game, &waiting_enemies)){ // va fonctionner
-        printf("\nIl existe déjà une entité à cette endroit.\n");
-    }else{
-        printf("\nL'ennemi à été ajouté\n");
-    }
-    if(!game_add_enemy(&game, &waiting_enemies)){
-        printf("\nIl existe déjà une entité à cette endroit.\n");
-    }else{
-        printf("\nL'ennemi à été ajouté\n");
-    }*/
+    Game game = {NULL, NULL, money};
+    printf("AJOUT TOURELLE: \n");
+    Tower * towers = NULL;
+    Tower * t1 = alloue_tower('X', 0, 2, 1, 0);
+    tower_add(&towers,t1);
+    game_add_entity(&game, &towers, TOWER);
+    gm_add_entities(&game, &towers, TOWER, 0);
 
     // affichage du jeu
     char choice = '.';
     int turn = 1; /*  @todo créer une classe game_state pour le tour, les points, les stats, etc...  */
+
+    LEVEL_MENU_ACTION act = 0;
+    while((act = CLI_scan_choice_level_menu())!= START_LEVEL){
+        switch (act) {
+            case SHOW_WAVE:
+                CLI_show_wave(waiting_enemies);
+                break;
+            case BUILD_DEFENSE:
+                break;
+            case ENEMIES_INFO:
+                CLI_menu_entities_types(types);
+                break;
+            case TOWERS_INFO:
+                break;
+            default:
+                continue;
+        }
+        act = 0;
+    }
+
     while((1)){
         CLI_display_game(game);
-        CLI_display_tower_menu(t_types);
-        CLI_display_menu();
+        CLI_menu_entities_types(t_types);
         scanf(" %c", &choice);
         if(choice == 'n') {
             gm_move_all(&game);
-            gm_add_entities(&game, &waiting_enemies, turn);
+            gm_add_entities(&game, &waiting_enemies, ENEMY, turn);
             turn += 1;
         }else if(choice == 'q'){
             break;
@@ -148,7 +98,6 @@ int main() {
     enemy_free_all(&game.enemies);
     entity_type_dliste_free(&types);
     entity_type_dliste_free(&t_types);
-    DListe_delete(&l);
     //free(extr);
     printf("\n");
     return 0;

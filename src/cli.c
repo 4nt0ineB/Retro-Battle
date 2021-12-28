@@ -83,21 +83,76 @@ void CLI_display_help(){
 
 }
 
-void CLI_display_menu(){
-    printf("MENU"
-           "\n] Next turn (n)\n");
-    printf("\nChoice ? :");
+void CLI_display_level_menu(){
+    printf("____ MENU _________________________"
+           "\n| 1) See enemies incoming wave"
+           "\n| 2) Prepare defense"
+           "\n| 3) Enemies info"
+           "\n| 4) Towers info"
+           "\n| 5) Start"
+    );
+    printf("\nChoice ? : ");
 }
 
-void CLI_display_tower_menu(DListe entity_types_list){
-    printf("Which tower do you want to deploy ?\n");
-    DListe t_tmp = entity_types_list;
+LEVEL_MENU_ACTION CLI_scan_choice_level_menu(){
+    int choice = 0;
+    CLI_display_level_menu();
+    while((scanf(" %d", &choice) != 1)  || choice < SHOW_WAVE || choice > START_LEVEL){
+        printf("Wrong choice, try again.\n");
+        CLI_display_level_menu();
+    }
+    return choice;
+}
+
+void CLI_show_wave(Enemy * l){
+    char * view[MAX_LINE+1][MAX_LINE_LENGTH+1] = {0};
+    int i, j;
+    // initialisation de la vue
+    for(i = 1; i <= MAX_LINE; i++){
+        for(j = 1; j <= MAX_LINE_LENGTH; j++){
+            view[i][j] = (char *) malloc(10 * sizeof(char));
+            strcpy(view[i][j], ".");
+        }
+    }
+
+    // Ajout des ennemis
+    Enemy * e_tmp = l;
+    while(e_tmp){
+        free(view[e_tmp->line][((MAX_LINE_LENGTH+1) - e_tmp->turn)]);
+        view[e_tmp->line][((MAX_LINE_LENGTH+1) - e_tmp->turn)] = enemy_toString(*e_tmp);
+        e_tmp = e_tmp->next;
+    }
+
+    // affichage de la vue
+    printf("\e[1;1H\e[2J");
+    for(i = 1; i <= MAX_LINE; i++){
+        printf("%d|", i);
+        for(j = 1; j <= MAX_LINE_LENGTH; j++){
+            printf(" %4s", view[i][j]);
+        }
+        printf("\n");
+    }
+
+    // free
+    for(i = 1; i <= MAX_LINE; i++){
+        for(j = 1; j <= MAX_LINE_LENGTH; j++){
+            if(view[i][j]){
+                free(view[i][j]);
+            }
+        }
+    }
+
+}
+
+DListe * CLI_menu_entities_types(DListe entity_types){
+
+    DListe t_tmp = entity_types;
     while(t_tmp){
         printf("%c : %s\n",(char) ((Entity_type *) t_tmp->element)->id, ((Entity_type *) t_tmp->element)->name);
         t_tmp = t_tmp->suivant;
     }
-    printf("\ns : start\n");
     printf("Your choice ? : ");
+    return NULL;
 }
 
 void CLI_display_game(Game game){
@@ -111,14 +166,14 @@ void CLI_display_game(Game game){
         }
     }
     // Ajout des tourelles
-    /*
+
     Tower * t_tmp = game.towers;
-    while(e_tmp){
-        free(view[t_tmp->line][e_tmp->position]);
-        view[t_tmp->line][e_tmp->position] = tower_toString(*t_tmp);
+    while(t_tmp){
+        free(view[t_tmp->line][t_tmp->position]);
+        view[t_tmp->line][t_tmp->position] = tower_toString(*t_tmp);
         t_tmp = t_tmp->next;
     }
-     */
+
     // Ajout des ennemis
     Enemy * e_tmp = game.enemies;
     while(e_tmp){
@@ -132,7 +187,7 @@ void CLI_display_game(Game game){
     for(i = 1; i <= MAX_LINE; i++){
         printf("%d|", i);
         for(j = 1; j <= MAX_LINE_LENGTH; j++){
-            printf(" %2s", view[i][j]);
+            printf(" %4s", view[i][j]);
         }
         printf("\n");
     }

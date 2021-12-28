@@ -180,7 +180,7 @@ void enemy_free_all(Enemy ** enemy) {
 char * enemy_toString(Enemy enemy){
     //printf("{Life:%d,Type:%c,Line:%d}", enemy.life, (char) enemy.type, enemy.line);
     char * str = (char *) malloc(20 * sizeof(char));
-    sprintf(str, "%d%c", enemy.life, (char) enemy.type);
+    sprintf(str, "(%d%c)", enemy.life, (char) enemy.type);
     return str;
 }
 

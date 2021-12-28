@@ -11,6 +11,17 @@
 #include "settings.h"
 #include <string.h>
 
+//** actions des menus
+typedef enum {
+    SHOW_WAVE = 1,
+    BUILD_DEFENSE,
+    ENEMIES_INFO,
+    TOWERS_INFO,
+    START_LEVEL
+} LEVEL_MENU_ACTION;
+//**
+
+
 /**
  * A DEPLACER DANS cli.c
  * DEBUG : Affiche les ennemis d'une même ligne
@@ -56,12 +67,14 @@ void CLI_display_help();
 /**
  * Affiche le menu
  */
-void CLI_display_menu();
+void CLI_display_level_menu();
 
-/*
- * Affiche le menu de selection des tourelles
- */
-void CLI_display_tower_menu(DListe entity_types_list);
+LEVEL_MENU_ACTION CLI_scan_choice_level_menu();
+
+void CLI_show_wave(Enemy * l);
+
+DListe * CLI_menu_entities_types(DListe entity_types);
+
 
 
 /**

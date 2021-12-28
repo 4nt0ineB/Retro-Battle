@@ -5,7 +5,7 @@
 #ifndef L2_PROJET_C_GAME_H
 #define L2_PROJET_C_GAME_H
 #include "enemy.h"
-
+#include "tower.h"
 #include <stdlib.h>
 
 /**
@@ -13,7 +13,7 @@
  */
 typedef struct {
     Enemy* enemies; ///< Structure des ennemis en jeu
-    //Tower* towers; ///< structure des tourelles en jeu
+    Tower* towers; ///< Structure des tourelles en jeu
     int money;
 } Game;
 
@@ -37,6 +37,18 @@ int game_add_enemy(Game * game, Enemy ** enemy);
  */
 void * game_get_entity_by_position(Game game, int line, int position, ENTITY * ntt);
 
+int game_add_entity(Game * game, void * entity, ENTITY ntt);
+
+/**
+ *
+ * Change de position une entité, si possible
+ * @param game
+ * @param entity
+ * @param ntt
+ * @param line
+ * @param position
+ * @return 0 si le changement n'a pu être fait
+ */
 int game_move_entity(Game * game, void * entity, ENTITY ntt, int line, int position);
 
 #endif //L2_PROJET_C_GAME_H
