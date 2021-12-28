@@ -14,6 +14,7 @@
 typedef struct {
     Enemy* enemies; ///< Structure des ennemis en jeu
     Tower* towers; ///< Structure des tourelles en jeu
+    int turn;
     int money;
 } Game;
 

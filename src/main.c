@@ -50,7 +50,7 @@ int main() {
     //printf("\n[#########] ---------- Lancement du jeu ---------- [#########]\n");
     // Game
     // à déclarer dans play() dans game_master.c
-    Game game = {NULL, NULL, money};
+    Game game = {NULL, NULL, 1, money};
     // ça râle si on ne crée pas de fenêtre alors qu'on importe libMLV (voir: valgrind ./main
 
 
@@ -62,7 +62,7 @@ int main() {
     gm_add_entities(&game, &towers, TOWER, 0);
 
     // affichage du jeu
-    int turn = 1; /*  @todo créer une classe game_state pour le tour, les points, les stats, etc...  */
+    /*  @todo créer une classe game_state pour le tour, les points, les stats, etc...  */
 
     LEVEL_MENU_ACTION act = 0;
     DListe tmp = NULL;
@@ -97,25 +97,32 @@ int main() {
         CLI_clear_screen();
     }
 
-    clock_t start = clock();
-    long diff = 0;
-    while(turn < MAX_LINE_LENGTH) {
-        diff = mmsecondes_diff_clocks(start, clock());
-        printf("DIFF: %ld", diff);
-        if ( diff % 3000 == 0) {
+    clock_t start = clock() ;
+    double difference_ms = 0;
+    printf("NOMBRE DE TICK D'HORLOGE PAR MILLISECONDE %ld\n", CLOCKS_PER_SEC*1000);
+
+
+    while(game.turn < MAX_LINE_LENGTH) {
+        difference_ms = (double) mmsecondes_diff_clocks(start, clock())*1000/CLOCKS_PER_SEC;
+        printf("NOMBRE DE MILLISECONDES ECOULE %ld\n", (long) difference_ms);
+
+        if ( (long) difference_ms % 100000000 == 0) {
+            difference_ms = 0;
+            //printf("TIME = %ld\n", mmsecondes_diff_clocks(clock(), t2));
+
             CLI_clear_screen();
-            printf("Turn %d\n", turn);
+            printf("Turn %d\n", game.turn);
             CLI_display_game(game);
             printf("\n");
             //CLI_menu_entities_types(t_types);
             gm_move_all(&game);
-            gm_add_entities(&game, &waiting_enemies, ENEMY, turn);
-            turn += 1;
+            gm_add_entities(&game, &waiting_enemies, ENEMY, game.turn);
+            game.turn += 1;
+            start = clock() ;
         }
     }
 
-    printf("NOMBRE DE TICK D'HORLOGE PAR MILLISECONDE %ld\n", CLOCKS_PER_SEC/1000);
-    printf("NOMBRE DE MILLISECONDES ECOULE %ld\n", mmsecondes_diff_clocks(start, clock()));
+    printf("NOMBRE DE MILLISECONDES ECOULE %lf\n", (double) difference_ms);
     // free //
 
     printf("\n");
