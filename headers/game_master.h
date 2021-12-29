@@ -63,4 +63,9 @@ int gm_entity_play_effects(Game game, void * entity, ENTITY ntt, DListe entity_t
 
 Enemy * gm_remove_dead_enemies(Game * game);
 
+int gm_ennemis_won(Game game);
+
+int gm_player_won(Game game);
+
+int gm_is_game_over(Game game);
 #endif //L2_PROJET_C_GAME_MASTER_H

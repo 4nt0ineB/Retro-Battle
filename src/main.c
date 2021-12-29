@@ -58,20 +58,12 @@ int main() {
 
     // affichage du jeu
     /*  @todo créer une classe game_state pour le tour, les points, les stats, etc...  */
-   /* printf("\n");
-    game_add_entity(&game, &waiting_enemies, ENEMY);
-    printf("----- SEPARE\n");
-    printf("BOP %p\n", waiting_enemies);
-    CLI_display_enemy(*waiting_enemies);
-    printf("\n");
-    game_add_entity(&game, &waiting_enemies, ENEMY);
-    game.enemies->next->life = 0;
-    gm_remove_dead_enemies(&game);*/
 
     LEVEL_MENU_ACTION act = 0;
     DListe tmp = NULL;
     char tmp2[2] = {0};
     //CLI_display_title();printf("\n");
+    CLI_clear_screen();
     while((act = CLI_scan_choice_level_menu())!= START_LEVEL){
         CLI_clear_screen();
         switch (act) {
@@ -94,18 +86,17 @@ int main() {
                 break;
         }
         act = 0;
-        printf("\nContinue (y): ");
+        printf("\n\nContinue (y): ");
         tmp2[0] = 0;
         while(scanf(" %1s", tmp2) != 1 || *tmp2 != 'y');
         printf("\n");
         CLI_clear_screen();
     }
 
-
-    // d'après https://man7.org/linux/man-pages/man2/clock_gettime.2.html
+    // jouer le niveau
     clock_t t_1 = clock();
     clock_t t_2;
-
+    Enemy * dead_e = NULL;
     while(game.turn < MAX_LINE_LENGTH) {
             // Si on se renseigne sur time.h (par ex: https://fr.wikipedia.org/wiki/Time.h
             // on apprend l'existence de clock_t CLOCKS_PER_SEC (nombre de tick d'horloge par seconde).
@@ -116,21 +107,42 @@ int main() {
             // alternative : utiliser POSIX (clock_gettime())
             t_2 = clock();
             if(((unsigned int)(t_2 - t_1) % CLOCKS_PER_SEC) == 0){
+                // retirer les ennemis à court de vies
+                enemy_add(&dead_e,gm_remove_dead_enemies(&game));
+
                 game.turn += 1;
-                CLI_clear_screen();
-                CLI_display_game(game);
-                printf("\n");
-                //CLI_menu_entities_types(t_types);
-                gm_move_all(&game);
-                gm_entity_play_effects(game, game.towers, TOWER, t_types);
+                // ajouter les ennemis du tour courant (mais d'abord ceux ayants un ou des tours de retard)
                 gm_add_entities(&game, &waiting_enemies, ENEMY);
-                gm_remove_dead_enemies(&game);
+                CLI_clear_screen();
+                CLI_display_game(game);printf("\n");
+                // on fait jouer les tourelles
+                gm_entity_play_effects(game, game.towers, TOWER, t_types);
+                // on fait jouer les ennemis
+                // --
+                // déplacement des ennemis
+                gm_move_all(&game);
+                // vérifier si la partie est finie, savoir qui a gagné n'est pas important ici
+                gm_is_game_over(game);
             }
 
     }
 
+    // fin de partie
+    if(gm_ennemis_won(game)){
+        printf("Vous avez perdu !\n");
+    }else if(gm_player_won(game)){
+        printf("Vous avez gagné !\n");
+    }else{
+        printf("Qui à gagné Q_Q ?\n");
+    }
+    // détail de la partie
+    printf("\n[Récapitulatif de la vague]\n"
+           "Nombre d'ennemis tués: %d\n"
+    , enemy_count(dead_e));
+
     // free //
     printf("\n");
+    enemy_free_all(&dead_e);
     enemy_free_all(&waiting_enemies);
     enemy_free_all(&game.enemies);
     tower_free_all(&game.towers);

@@ -151,4 +151,11 @@ void enemy_free_all(Enemy ** enemy);
  */
 char * enemy_toString(Enemy enemy);
 
+/**
+ * Renvoie le nombre d'enemis dans la structure
+ * @param enemy
+ * @return
+ */
+int enemy_count(Enemy * enemy);
+
 #endif //L2_PROJET_C_ENEMY_H

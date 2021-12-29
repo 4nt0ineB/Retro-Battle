@@ -199,3 +199,13 @@ char * enemy_toString(Enemy enemy){
     return str;
 }
 
+int enemy_count(Enemy * enemy){
+    Enemy * tmp = enemy;
+    int count = 0;
+    while(tmp){
+        count += 1;
+        tmp = tmp->next;
+    }
+    return count;
+}
+

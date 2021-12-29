@@ -71,7 +71,8 @@ int gm_entity_play_effect(Game game, void * entity, ENTITY ntt, Effect effect){
         entity_line = ((Tower *) entity)->line;
         entity_pos = ((Tower *) entity)->position;
     }
-    if(effect.front){
+
+    if(effect.front){ /* @todo détailler pourquoi on a une séparation (profondeur du front etc...)*/
         // enemy
         etmp = game.enemies;
         hr = ((Enemy *) entity)->line - effect.h_range;
@@ -83,7 +84,7 @@ int gm_entity_play_effect(Game game, void * entity, ENTITY ntt, Effect effect){
             // on récupère la ligne
             if(!(tmp_line = enemy_get_first_in_line(game.enemies, i)))
                 continue;
-            // on souhaite les "front" premiers enemies de la
+            // on souhaite les "effect.front" premières entités de la ligne de front ennemie
             tmp_pos = tmp_line;
             for(j = 0; j < effect.front; j++){
                 if(tmp_pos->line == entity_line && tmp_pos->position == entity_pos){
@@ -152,6 +153,8 @@ int gm_entity_play_effect(Game game, void * entity, ENTITY ntt, Effect effect){
             etmp = etmp->next;
         }
     }
+    free(towers);
+    free(enemies);
     return 1;
 }
 
@@ -186,8 +189,8 @@ int gm_apply_effect_on_entity(void * entity, ENTITY ntt, Effect effect){
 int gm_entity_play_effects(Game game, void * entity, ENTITY ntt, DListe entity_types){
     DListe type = entity_types;
     DListe effect = NULL;
-
     int id;
+
     if(ntt == TOWER){
         id = ((Tower *) entity)->type;
     }else if(ntt == ENEMY){
@@ -208,7 +211,7 @@ int gm_entity_play_effects(Game game, void * entity, ENTITY ntt, DListe entity_t
 }
 
 Enemy * gm_remove_dead_enemies(Game * game){
-    Enemy ** dead = NULL;
+    Enemy * dead = NULL;
     Enemy * tmp = &(*game->enemies);
     Enemy ** pp = &*&game->enemies;
     Enemy * tmp_next = NULL;
@@ -216,9 +219,32 @@ Enemy * gm_remove_dead_enemies(Game * game){
     while(tmp){
         tmp_next = tmp->next;
         if((*tmp).life <= 0)
-            enemy_extract(pp, &(*tmp));
+            enemy_add(&dead, enemy_extract(pp, &(*tmp)));
         tmp = tmp_next;
     }
-
     return &(*dead);
+}
+
+int gm_ennemis_won(Game game){
+    Enemy * tmp = game.enemies;
+    while(tmp){
+        if(tmp->position == 1)
+            return 1;
+        tmp = tmp->next;
+    }
+    return 0;
+}
+
+int gm_player_won(Game game){
+    if(!game.enemies)
+        return 1;
+    return 0;
+}
+
+int gm_is_game_over(Game game){
+    if(gm_ennemis_won(game)
+        || gm_player_won(game)){
+        return 1;
+    }
+    return 0;
 }

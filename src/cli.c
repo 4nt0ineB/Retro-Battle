@@ -250,3 +250,7 @@ void CLI_display_title(){
            RESET
            );
 }
+
+void CLI_display_entity_type_effects(Entity_type){
+    /* @todo ici /
+}
