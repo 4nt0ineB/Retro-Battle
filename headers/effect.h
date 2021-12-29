@@ -89,4 +89,17 @@ Effect * effect_alloue(
  */
 void effect_display_full(Effect effect);
 
+/**
+ *
+ * @param t_line ligne de la target
+ * @param t_pos  position de la target
+ * @param e_line ligne de l'entité
+ * @param e_pos position de l'entité
+ * @param effect effet de l'entité
+ * @return
+ */
+int effect_entity_in_circle_range(int t_line, int t_pos, int e_line, int e_pos, Effect effect);
+
+int effect_entity_in_range(int t_line, int t_pos, int e_line, int e_pos, Effect effect);
+
 #endif //L2_PROJET_C_EFFECT_H

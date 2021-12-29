@@ -1,17 +1,12 @@
 #include <stdio.h>
-#include <MLV/MLV_all.h>
 #include <time.h>
+#include <MLV/MLV_all.h>
 
 #include "../headers/entity_type.h"
 #include "../headers/enemy.h"
 #include "../headers/cli.h"
-#include "../headers/settings.h"
-#include "../headers/entity_type.h"
-#include "../headers/game.h"
-#include "../headers/effect.h"
-#include "../headers/DListe.h"
 #include "../headers/game_master.h"
-#include "../headers/game-utils.h"
+
 
 int main() {
 
@@ -56,13 +51,15 @@ int main() {
 
     //printf("AJOUT TOURELLE: \n");
     Tower * towers = NULL;
-    Tower * t1 = alloue_tower('X', 0, 2, 1, 0);
+    Tower * t1 = alloue_tower('A', 0, 2, 1, 0);
     tower_add(&towers,t1);
     game_add_entity(&game, &towers, TOWER);
     gm_add_entities(&game, &towers, TOWER, 0);
 
     // affichage du jeu
     /*  @todo créer une classe game_state pour le tour, les points, les stats, etc...  */
+
+
 
     LEVEL_MENU_ACTION act = 0;
     DListe tmp = NULL;
@@ -97,34 +94,33 @@ int main() {
         CLI_clear_screen();
     }
 
-    clock_t start = clock() ;
-    double difference_ms = 0;
-    printf("NOMBRE DE TICK D'HORLOGE PAR MILLISECONDE %ld\n", CLOCKS_PER_SEC*1000);
 
-
+    // d'après https://man7.org/linux/man-pages/man2/clock_gettime.2.html
+    clock_t t_1 = clock();
+    clock_t t_2;
     while(game.turn < MAX_LINE_LENGTH) {
-        difference_ms = (double) mmsecondes_diff_clocks(start, clock())*1000/CLOCKS_PER_SEC;
-        printf("NOMBRE DE MILLISECONDES ECOULE %ld\n", (long) difference_ms);
+            // Si on se renseigne sur time.h (par ex: https://fr.wikipedia.org/wiki/Time.h
+            // on apprend l'existence de clock_t CLOCKS_PER_SEC (nombre de tick d'horloge par seconde).
+            // (ce qu'on préfère, car time_t donné par time(NULL) est trop grand (seconde))
+            // Comme nous souhaitons avoir des millisecondes on multiplie par 1000,
+            // puis par 500 pour la latence souhaitée
+            // Mince, en fait non. Impossible d'obtenir une précision inférieure à la seconde
+            // alternative : utiliser POSIX (clock_gettime())
+            t_2 = clock();
+            if(((unsigned int)(t_2 - t_1) % CLOCKS_PER_SEC) == 0){
+                CLI_clear_screen();
+                CLI_display_game(game);
+                printf("\n");
+                //CLI_menu_entities_types(t_types);
+                gm_move_all(&game);
+                gm_add_entities(&game, &waiting_enemies, ENEMY, game.turn);
+                gm_entity_play_effects(game, game.towers, TOWER, t_types);
+                game.turn += 1;
+            }
 
-        if ( (long) difference_ms % 100000000 == 0) {
-            difference_ms = 0;
-            //printf("TIME = %ld\n", mmsecondes_diff_clocks(clock(), t2));
-
-            CLI_clear_screen();
-            printf("Turn %d\n", game.turn);
-            CLI_display_game(game);
-            printf("\n");
-            //CLI_menu_entities_types(t_types);
-            gm_move_all(&game);
-            gm_add_entities(&game, &waiting_enemies, ENEMY, game.turn);
-            game.turn += 1;
-            start = clock() ;
-        }
     }
 
-    printf("NOMBRE DE MILLISECONDES ECOULE %lf\n", (double) difference_ms);
     // free //
-
     printf("\n");
     enemy_free_all(&waiting_enemies);
     enemy_free_all(&game.enemies);

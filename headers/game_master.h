@@ -10,6 +10,7 @@
 #include "DListe.h"
 #include "enemy.h"
 #include "settings.h"
+#include "effect.h"
 
 /**
  * Déplacement naturelle de l'entité
@@ -38,4 +39,20 @@ int gm_move_all(Game * game);
  */
 int gm_add_entities(Game * game, void * entities, ENTITY ntt, int turn);
 
+/**
+ *
+ * @param entity
+ * @param effect
+ * @param ntt
+ * @return
+ */
+int gm_entity_play_effect(Game game, void * entity, ENTITY ntt, Effect effect);
+/**
+ *
+ * @param entity
+ * @param ntt
+ * @param entity_types
+ * @return
+ */
+int gm_entity_play_effects(Game game, void * entity, ENTITY ntt, DListe entity_types);
 #endif //L2_PROJET_C_GAME_MASTER_H

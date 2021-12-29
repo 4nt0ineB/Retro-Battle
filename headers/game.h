@@ -52,4 +52,6 @@ int game_add_entity(Game * game, void * entity, ENTITY ntt);
  */
 int game_move_entity(Game * game, void * entity, ENTITY ntt, int line, int position);
 
+//################ Fonctions des effets implémentés ################//
+int game_effect_damage(void * entity, ENTITY ntt, Effect effects);
 #endif //L2_PROJET_C_GAME_H

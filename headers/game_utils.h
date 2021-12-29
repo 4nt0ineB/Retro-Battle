@@ -17,4 +17,6 @@
  */
 long mmsecondes_diff_clocks(clock_t t1, clock_t t2);
 
+double diffclock(clock_t clock1,clock_t clock2);
+
 #endif //L2_PROJET_C_GAME_UTILS_H

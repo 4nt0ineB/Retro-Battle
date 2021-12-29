@@ -68,3 +68,9 @@ int game_move_entity(Game * game, void * entity, ENTITY ntt, int line, int posit
     }
     return 1;
 }
+
+
+//** Fonction des effets implémentés **//
+int game_effect_damage(void * entity, ENTITY ntt, Effect effects){
+    return 0;
+}

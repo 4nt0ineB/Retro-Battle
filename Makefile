@@ -1,6 +1,6 @@
 COMP = clang
 FLAG = -Wall -Wfatal-errors -std=c17
-LIB = -lMLV
+LIB = -lMLV -lrt
 OUTPUT = main
 LEVEL_FILE = ./assets/level1.txt
 

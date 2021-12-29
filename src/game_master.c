@@ -31,7 +31,7 @@ int gm_add_entities(Game * game, void * entities, ENTITY ntt, int turn){
         Enemy ** entity_tmp = (Enemy **) entities;
         if(!*entity_tmp) return 0;
         Enemy ** entity_tmp_next = &(*entity_tmp)->next;
-        // on veut tours les ennemis dont le tour d'apparition a été passé
+        // on veut placer les ennemis dont le tour d'apparition a été passé
         // ou dont c'est le tour d'apparition (file d'attente)
         if ((*entity_tmp)->turn > turn || !game_add_entity(game, entity_tmp, ntt))
             // échec d'ajout, on passe au suivant
@@ -49,21 +49,128 @@ int gm_add_entities(Game * game, void * entities, ENTITY ntt, int turn){
     return 1;
 }
 
-/*int gm_add_entities(Game * game, Enemy ** entities, int turn){
-    Enemy ** enemy_tmp = (Enemy **)entities;
-    Enemy ** enemy_tmp_next;
-    while((*enemy_tmp)) {
-        enemy_tmp_next = &(*enemy_tmp)->next;
-        // on veut tours les ennemis dont le tour d'apparition a été passé
-        // ou dont c'est le tour d'apparition
-        // (file d'attente)
-        if ((*enemy_tmp)->turn <= turn && game_add_enemy(game, enemy_tmp)) {
-            // succès d'ajout, l'ennemi courant est l'ancien suivant
-            // on ne fait rien
-        } else {
-            // échec d'ajout, on passe au suivant
-            enemy_tmp = enemy_tmp_next;
+int gm_entity_play_effect(Game game, void * entity, ENTITY ntt, Effect effect){
+    // on récupère les targets
+    if(effect.target != 0 && effect.target != 2) return 0;
+    int pos[MAX_LINE+1][MAX_LINE_LENGTH+1] = {0};
+    DListe towers = NULL;
+    DListe enemies = NULL;
+    DListe cel = NULL;
+    Enemy * etmp = NULL;
+    Tower * ttmp = NULL;
+
+
+    int i, j = 0;
+    int entity_line, entity_pos = 0;
+    int range, zrange = 0;
+    if(effect.front){
+
+    }else{
+        // tourelles
+        ttmp = game.towers;
+        while(ttmp){
+            if(ntt == ENEMY){
+                entity_line = ((Enemy *) entity)->line;
+                entity_pos = ((Enemy *) entity)->position;
+            }else if(ntt == TOWER){
+                entity_line = ((Tower *) entity)->line;
+                entity_pos = ((Tower *) entity)->position;
+            }
+            if(ttmp->line == entity_line && ttmp->position == entity_pos){
+                ttmp = ttmp->next;
+                continue;
+            }
+            zrange = effect_entity_in_circle_range(
+                    ttmp->line, ttmp->position,
+                    entity_line, entity_pos,
+                    effect);
+            range = effect_entity_in_range(
+                    ttmp->line, ttmp->position,
+                    entity_line, entity_pos,
+                    effect);
+            if(!pos[ttmp->line][ttmp->position] && (zrange || range)){
+                cel = alloue_DCellule(&(*ttmp));
+                pos[ttmp->line][ttmp->position] = 1;
+                DListe_ajouter_fin(&towers, cel);
+            }
+            ttmp = ttmp->next;
+        }
+        // ennemis
+        etmp = game.enemies;
+        while(etmp){
+            if(ntt == ENEMY){
+                entity_line = ((Enemy *) entity)->line;
+                entity_pos = ((Enemy *) entity)->position;
+            }else if(ntt == TOWER){
+                entity_line = ((Tower *) entity)->line;
+                entity_pos = ((Tower *) entity)->position;
+            }
+            if(etmp->line == entity_line && etmp->position == entity_pos){
+                etmp = etmp->next;
+                continue;
+            }
+            zrange = effect_entity_in_circle_range(
+                    etmp->line, etmp->position,
+                    entity_line, entity_pos,
+                    effect);
+            range = effect_entity_in_range(
+                    etmp->line, etmp->position,
+                    entity_line, entity_pos,
+                    effect);
+            if(!pos[etmp->line][etmp->position] && (zrange || range)){
+                cel = alloue_DCellule(&(*etmp));
+                pos[etmp->line][etmp->position] = 1;
+                DListe_ajouter_fin(&towers, cel);
+            }
+            etmp = etmp->next;
         }
     }
+
+    DListe m = towers;
+    while(m){
+        //printf("%p->", m->element);
+        m = m->suivant;
+    }
+    //printf("\n");
+
+    switch (effect.type) {
+        case DAMAGE:
+            printf("HELLO !! \n");
+            //game_effect_damage(void * entity, ntt, effects);
+            break;
+        case HEAL:
+            break;
+        case SLOW:
+            break;
+        case SPEED:
+            break;
+        case FREEZE:
+            break;
+        case SWITCHPLACE:
+            break;
+    }
     return 1;
-}*/
+}
+int gm_entity_play_effects(Game game, void * entity, ENTITY ntt, DListe entity_types){
+    DListe type = entity_types;
+    DListe effect = NULL;
+
+    int id;
+    if(ntt == TOWER){
+        id = ((Tower *) entity)->type;
+    }else if(ntt == ENEMY){
+        id = ((Enemy *) entity)->type;
+    }
+    while(type){
+        if(((Entity_type *) type->element)->id == id)
+            break;
+        type = type->suivant;
+    }
+    if(!type) return 0;
+    effect = ((Entity_type *) type->element)->effects;
+    while(effect){
+        gm_entity_play_effect(game, entity, ntt, *(Effect *) effect->element);
+        effect = effect->suivant;
+    }
+    return 1;
+}
