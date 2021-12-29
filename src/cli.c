@@ -55,14 +55,7 @@ void CLI_entity_type_display_full(Entity_type e_type, ENTITY ntt){
         CLI_enemy_type_display(e_type);
     }
     printf("| Effects: ");
-    DListe cel = e_type.effects;
-    while(cel){
-        effect_display_full(*((Effect *) cel->element));
-        if(cel->suivant){
-            printf(", ");
-        }
-        cel = cel->suivant;
-    }
+    CLI_display_entity_type_effects(e_type);
 }
 
 void CLI_display_enemy(Enemy enemy){
@@ -217,11 +210,11 @@ void CLI_display_game(Game game){
         printf("%d|", i);
         for(j = 1; j <= MAX_LINE_LENGTH; j++){
             if(*view[i][j] == '['){
-                printf(BOGREEN" %2s"RESET, &view[i][j][1]);
+                printf(BOGREEN" %3s"RESET, &view[i][j][1]);
             }else if(*view[i][j] == '('){
-                printf(BORED" %2s"RESET, &view[i][j][1]);
+                printf(BORED" %3s"RESET, &view[i][j][1]);
             }else{
-                printf(" %2s", view[i][j]);
+                printf(" %3s", view[i][j]);
             }
         }
         printf("\n");
@@ -251,6 +244,56 @@ void CLI_display_title(){
            );
 }
 
-void CLI_display_entity_type_effects(Entity_type){
-    /* @todo ici /
+
+void CLI_display_effect(Effect effect){
+    printf("\n┌──────────────────────────");
+    char str[300] = "";
+    strcat(str, "\n├ Name: %s");
+    strcat(str, "\n├ Target: %s");
+    if(effect.set){
+        strcat(str, "\n├ Set: %d");
+    }else{
+        strcat(str, "\n├ Increment: %d");
+    }
+
+    if(effect.front){
+        strcat(str, "\n├ Target front depth: %d.");
+        printf(str
+                , effect_type_toString(effect.type)
+                , (effect.target == 0 ? "Enemies": effect.target == 1 ? "Towers": "Enemies & Towers")
+                , (effect.set ? effect.set: effect.increment)
+                , effect.front
+        );
+        printf("\n│");
+        if(effect.b_range >= 1){
+            printf(" %d line%s above %s", effect.b_range, (effect.b_range > 1 ? "s" : ""), (effect.b_range >= 1 ? "and": ""));
+        }
+        if(effect.b_range >= 1){
+            printf(" %d line%s below.", effect.b_range, (effect.b_range > 1 ? "s" : ""));
+        }
+    }else{
+        strcat(str, "\n├ Range: %d");
+        strcat(str, "\n├ Left range: %d");
+        strcat(str, "\n├ Right range: %d");
+        strcat(str, "\n├ Range above: %d");
+        strcat(str, "\n└ Range below: %d");
+
+        printf(str
+                , effect_type_toString(effect.type)
+                , (effect.target == 0 ? "Enemies": effect.target == 1 ? "Towers": "Enemies & Towers")
+                , (effect.set ? effect.set: effect.increment)
+                , effect.range
+                , effect.l_range, effect.r_range, effect.h_range, effect.b_range
+        );
+    }
+    printf("\n└─────────────────────────");
+}
+
+void CLI_display_entity_type_effects(Entity_type ntt_type){
+    DListe l = ntt_type.effects;
+    while(l){
+        CLI_display_effect(*((Effect *) l->element));
+        printf("\n");
+        l = l->suivant;
+    }
 }

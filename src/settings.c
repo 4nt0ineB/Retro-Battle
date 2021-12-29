@@ -70,6 +70,9 @@ Enemy * lire_fichier_niveau(char * nom_fichier, int * money){
 }
 
 DListe lire_fichier_types(char * nom_fichier){
+    /*
+     * @todo limite la vie à 99 et restreindre les champs en général (ex: pas de speed négative)
+     */
     DListe types = NULL;
     DListe cel;
     Entity_type * enemy_type = NULL;
@@ -83,7 +86,8 @@ DListe lire_fichier_types(char * nom_fichier){
         return NULL;
     // lecture des types
     while(fscanf(fichier, "%25s %c %d %d", name, &type_id, &v1, &v2) == 4){
-        // allocation d'un nouveau nom sur le tas
+         // allocation d'un nouveau nom sur le tas
+         alloc_name = NULL;
          alloc_name = (char *) malloc(26 * sizeof(char));
          strcpy(alloc_name, name);
          DListe e_types_tmp = types;
@@ -110,7 +114,7 @@ DListe lire_fichier_types(char * nom_fichier){
              }
              e_types_tmp = e_types_tmp->suivant;
          }
-         //
+         //            printf("YOLO\n");
          if((enemy_type = entity_type_alloue(alloc_name, type_id, v1, v2))){
              cel = alloue_DCellule(enemy_type);
              if(!cel){
@@ -132,6 +136,9 @@ DListe lire_fichier_types(char * nom_fichier){
 }
 
 int lire_fichier_effets(char * nom_fichier, DListe types){
+    /*
+     * @todo restreindre les champs
+     */
     if(!types) return 0;
     FILE * fichier = NULL;
     Effect * effect = NULL;
@@ -171,6 +178,9 @@ int lire_fichier_effets(char * nom_fichier, DListe types){
         while(l && ((Entity_type *) l->element)->id != e_type){
             l = l->suivant;
         }
+        /*if(l)
+            CLI_display_entity_type_effects(*((Entity_type *) l->element));
+        printf("\n");*/
         if(!l){
             fprintf(stderr,"Le type %c n'a pas été définit.", e_type);
             free(effect);

@@ -94,4 +94,6 @@ char * tower_toString(Tower tower);
  */
 void tower_free_all(Tower ** towers);
 
+int tower_count(Tower * towers);
+
 #endif //L2_PROJET_C_TOWER_H

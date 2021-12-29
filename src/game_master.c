@@ -6,9 +6,19 @@
 
 
 int gm_move(Game * game, void * entity, ENTITY ntt){
+    int line = 0, speed = 0, pos = 0;
+    int orig_pos = ((Enemy *)entity)->position;
     if(ntt == ENEMY){
         // déplacement de "speed" case vers la gauche pour l'ennemi
-        return game_move_entity(game, entity, ntt, ((Enemy *)entity)->line, ((Enemy *)entity)->position - ((Enemy *)entity)->speed);
+        line = ((Enemy *)entity)->line;
+        speed = ((Enemy *)entity)->speed;
+        if(!speed) return 0;
+        pos = ((Enemy *)entity)->position;
+        // on cherche une position possible
+        while(pos == orig_pos || (game_move_entity(game, entity, ntt, line, pos) && (pos != (orig_pos - speed)))){
+            pos -= 1;
+        }
+        return 1;
     }
     return 0;
 }
@@ -17,8 +27,6 @@ int gm_move_all(Game * game){
     // mettre à jour la position des ennemis
     Enemy * tmp = game->enemies;
     ENTITY ntt = ENEMY;
-   // CLI_display_full_enemy(*tmp);
-
     while(tmp){
         gm_move(game, tmp, ntt);
         tmp = tmp->next;
@@ -50,8 +58,9 @@ int gm_add_entities(Game * game, void * entities, ENTITY ntt){
 }
 
 int gm_entity_play_effect(Game game, void * entity, ENTITY ntt, Effect effect){
+
     // on récupère les targets
-    if(effect.target != 0 && effect.target != 2) return 0;
+    if(effect.target < 0 || effect.target > 2) return 0;
     int pos[MAX_LINE+1][MAX_LINE_LENGTH+1] = {0};
     DListe towers = NULL;
     DListe enemies = NULL;
@@ -64,13 +73,16 @@ int gm_entity_play_effect(Game game, void * entity, ENTITY ntt, Effect effect){
     int entity_line, entity_pos = 0;
     int range, zrange = 0;
     int hr,br = 0;
+
     if(ntt == ENEMY){
         entity_line = ((Enemy *) entity)->line;
         entity_pos = ((Enemy *) entity)->position;
     }else if(ntt == TOWER){
+        return 0;
         entity_line = ((Tower *) entity)->line;
         entity_pos = ((Tower *) entity)->position;
     }
+
 
     if(effect.front){ /* @todo détailler pourquoi on a une séparation (profondeur du front etc...)*/
         // enemy
@@ -98,24 +110,16 @@ int gm_entity_play_effect(Game game, void * entity, ENTITY ntt, Effect effect){
                 }
             }
         }
-
-        DListe m = enemies;
-        while(m){
-            //printf("%p->", m->element);
-            m = m->suivant;
-        }
-        //printf("\n");
-        gm_apply_effect_on_entities(enemies, ntt, effect);
-
     }else{
         // tourelles
         ttmp = game.towers;
+
         while(ttmp){
             if(ttmp->line == entity_line && ttmp->position == entity_pos){
                 ttmp = ttmp->next;
                 continue;
             }
-            zrange = effect_entity_in_circle_range(
+            zrange = effect_entity_in_circular_range(
                     ttmp->line, ttmp->position,
                     entity_line, entity_pos,
                     effect);
@@ -131,13 +135,13 @@ int gm_entity_play_effect(Game game, void * entity, ENTITY ntt, Effect effect){
             ttmp = ttmp->next;
         }
         // ennemis
-        etmp = game.enemies;
+        /*etmp = game.enemies;
         while(etmp){
             if(etmp->line == entity_line && etmp->position == entity_pos){
                 etmp = etmp->next;
                 continue;
             }
-            zrange = effect_entity_in_circle_range(
+            zrange = effect_entity_in_circular_range(
                     etmp->line, etmp->position,
                     entity_line, entity_pos,
                     effect);
@@ -151,8 +155,17 @@ int gm_entity_play_effect(Game game, void * entity, ENTITY ntt, Effect effect){
                 DListe_ajouter_fin(&enemies, cel);
             }
             etmp = etmp->next;
-        }
+        }*/
     }
+    /*DListe m = towers;
+    while(m){
+        printf("%p->", m->element);
+        m = m->suivant;
+    }*/
+    printf("\n");
+    gm_apply_effect_on_entities(enemies, ntt, effect);
+    gm_apply_effect_on_entities(towers, ntt, effect);
+
     free(towers);
     free(enemies);
     return 1;
@@ -210,6 +223,24 @@ int gm_entity_play_effects(Game game, void * entity, ENTITY ntt, DListe entity_t
     return 1;
 }
 
+int gm_entities_play_effects(Game game, void * entity, ENTITY ntt, DListe entity_types){
+    void * tmp = entity;
+    while(tmp){
+        gm_entity_play_effects(game, tmp, ntt, entity_types);
+        switch (ntt) {
+            case TOWER:
+                tmp = ((Tower *) tmp)->next;
+                break;
+            case ENEMY:
+                tmp = ((Enemy *) tmp)->next;
+                break;
+            default:
+                return 0;
+        }
+    }
+    return 1;
+}
+
 Enemy * gm_remove_dead_enemies(Game * game){
     Enemy * dead = NULL;
     Enemy * tmp = &(*game->enemies);
@@ -220,6 +251,20 @@ Enemy * gm_remove_dead_enemies(Game * game){
         tmp_next = tmp->next;
         if((*tmp).life <= 0)
             enemy_add(&dead, enemy_extract(pp, &(*tmp)));
+        tmp = tmp_next;
+    }
+    return &(*dead);
+}
+Tower * gm_remove_dead_towers(Game * game){
+    Tower * dead = NULL;
+    Tower * tmp = &(*game->towers);
+    Tower ** pp = &*&game->towers;
+    Tower * tmp_next = NULL;
+    //printf("Adresse ennemis fonction: %p\n", &(game->enemies));
+    while(tmp){
+        tmp_next = tmp->next;
+        if((*tmp).life <= 0)
+            tower_add(&dead, tower_extract(pp, &(*tmp)));
         tmp = tmp_next;
     }
     return &(*dead);

@@ -98,7 +98,7 @@ void effect_display_full(Effect effect);
  * @param effect effet de l'entité
  * @return
  */
-int effect_entity_in_circle_range(int t_line, int t_pos, int e_line, int e_pos, Effect effect);
+int effect_entity_in_circular_range(int t_line, int t_pos, int e_line, int e_pos, Effect effect);
 
 int effect_entity_in_range(int t_line, int t_pos, int e_line, int e_pos, Effect effect);
 

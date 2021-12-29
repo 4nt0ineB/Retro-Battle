@@ -1,3 +1,4 @@
-DENIED-SERVICE D 3 1
-ERROR E 1 1
-SEGFAULT S 1 1
+DENIED-SERVICE D 27 2
+ERROR E 99 1
+
+# Enemy name | Label | Life | Speed

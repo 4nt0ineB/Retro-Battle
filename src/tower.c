@@ -109,3 +109,13 @@ void tower_free_all(Tower ** towers){
     }
     *towers = NULL;
 }
+
+int tower_count(Tower * towers){
+    Tower * tmp = towers;
+    int count = 0;
+    while(tmp){
+        count += 1;
+        tmp = tmp->next;
+    }
+    return count;
+}

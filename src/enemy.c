@@ -165,7 +165,7 @@ int init_enemies(Enemy * enemy_list, DListe enemy_types){
 
     while(tmp){
         e_type_tmp = enemy_types;
-        while(e_type_tmp && ((Entity_type *) e_type_tmp->element)->id == tmp->type){
+        while(e_type_tmp && ((Entity_type *) e_type_tmp->element)->id != tmp->type){
             e_type_tmp = e_type_tmp->suivant;
         }
         if(!e_type_tmp){

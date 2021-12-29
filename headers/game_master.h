@@ -61,7 +61,11 @@ int gm_apply_effect_on_entity(void * entity, ENTITY ntt, Effect effect);
  */
 int gm_entity_play_effects(Game game, void * entity, ENTITY ntt, DListe entity_types);
 
+int gm_entities_play_effects(Game game, void * entity, ENTITY ntt, DListe entity_types);
+
 Enemy * gm_remove_dead_enemies(Game * game);
+
+Tower * gm_remove_dead_towers(Game * game);
 
 int gm_ennemis_won(Game game);
 

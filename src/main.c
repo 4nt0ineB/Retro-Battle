@@ -30,7 +30,6 @@ int main() {
     // association des caractéristiques des ennemis par type //
     //printf("\n initialisation des ennemis d'après leur type\n");
     init_enemies(waiting_enemies, types);
-
     //printf("\n[#########] ---------- Configuration des tourelles ---------- [#########]\n");
     // test lecture type tower //
     nom_fichier = "./data/tower_types";
@@ -51,7 +50,7 @@ int main() {
 
     //printf("AJOUT TOURELLE: \n");
     Tower * towers = NULL;
-    Tower * t1 = alloue_tower('A', 0, 2, 1, 0);
+    Tower * t1 = alloue_tower('A', 1, 2, 1, 0);
     tower_add(&towers,t1);
     game_add_entity(&game, &towers, TOWER);
     gm_add_entities(&game, &towers, TOWER);
@@ -97,32 +96,38 @@ int main() {
     clock_t t_1 = clock();
     clock_t t_2;
     Enemy * dead_e = NULL;
-    while(game.turn < MAX_LINE_LENGTH) {
+    Tower * dead_t = NULL;
+    while(game.turn < MAX_LINE_LENGTH) { // check nombre de tour ici devient caduque maintenant
             // Si on se renseigne sur time.h (par ex: https://fr.wikipedia.org/wiki/Time.h
             // on apprend l'existence de clock_t CLOCKS_PER_SEC (nombre de tick d'horloge par seconde).
             // (ce qu'on préfère, car time_t donné par time(NULL) est trop grand (seconde))
             // Comme nous souhaitons avoir des millisecondes on multiplie par 1000,
             // puis par 500 pour la latence souhaitée
             // Mince, en fait non. Impossible d'obtenir une précision inférieure à la seconde
+            // de plus cela va dépendre de la capacité de la machine à traiter le processus en cours (le jeu)
             // alternative : utiliser POSIX (clock_gettime())
             t_2 = clock();
             if(((unsigned int)(t_2 - t_1) % CLOCKS_PER_SEC) == 0){
                 // retirer les ennemis à court de vies
                 enemy_add(&dead_e,gm_remove_dead_enemies(&game));
+                tower_add(&dead_t,gm_remove_dead_towers(&game));
+                // vérifier si la partie est finie, savoir qui a gagné n'est pas important ici
 
+                //
                 game.turn += 1;
                 // ajouter les ennemis du tour courant (mais d'abord ceux ayants un ou des tours de retard)
                 gm_add_entities(&game, &waiting_enemies, ENEMY);
                 CLI_clear_screen();
                 CLI_display_game(game);printf("\n");
                 // on fait jouer les tourelles
-                gm_entity_play_effects(game, game.towers, TOWER, t_types);
+                //gm_entities_play_effects(game, game.towers, TOWER, t_types);
                 // on fait jouer les ennemis
-                // --
+                gm_entities_play_effects(game, game.enemies, ENEMY, types);
+                if(gm_is_game_over(game))
+                    break;
                 // déplacement des ennemis
                 gm_move_all(&game);
-                // vérifier si la partie est finie, savoir qui a gagné n'est pas important ici
-                gm_is_game_over(game);
+
             }
 
     }
@@ -138,11 +143,13 @@ int main() {
     // détail de la partie
     printf("\n[Récapitulatif de la vague]\n"
            "Nombre d'ennemis tués: %d\n"
-    , enemy_count(dead_e));
+           "Nombre de tourelles détruites: %d\n"
+    , enemy_count(dead_e), tower_count(dead_t));
 
     // free //
     printf("\n");
     enemy_free_all(&dead_e);
+    tower_free_all(&dead_t);
     enemy_free_all(&waiting_enemies);
     enemy_free_all(&game.enemies);
     tower_free_all(&game.towers);

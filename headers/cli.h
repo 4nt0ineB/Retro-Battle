@@ -106,6 +106,7 @@ void CLI_display_game(Game game);
  */
 void CLI_display_title();
 
+void CLI_display_effect(Effect effect);
 
 void CLI_display_entity_type_effects(Entity_type);
 

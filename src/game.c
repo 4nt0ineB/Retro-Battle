@@ -55,6 +55,8 @@ int game_add_entity(Game * game, void * entity, ENTITY ntt){
 }
 
 int game_move_entity(Game * game, void * entity, ENTITY ntt, int line, int position){
+    if(line <= 0 || position <= 0 || line > MAX_LINE || position > MAX_LINE_LENGTH)
+        return 0;
     if(game_get_entity_by_position(*game, line, position,&ntt))
         return 0;
     switch(ntt){
