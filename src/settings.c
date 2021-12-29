@@ -132,7 +132,6 @@ DListe lire_fichier_types(char * nom_fichier){
 }
 
 int lire_fichier_effets(char * nom_fichier, DListe types){
-    printf("-----\n");
     if(!types) return 0;
     FILE * fichier = NULL;
     Effect * effect = NULL;
@@ -178,8 +177,6 @@ int lire_fichier_effets(char * nom_fichier, DListe types){
             fclose(fichier);
             return 0;
         }
-
-        effect_display_full(*effect);
         if(!entity_type_add_effect(((Entity_type *) l->element), effect)){
             fprintf(stderr,"Impossible d'ajouter l'effet.\n");
             free(effect);

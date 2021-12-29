@@ -37,7 +37,7 @@ int gm_move_all(Game * game);
  * @param turn
  * @return
  */
-int gm_add_entities(Game * game, void * entities, ENTITY ntt, int turn);
+int gm_add_entities(Game * game, void * entities, ENTITY ntt);
 
 /**
  *
@@ -47,6 +47,11 @@ int gm_add_entities(Game * game, void * entities, ENTITY ntt, int turn);
  * @return
  */
 int gm_entity_play_effect(Game game, void * entity, ENTITY ntt, Effect effect);
+
+int gm_apply_effect_on_entities(DListe entities, ENTITY ntt, Effect effect);
+
+int gm_apply_effect_on_entity(void * entity, ENTITY ntt, Effect effect);
+
 /**
  *
  * @param entity
@@ -55,4 +60,7 @@ int gm_entity_play_effect(Game game, void * entity, ENTITY ntt, Effect effect);
  * @return
  */
 int gm_entity_play_effects(Game game, void * entity, ENTITY ntt, DListe entity_types);
+
+Enemy * gm_remove_dead_enemies(Game * game);
+
 #endif //L2_PROJET_C_GAME_MASTER_H

@@ -45,7 +45,7 @@ int main() {
     //printf("\n[#########] ---------- Lancement du jeu ---------- [#########]\n");
     // Game
     // à déclarer dans play() dans game_master.c
-    Game game = {NULL, NULL, 1, money};
+    Game game = {NULL, NULL, 0, money};
     // ça râle si on ne crée pas de fenêtre alors qu'on importe libMLV (voir: valgrind ./main
 
 
@@ -54,17 +54,24 @@ int main() {
     Tower * t1 = alloue_tower('A', 0, 2, 1, 0);
     tower_add(&towers,t1);
     game_add_entity(&game, &towers, TOWER);
-    gm_add_entities(&game, &towers, TOWER, 0);
+    gm_add_entities(&game, &towers, TOWER);
 
     // affichage du jeu
     /*  @todo créer une classe game_state pour le tour, les points, les stats, etc...  */
-
-
+   /* printf("\n");
+    game_add_entity(&game, &waiting_enemies, ENEMY);
+    printf("----- SEPARE\n");
+    printf("BOP %p\n", waiting_enemies);
+    CLI_display_enemy(*waiting_enemies);
+    printf("\n");
+    game_add_entity(&game, &waiting_enemies, ENEMY);
+    game.enemies->next->life = 0;
+    gm_remove_dead_enemies(&game);*/
 
     LEVEL_MENU_ACTION act = 0;
     DListe tmp = NULL;
     char tmp2[2] = {0};
-    CLI_display_title();printf("\n");
+    //CLI_display_title();printf("\n");
     while((act = CLI_scan_choice_level_menu())!= START_LEVEL){
         CLI_clear_screen();
         switch (act) {
@@ -98,6 +105,7 @@ int main() {
     // d'après https://man7.org/linux/man-pages/man2/clock_gettime.2.html
     clock_t t_1 = clock();
     clock_t t_2;
+
     while(game.turn < MAX_LINE_LENGTH) {
             // Si on se renseigne sur time.h (par ex: https://fr.wikipedia.org/wiki/Time.h
             // on apprend l'existence de clock_t CLOCKS_PER_SEC (nombre de tick d'horloge par seconde).
@@ -108,14 +116,15 @@ int main() {
             // alternative : utiliser POSIX (clock_gettime())
             t_2 = clock();
             if(((unsigned int)(t_2 - t_1) % CLOCKS_PER_SEC) == 0){
+                game.turn += 1;
                 CLI_clear_screen();
                 CLI_display_game(game);
                 printf("\n");
                 //CLI_menu_entities_types(t_types);
                 gm_move_all(&game);
-                gm_add_entities(&game, &waiting_enemies, ENEMY, game.turn);
                 gm_entity_play_effects(game, game.towers, TOWER, t_types);
-                game.turn += 1;
+                gm_add_entities(&game, &waiting_enemies, ENEMY);
+                gm_remove_dead_enemies(&game);
             }
 
     }

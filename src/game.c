@@ -39,7 +39,8 @@ int game_add_entity(Game * game, void * entity, ENTITY ntt){
             e = (Enemy **) entity;
             if(game_get_entity_by_position(*game, (*e)->line, (*e)->position, &ntt_tmp))
                 return 0;
-            enemy_add(&game->enemies, enemy_extract((&*e), *e));
+            Enemy * test = enemy_extract((&*e), *e);
+            enemy_add(&game->enemies, test);
             break;
         case TOWER:
             t = (Tower **) entity;
@@ -71,6 +72,16 @@ int game_move_entity(Game * game, void * entity, ENTITY ntt, int line, int posit
 
 
 //** Fonction des effets implémentés **//
-int game_effect_damage(void * entity, ENTITY ntt, Effect effects){
-    return 0;
+int game_effect_damage(void * entity, ENTITY ntt, Effect effect){
+    switch (ntt) {
+        case TOWER:
+            ((Tower *) entity)->life += effect.increment;
+            break;
+        case ENEMY:
+            ((Enemy *) entity)->life += effect.increment;
+            break;
+        default:
+            return 0;
+    }
+    return 1;
 }

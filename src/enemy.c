@@ -3,7 +3,7 @@
 //
 
 #include "../headers/enemy.h"
-
+#include "../headers/cli.h"
 
 Enemy * alloue_enemy(int type, int life, int line, int position, int speed, int turn){
     Enemy * enemy = (Enemy *) malloc(sizeof(Enemy));
@@ -67,6 +67,7 @@ int enemy_add_next_line(Enemy ** dest, Enemy * src){
         src->prev_line = (* dest);
         return 1;
     }
+    printf("\n");
     return enemy_add_next_line(&(* dest)->next_line, src);
 }
 
@@ -79,7 +80,9 @@ Enemy * enemy_extract_from_line(Enemy** dest, Enemy * src) {
         }
     }else{
         if(!src->next_line){
-            src->prev_line->next_line = NULL;
+            if(src->prev_line){
+                src->prev_line->next_line = NULL;
+            }
             src->prev_line = NULL;
         }else{
             src->prev_line->next_line = src->next_line;
@@ -99,7 +102,7 @@ Enemy * enemy_extract_from_next(Enemy** e_from, Enemy * enemy){
     }
     while(tmp->next){
         if(tmp->next == enemy){
-            (* e_from)->next = enemy->next ? enemy->next : NULL;
+            tmp->next = enemy->next ? enemy->next : NULL;
             return enemy;
         }
         tmp = tmp->next;
@@ -125,7 +128,19 @@ Enemy * enemy_get_by_position(Enemy * enemy, int line, int position){
     Enemy * tmp = enemy;
     while(tmp){
         if(tmp->line == line && tmp->position == position){
-            return enemy;
+            return tmp;
+        }
+        tmp = tmp->next;
+    }
+    return NULL;
+}
+
+Enemy * enemy_get_first_in_line(Enemy * enemy, int line){
+    if(!enemy) return NULL;
+    Enemy * tmp = enemy;
+    while(tmp){
+        if(tmp->line == line){
+            return tmp;
         }
         tmp = tmp->next;
     }

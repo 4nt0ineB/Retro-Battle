@@ -17,7 +17,7 @@ SRC_FILES := $(shell find $(SRC_DIR) -name '*.c')
 #SRC = $(addsuffix .c, $(addprefix, $(SRC_DIR)/,$(SRC_FILES)))
 
 build: $(SRC_FILES)
-	$(COMP) $(FLAG) $(SRC_FILES) -o $(OUTPUT) $(LIB) -g
+	$(COMP) $(FLAG) $(SRC_FILES) -o $(OUTPUT)  -g
 
 run: build
 	./$(OUTPUT) $(LEVEL_FILE)

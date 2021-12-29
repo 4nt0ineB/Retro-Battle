@@ -6,6 +6,7 @@
 #include "effect.h"
 #include "entity_type.h"
 
+
 /**
  * Modélise un ennemi.
  */
@@ -122,6 +123,7 @@ Enemy * enemy_find_first_type(Enemy * enemy, int e_type);
  */
 Enemy * enemy_get_by_position(Enemy * enemy, int line, int position);
 
+Enemy * enemy_get_first_in_line(Enemy * enemy, int line);
 
 /**
  * Déplace l'ennemi dans la direction souhaitée

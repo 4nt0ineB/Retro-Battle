@@ -73,9 +73,8 @@ Effect * effect_alloue(
 
 void effect_display_full(Effect effect){
     printf(
-            "{Type: %s, rr: %d}"
+            "{Type: %s}"
             , effect_type_toString(effect.type)
-            , effect.r_range
     );
 }
 
@@ -89,6 +88,8 @@ int effect_entity_in_circle_range(int t_line, int t_pos, int e_line, int e_pos, 
 }
 
 int effect_entity_in_range(int t_line, int t_pos, int e_line, int e_pos, Effect effect){
+    printf("bop suivant\n");
+    return 0;
     int lr, hr, rr, br = 0;
     effect_display_full(effect);printf("\n");
     printf("----------------------------\n");
