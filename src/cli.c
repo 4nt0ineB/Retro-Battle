@@ -54,7 +54,7 @@ void CLI_entity_type_display_full(Entity_type e_type, ENTITY ntt){
     }else if(ntt == ENEMY){
         CLI_enemy_type_display(e_type);
     }
-    printf("| Effects: ");
+    printf(RED "┌─────── Effects ──────────" RESET);
     CLI_display_entity_type_effects(e_type);
 }
 
@@ -80,18 +80,19 @@ void CLI_display_help(){
 }
 
 void CLI_display_level_menu(){
-    printf("____ MENU _________________________"
+    printf("──── MENU ────────────────────────────"
            "\n 1" GREEN " ► " RESET "See the incoming wave"
            "\n 2" GREEN " ► " RESET "Prepare defense"
            "\n 3" GREEN " ► " RESET "Enemies info"
            "\n 4" GREEN " ► " RESET "Towers info"
            "\n 5" GREEN " ► " RESET "Start"
     );
-    printf("\nChoice ? : ");
+    printf("\n\nChoice ? : ");
 }
 
 LEVEL_MENU_ACTION CLI_scan_choice_level_menu(){
     char choice[2] = {0};
+    CLI_display_title();printf("\n\n");
     CLI_display_level_menu();
     while((scanf(" %1s", choice) != 1)  || *choice < SHOW_WAVE || *choice > START_LEVEL){
         CLI_clear_screen();
@@ -149,10 +150,10 @@ void CLI_show_wave(Enemy * l){
 void CLI_menu_entities_types(DListe entity_types){
     DListe t_tmp = entity_types;
     while(t_tmp){
-        printf("%c : %s\n",(char) ((Entity_type *) t_tmp->element)->id, ((Entity_type *) t_tmp->element)->name);
+        printf("  %c : %s\n",(char) ((Entity_type *) t_tmp->element)->id, ((Entity_type *) t_tmp->element)->name);
         t_tmp = t_tmp->suivant;
     }
-    printf("Your choice ? : ");
+
 }
 
 DListe CLI_scan_choice_entity_types_menu(DListe * entity_types){
@@ -160,8 +161,10 @@ DListe CLI_scan_choice_entity_types_menu(DListe * entity_types){
     DListe tmp = NULL;
     do{
         tmp = *entity_types;
-
+        printf("◄ b: back\n");
+        printf("────────────\n");
         CLI_menu_entities_types(*entity_types);
+        printf("\n Your choice ? : ");
         if(scanf(" %1s", choice) == 1){
             while(tmp){
                 if((int) *choice == ((Entity_type *) tmp->element)->id)
@@ -169,12 +172,13 @@ DListe CLI_scan_choice_entity_types_menu(DListe * entity_types){
                 tmp = tmp->suivant;
             }
         }
-        if(!tmp){
+        if(*choice != GO_BACK && !tmp){
             CLI_clear_screen();
+            CLI_display_title();printf("\n\n");
             printf(BORED "Wrong choice, try again.\n" RESET);
         }
 
-    }while(!tmp);
+    }while(*choice != GO_BACK && !tmp);
     return &(*tmp);
 }
 
@@ -296,4 +300,13 @@ void CLI_display_entity_type_effects(Entity_type ntt_type){
         printf("\n");
         l = l->suivant;
     }
+}
+
+int CLI_ask_continue(){
+    char tmp2[2] = {0};
+    printf("\n\nContinue (y): ");
+    tmp2[0] = 0;
+    while(scanf(" %1s", tmp2) != 1 || *tmp2 != 'y');
+    printf("\n");
+    return 1;
 }

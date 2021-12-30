@@ -13,6 +13,8 @@
 #include "settings.h"
 #include "cli_couleurs.h"
 
+// aide: https://theasciicode.com.ar/
+
 //** actions des menus
 typedef enum {
     SHOW_WAVE = '1',
@@ -109,6 +111,8 @@ void CLI_display_title();
 void CLI_display_effect(Effect effect);
 
 void CLI_display_entity_type_effects(Entity_type);
+
+int CLI_ask_continue();
 
 #endif //L2_PROJET_C_CLI_H
 

@@ -60,35 +60,41 @@ int main() {
 
     LEVEL_MENU_ACTION act = 0;
     DListe tmp = NULL;
-    char tmp2[2] = {0};
-    //CLI_display_title();printf("\n");
     CLI_clear_screen();
     while((act = CLI_scan_choice_level_menu())!= START_LEVEL){
         CLI_clear_screen();
+        CLI_display_title();printf("\n\n");
         switch (act) {
             case SHOW_WAVE:
                 CLI_show_wave(waiting_enemies);
+                CLI_ask_continue();
                 break;
             case BUILD_DEFENSE:
+                CLI_ask_continue();
                 break;
             case ENEMIES_INFO:
-                if(!(tmp = CLI_scan_choice_entity_types_menu(&types))) break;
-                CLI_clear_screen();
-                CLI_entity_type_display_full(*((Entity_type *) tmp->element), ENEMY);
+                do{
+                    CLI_clear_screen();
+                    CLI_display_title();printf("\n\n");
+                    if((tmp = CLI_scan_choice_entity_types_menu(&types))){
+                        CLI_clear_screen();
+                        CLI_display_title();printf("\n\n");
+                        CLI_entity_type_display_full(*((Entity_type *) tmp->element), ENEMY);
+                        CLI_ask_continue();
+                    }
+
+                }while(tmp);
                 break;
             case TOWERS_INFO:
                 if(!(tmp = CLI_scan_choice_entity_types_menu(&t_types))) break;
                 CLI_clear_screen();
                 CLI_entity_type_display_full(*((Entity_type *) tmp->element), TOWER);
+                CLI_ask_continue();
                 break;
             default:
                 break;
         }
         act = 0;
-        printf("\n\nContinue (y): ");
-        tmp2[0] = 0;
-        while(scanf(" %1s", tmp2) != 1 || *tmp2 != 'y');
-        printf("\n");
         CLI_clear_screen();
     }
 
@@ -118,6 +124,7 @@ int main() {
                 // ajouter les ennemis du tour courant (mais d'abord ceux ayants un ou des tours de retard)
                 gm_add_entities(&game, &waiting_enemies, ENEMY);
                 CLI_clear_screen();
+                CLI_display_title();printf("\n\n");
                 CLI_display_game(game);printf("\n");
                 // on fait jouer les tourelles
                 //gm_entities_play_effects(game, game.towers, TOWER, t_types);

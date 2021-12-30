@@ -17,6 +17,7 @@
  *
  */
 #define MAX_LINE_LENGTH 26
+#define GO_BACK 'b'
 
 /**
  * Lit un fichier de niveau
