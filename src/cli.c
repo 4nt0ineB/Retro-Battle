@@ -156,6 +156,8 @@ void CLI_menu_entities_types(DListe entity_types){
 
 }
 
+
+
 DListe CLI_scan_choice_entity_types_menu(DListe * entity_types){
     char choice[2] = {0};
     DListe tmp = NULL;
@@ -177,7 +179,6 @@ DListe CLI_scan_choice_entity_types_menu(DListe * entity_types){
             CLI_display_title();printf("\n\n");
             printf(BORED "Wrong choice, try again.\n" RESET);
         }
-
     }while(*choice != GO_BACK && !tmp);
     return &(*tmp);
 }
@@ -193,7 +194,6 @@ void CLI_display_game(Game game){
         }
     }
     // Ajout des tourelles
-
     Tower * t_tmp = game.towers;
     while(t_tmp){
         free(view[t_tmp->line][t_tmp->position]);
@@ -310,3 +310,134 @@ int CLI_ask_continue(){
     printf("\n");
     return 1;
 }
+
+/*int CLI_menu_defense(){
+    char tmp2[2] = {0};
+    printf("\n\nContinue (y): ");
+    tmp2[0] = 0;
+    while(scanf(" %1s", tmp2) != 1 && *tmp2 != 'b' && *tmp2 != 'a'){
+        printf("Wrong choice, try again.\n");
+    }
+
+    return *tmp2 == 'a' ? 1 : 0;
+}*/
+
+/*void CLI_read_input_defense(Game * game, DListe tower_types){
+    printf("\nr: remove a: add");
+}*/
+int CLI_build_defense(Game * game, DListe tower_types) {
+    char input[300] = {0};
+
+    char * reste;
+    char commande[30] = {0};
+    char type_id[2] = {0};
+    char line[5], pos[5];
+    long l = 0,p = 0;
+    ENTITY ntt = 0;
+    Tower * new_tower = NULL;
+
+    do{
+        CLI_clear_screen();
+        CLI_display_title();printf("\n");
+        CLI_display_game(*game);printf("\n");
+        printf(BOBLUE " ██ Help ██ add [Type line position] ▒ del [line position] ▒ exit\n\n" RESET);
+        printf("What to do ? : ");
+        if(!fgets(input, 300, stdin)){
+            printf(BORED "Wrong input, try again.\n" RESET);
+            continue;
+        }
+        printf("ICI : %s", input);
+        if(!strcmp(commande, "exit"))
+            return 0;
+        else if(strcmp(commande, "add") == 0){
+            printf("\nAdd> ");
+            if(scanf(" %1s %4s %4s", type_id, line, pos) != 3){
+                printf(BORED "Wrong input, try again.\n" RESET);
+                continue;
+            }
+            l = strtol(line, &reste, 10);
+            p = strtol(pos, &reste, 10);
+            if(!l || !p){
+                printf(BORED "Wrong input, try again.\n" RESET);
+                continue;
+            }
+            new_tower = alloue_tower((int) *type_id, 0, (int) l,(int) p, 0);
+            init_towers(new_tower, tower_types);
+            game_add_entity(&(*game), &new_tower, TOWER);
+        } else if(strcmp(commande, "del") == 0){
+            printf("\nRemove> ");
+            if(scanf(" %4s %4s", line, pos) != 2){
+                printf(BORED "Wrong input, try again.\n" RESET);
+                continue;
+            }
+            l = strtol(line, &reste, 10);
+            p = strtol(pos, &reste, 10);
+            if(!l || !p){
+                printf(BORED "Wrong input, try again.\n" RESET);
+                continue;
+            }
+            tower_extract(&game->towers, game_get_entity_by_position(*game, (int) l, (int) p, &ntt));
+        }else{
+            printf(BORED "Wrong input, try again.\n" RESET);
+            continue;
+        }
+    }while((1));
+    return 0;
+}
+/*
+int CLI_build_defense(Game * game, DListe tower_types) {
+    char * reste;
+    char commande[30] = {0};
+    char type_id[2] = {0};
+    char line[5], pos[5];
+    long l = 0,p = 0;
+    ENTITY ntt = 0;
+    Tower * new_tower = NULL;
+
+   do{
+        CLI_clear_screen();
+        CLI_display_title();printf("\n");
+        CLI_display_game(*game);printf("\n");
+        printf(BOBLUE " ██ Help ██ add [Type line position] ▒ del [line position] ▒ exit\n\n" RESET);
+        printf("What to do ? : ");
+        if(!scanf(" %15s", commande)){
+            printf(BORED "Wrong input, try again.\n" RESET);
+            continue;
+        }
+        if(!strcmp(commande, "exit"))
+            return 0;
+        else if(strcmp(commande, "add") == 0){
+            printf("\nAdd> ");
+            if(scanf(" %1s %4s %4s", type_id, line, pos) != 3){
+                printf(BORED "Wrong input, try again.\n" RESET);
+                continue;
+            }
+            l = strtol(line, &reste, 10);
+            p = strtol(pos, &reste, 10);
+            if(!l || !p){
+                printf(BORED "Wrong input, try again.\n" RESET);
+                continue;
+            }
+            new_tower = alloue_tower((int) *type_id, 0, (int) l,(int) p, 0);
+            init_towers(new_tower, tower_types);
+            game_add_entity(&(*game), &new_tower, TOWER);
+        } else if(strcmp(commande, "del") == 0){
+            printf("\nRemove> ");
+            if(scanf(" %4s %4s", line, pos) != 2){
+                printf(BORED "Wrong input, try again.\n" RESET);
+                continue;
+            }
+            l = strtol(line, &reste, 10);
+            p = strtol(pos, &reste, 10);
+            if(!l || !p){
+                printf(BORED "Wrong input, try again.\n" RESET);
+                continue;
+            }
+            tower_extract(&game->towers, game_get_entity_by_position(*game, (int) l, (int) p, &ntt));
+        }else{
+            printf(BORED "Wrong input, try again.\n" RESET);
+            continue;
+        }
+   }while((1));
+   return 0;
+}*/

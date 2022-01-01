@@ -61,6 +61,7 @@ int main() {
     LEVEL_MENU_ACTION act = 0;
     DListe tmp = NULL;
     CLI_clear_screen();
+    CLI_clear_screen();
     while((act = CLI_scan_choice_level_menu())!= START_LEVEL){
         CLI_clear_screen();
         CLI_display_title();printf("\n\n");
@@ -70,7 +71,7 @@ int main() {
                 CLI_ask_continue();
                 break;
             case BUILD_DEFENSE:
-                CLI_ask_continue();
+                CLI_build_defense(&game, t_types);
                 break;
             case ENEMIES_INFO:
                 do{
@@ -82,14 +83,19 @@ int main() {
                         CLI_entity_type_display_full(*((Entity_type *) tmp->element), ENEMY);
                         CLI_ask_continue();
                     }
-
                 }while(tmp);
                 break;
             case TOWERS_INFO:
-                if(!(tmp = CLI_scan_choice_entity_types_menu(&t_types))) break;
-                CLI_clear_screen();
-                CLI_entity_type_display_full(*((Entity_type *) tmp->element), TOWER);
-                CLI_ask_continue();
+                do{
+                    CLI_clear_screen();
+                    CLI_display_title();printf("\n\n");
+                    if((tmp = CLI_scan_choice_entity_types_menu(&t_types))){
+                        CLI_clear_screen();
+                        CLI_display_title();printf("\n\n");
+                        CLI_entity_type_display_full(*((Entity_type *) tmp->element), ENEMY);
+                        CLI_ask_continue();
+                    }
+                }while(tmp);
                 break;
             default:
                 break;
@@ -134,7 +140,6 @@ int main() {
                     break;
                 // déplacement des ennemis
                 gm_move_all(&game);
-
             }
 
     }

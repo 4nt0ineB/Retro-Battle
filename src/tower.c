@@ -58,6 +58,7 @@ int tower_add(Tower ** dest, Tower * src){
 }
 
 Tower * tower_extract(Tower ** from, Tower * tower){
+    if(!tower) return NULL;
     Tower * tmp = (* from);
     if(tmp == tower){
         *from = tmp->next ? tmp->next : NULL;
@@ -65,7 +66,7 @@ Tower * tower_extract(Tower ** from, Tower * tower){
     }
     while(tmp->next){
         if(tmp->next == tower){
-            (* from)->next = tower->next ? tower->next : NULL;
+            tmp->next = tower->next ? tower->next : NULL;
             return tower;
         }
         tmp = tmp->next;
@@ -78,7 +79,7 @@ Tower * tower_get_by_position(Tower * towers, int line, int position){
     Tower * tmp = towers;
     while(tmp){
         if(tmp->line == line && tmp->position == position){
-            return towers;
+            return tmp;
         }
         tmp = tmp->next;
     }

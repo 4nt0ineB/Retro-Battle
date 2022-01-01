@@ -114,6 +114,12 @@ void CLI_display_entity_type_effects(Entity_type);
 
 int CLI_ask_continue();
 
+int CLI_menu_defense();
+
+void CLI_read_input_defense(Game * game, DListe tower_types);
+
+int CLI_build_defense(Game * game, DListe tower_types);
+
 #endif //L2_PROJET_C_CLI_H
 
 
