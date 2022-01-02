@@ -1,0 +1,5 @@
+DENIED-SERVICE D 6 10
+ERROR E 99 10
+TEST C 2 10
+
+# Enemy name | Label | Life | Speed
