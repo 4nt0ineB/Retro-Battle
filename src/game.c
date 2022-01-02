@@ -87,3 +87,7 @@ int game_effect_damage(void * entity, ENTITY ntt, Effect effect){
     }
     return 1;
 }
+
+void game_incr_money(Game * game, int money){
+    game->money += money;
+}

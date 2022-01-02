@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include "DListe.h"
 #include "entity_type.h"
-
+#include "cli_couleurs.h"
 /**
  * Modélise une tourelle.
  */

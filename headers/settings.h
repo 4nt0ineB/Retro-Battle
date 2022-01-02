@@ -4,6 +4,7 @@
 
 #ifndef L2_PROJET_C_SETTINGS_H
 #define L2_PROJET_C_SETTINGS_H
+#include <stdlib.h>
 #include "enemy.h"
 #include "entity_type.h"
 #include "DListe.h"
@@ -18,6 +19,14 @@
  */
 #define MAX_LINE_LENGTH 26
 #define GO_BACK 'b'
+#define MAX_OPTIONS 128
+
+typedef enum {
+    GUI = 'g',
+    CLI = 'a',
+    HELP = 'h',
+    PATH = 'p'
+} GAME_OPTIONS;
 
 /**
  * Lit un fichier de niveau
@@ -45,5 +54,6 @@ DListe lire_fichier_types(char * nom_fichier);
 int lire_fichier_effets(char * nom_fichier, DListe types);
 
 
+char ** read_options(int argc, char *argv[]);
 
 #endif //L2_PROJET_C_SETTINGS_H

@@ -6,11 +6,14 @@
 #include "../headers/enemy.h"
 #include "../headers/cli.h"
 #include "../headers/game_master.h"
+#include "../headers/game_utils.h"
 
 
-int main() {
+int main(int argc, char *argv[]) {
 
-
+    char ** options = NULL;
+            options = read_options(argc, argv);
+    //printf("CHEMIN = %s\n", options[PATH]);
     // test fichier niveau //
     //printf("\n[#########] ---------- Lectures d'un niveau ---------- [#########]\n");
     int money = 0;
@@ -62,7 +65,7 @@ int main() {
     DListe tmp = NULL;
     CLI_clear_screen();
     CLI_clear_screen();
-    while((act = CLI_scan_choice_level_menu())!= START_LEVEL){
+    do{
         CLI_clear_screen();
         CLI_display_title();printf("\n\n");
         switch (act) {
@@ -102,14 +105,19 @@ int main() {
         }
         act = 0;
         CLI_clear_screen();
-    }
+        act = CLI_scan_choice_level_menu();
+    }while(act != START_LEVEL && act != LEAVE);
 
-    // jouer le niveau
-    clock_t t_1 = clock();
-    clock_t t_2;
-    Enemy * dead_e = NULL;
-    Tower * dead_t = NULL;
-    while(game.turn < MAX_LINE_LENGTH) { // check nombre de tour ici devient caduque maintenant
+
+
+    // fin de partie
+    if(act == START_LEVEL){
+        // jouer le niveau
+        clock_t t_1 = clock();
+        clock_t t_2;
+        Enemy * dead_e = NULL;
+        Tower * dead_t = NULL;
+        while(game.turn < MAX_LINE_LENGTH) { // check nombre de tour ici devient caduque maintenant
             // Si on se renseigne sur time.h (par ex: https://fr.wikipedia.org/wiki/Time.h
             // on apprend l'existence de clock_t CLOCKS_PER_SEC (nombre de tick d'horloge par seconde).
             // (ce qu'on préfère, car time_t donné par time(NULL) est trop grand (seconde))
@@ -142,26 +150,28 @@ int main() {
                 gm_move_all(&game);
             }
 
-    }
+        }
 
-    // fin de partie
-    if(gm_ennemis_won(game)){
-        printf("Vous avez perdu !\n");
-    }else if(gm_player_won(game)){
-        printf("Vous avez gagné !\n");
-    }else{
-        printf("Qui à gagné Q_Q ?\n");
+        if(gm_ennemis_won(game)){
+            printf("Vous avez perdu !\n");
+        }else if(gm_player_won(game)){
+            printf("Vous avez gagné !\n");
+        }else{
+            printf("Qui à gagné Q_Q ?\n");
+        }
+        // détail de la partie
+        printf("\n┌ Wave recap \n"
+               "▄ Killed enemies: %d\n"
+               "▄ Destroyed towers: %d\n"
+                , enemy_count(dead_e), tower_count(dead_t));
+
+        enemy_free_all(&dead_e);
+        tower_free_all(&dead_t);
     }
-    // détail de la partie
-    printf("\n[Récapitulatif de la vague]\n"
-           "Nombre d'ennemis tués: %d\n"
-           "Nombre de tourelles détruites: %d\n"
-    , enemy_count(dead_e), tower_count(dead_t));
 
     // free //
     printf("\n");
-    enemy_free_all(&dead_e);
-    tower_free_all(&dead_t);
+    free_string_table(options, MAX_OPTIONS);
     enemy_free_all(&waiting_enemies);
     enemy_free_all(&game.enemies);
     tower_free_all(&game.towers);

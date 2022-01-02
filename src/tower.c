@@ -24,12 +24,11 @@ int init_towers(Tower * towers, DListe tower_types){
 
     while(tmp){
         e_type_tmp = tower_types;
-        while(e_type_tmp && ((Entity_type *) e_type_tmp->element)->id == tmp->type){
+        while(e_type_tmp && ((Entity_type *) e_type_tmp->element)->id != tmp->type){
             e_type_tmp = e_type_tmp->suivant;
         }
         if(!e_type_tmp){
-            fprintf(stderr
-                    , "\nLe type %c n'a pas été définit.\n"
+            printf(BORED "\nLe type %c n'a pas été définit.\n" RESET
                     , tmp->type);
             return 0;
         }

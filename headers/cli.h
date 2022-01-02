@@ -21,9 +21,12 @@ typedef enum {
     BUILD_DEFENSE,
     ENEMIES_INFO,
     TOWERS_INFO,
-    START_LEVEL
+    START_LEVEL,
+    LEAVE
 } LEVEL_MENU_ACTION;
 //**
+
+
 
 /**
  * Replace l'affichage du terminal en haut

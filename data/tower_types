@@ -3,3 +3,5 @@ RAM R 1 2
 PMMU P 2 2
 PATCH X 3 3
 FIREWALL F 4 4
+
+# Enemy name | Label | Life | price

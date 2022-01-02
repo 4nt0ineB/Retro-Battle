@@ -12,7 +12,9 @@ Enemy * lire_fichier_niveau(char * nom_fichier, int * money){
     int e_line =-1, e_tour = -1;
     // permet de vérifier facilement la cohérence du fichier de niveau
     // : pas deux ennemis au même endroit au même tour
-    int histo_ennemy[MAX_LINE+1][MAX_LINE_LENGTH+1] = {0};
+    int * histo_ennemy[MAX_LINE+1] = {0};
+    int maxline[MAX_LINE+1] = {0};
+
     int last_tour = 1;
     // ouverture du fichier
     if(!(fichier = fopen(nom_fichier, "r")) ){
@@ -34,17 +36,16 @@ Enemy * lire_fichier_niveau(char * nom_fichier, int * money){
                     , e_tour, e_line, e_type);
             fclose(fichier);
             return NULL;
-        }else if(e_tour < 1 || e_tour > MAX_LINE_LENGTH){
-            fprintf(stderr
-                    , "\nMauvais formatage du niveau:"
-                      "\n[%d %d %c] Le maximum de tours est %d, le minimum est 1.\n"
-                    , e_tour, e_line, e_type, MAX_LINE_LENGTH);
-            exit(1);
         }else if(e_line < 1 || e_line > MAX_LINE) {
             fprintf(stderr, "\nMauvais formatage du niveau:"
                             "\n[%d %d %c] La maximum de lignes est %d, le minimum est 1.\n", e_tour, e_line, e_type, MAX_LINE);
             fclose(fichier);
             return NULL;
+        }
+        if(maxline[e_line] < e_tour) {
+            maxline[e_line] = e_tour;
+            histo_ennemy[e_line] = (int *) realloc(histo_ennemy[e_line], (maxline[e_line] + 1) * sizeof(int));
+            histo_ennemy[e_line][e_tour] = 0;
         }
         if(histo_ennemy[e_line][e_tour]){
             fprintf(stderr
@@ -66,6 +67,11 @@ Enemy * lire_fichier_niveau(char * nom_fichier, int * money){
         last_tour = e_tour;
     }
     fclose(fichier);
+    int i = 0;
+    for(; i <= MAX_LINE; i++){
+        free(histo_ennemy[i]);
+    }
+
     return enemy_list;
 }
 
@@ -197,3 +203,50 @@ int lire_fichier_effets(char * nom_fichier, DListe types){
     return 1;
 }
 
+char ** read_options(int argc, char *argv[]) {
+    /*           TRAITEMENT OPTIONS            */
+    char ** options = (char **) malloc(128 * sizeof(char *));
+    if(!options) return NULL;
+    int i = 0;
+    for(; i < MAX_OPTIONS; i++){
+        options[i] = (char *) malloc(2 * sizeof(char));
+        if(!options[i]) return NULL;
+    }
+    // index de l'argument
+    i = 1;
+    // pointeur sur la chaine de l'argument
+    char *str_option;
+    // iteration sur les arguments
+    for (; i < argc; i++) {
+        str_option = argv[i];
+        // si est une option
+        if (*str_option == '-') {
+            str_option++;
+            // iteration sur la chaine de l'argument
+            for (; *str_option; str_option++) {
+                // enregistre choix option
+                switch (*str_option) {
+                    case HELP:
+                        options[HELP][0] = HELP;
+                        break;
+                    case GUI:
+                        options[CLI][0] = '\0';
+                        options[GUI][0] = GUI;
+                        break;
+                    case CLI:
+                        options[GUI][0] = '\0';
+                        options[CLI][0] = CLI;
+                        break;
+                    default:
+                        continue;
+                }
+            }
+        }else{
+            free(options[PATH]);
+            options[PATH] = (char *) malloc(strlen(str_option) * sizeof(char));
+            strcpy(options[PATH], str_option);
+        }
+
+    }
+    return options;
+}

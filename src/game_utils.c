@@ -12,3 +12,10 @@ long mmsecondes_diff_clocks(clock_t t1, clock_t t2){
     return (t2 - t1);
 }
 */
+
+void free_string_table(char ** t, int taille){
+    int i = 0;
+    for(; i < taille; i++)
+        free(t[i]);
+    free(t);
+}

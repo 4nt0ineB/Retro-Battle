@@ -16,6 +16,7 @@
 #define BORED "\e[1;31m"
 #define BOBLUE "\e[1;34m"
 #define BOGREEN "\e[1;32m"
+#define BOYELLOW "\e[1;33m"
 
 #define RESET "\e[0m"
 #define CLEAR "\e[1;1H\e[2J"

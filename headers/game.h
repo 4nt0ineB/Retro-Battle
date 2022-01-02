@@ -54,4 +54,6 @@ int game_move_entity(Game * game, void * entity, ENTITY ntt, int line, int posit
 
 //################ Fonctions des effets implémentés ################//
 int game_effect_damage(void * entity, ENTITY ntt, Effect effects);
+
+void game_incr_money(Game * game, int money);
 #endif //L2_PROJET_C_GAME_H
