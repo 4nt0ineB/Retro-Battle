@@ -2,7 +2,7 @@ COMP = clang
 FLAG = -Wall -Wfatal-errors -std=c17
 LIB = -lMLV -lrt
 OUTPUT = main
-LEVEL_FILE = ./assets/level1.txt
+LEVEL_FILE = ./data/level1
 
 SRC_DIR = src
 .SILENT: clean
@@ -23,6 +23,6 @@ run: build
 	./$(OUTPUT) $(LEVEL_FILE)
 
 memleak: clean build
-	valgrind --leak-check=full --track-origins=yes  --show-leak-kinds=all ./$(OUTPUT)
+	valgrind --leak-check=full --track-origins=yes  --show-leak-kinds=all ./$(OUTPUT) $(LEVEL_FILE)
 
 all: run

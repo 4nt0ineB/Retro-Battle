@@ -5,6 +5,7 @@
 #ifndef L2_PROJET_C_GAME_MASTER_H
 #define L2_PROJET_C_GAME_MASTER_H
 #include <stdio.h>
+#include <time.h>
 #include "cli.h"
 #include "game.h"
 #include "DListe.h"
@@ -72,4 +73,9 @@ int gm_ennemis_won(Game game);
 int gm_player_won(Game game);
 
 int gm_is_game_over(Game game);
+
+
+int gm_level_cli(Enemy ** waiting_enemies, DListe e_types, DListe t_types, int money);
+
+int gm_level_gui(Enemy ** waiting_enemies, DListe e_types, DListe t_types, int money);
 #endif //L2_PROJET_C_GAME_MASTER_H

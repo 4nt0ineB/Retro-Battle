@@ -2,7 +2,7 @@ D DAMAGE -1 0 1 0 1 0 0 0 0
 
 
 
-# type id | effect name | increment | set | target | range | l_range | h_range | r_range | b_range | front
+# type id | effect name | increment | set | target | range | l_range | h_range | r_range | b_range | front depth
 #
 #
 # type id: defined by user in "enemy_types"

@@ -243,7 +243,7 @@ char ** read_options(int argc, char *argv[]) {
             }
         }else{
             free(options[PATH]);
-            options[PATH] = (char *) malloc(strlen(str_option) * sizeof(char));
+            options[PATH] = (char *) malloc((strlen(str_option)+1) * sizeof(char));
             strcpy(options[PATH], str_option);
         }
 

@@ -1,5 +1,5 @@
-DENIED-SERVICE D 6 10
-ERROR E 99 10
-TEST C 2 10
+DENIED-SERVICE D 1 2
+ERROR E 5 2
+TEST C 2 2
 
 # Enemy name | Label | Life | Speed

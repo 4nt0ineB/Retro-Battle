@@ -129,7 +129,6 @@ void CLI_show_wave(Enemy * l){
 
     // Ajout des ennemis
     Enemy * e_tmp = l;
-    printf("MAX: %d\n", maxturn);
     while(e_tmp){
         free(view[e_tmp->line][e_tmp->turn]);
         view[e_tmp->line][e_tmp->turn] = enemy_toString(*e_tmp);

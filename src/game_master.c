@@ -68,7 +68,6 @@ int gm_entity_play_effect(Game game, void * entity, ENTITY ntt, Effect effect){
     Enemy * etmp = NULL;
     Tower * ttmp = NULL;
 
-
     int i, j = 0;
     int entity_line, entity_pos = 0;
     int range, zrange = 0;
@@ -78,84 +77,112 @@ int gm_entity_play_effect(Game game, void * entity, ENTITY ntt, Effect effect){
         entity_line = ((Enemy *) entity)->line;
         entity_pos = ((Enemy *) entity)->position;
     }else if(ntt == TOWER){
-        return 0;
         entity_line = ((Tower *) entity)->line;
         entity_pos = ((Tower *) entity)->position;
     }
 
-
     if(effect.front){ /* @todo détailler pourquoi on a une séparation (profondeur du front etc...)*/
-        // enemy
-        etmp = game.enemies;
-        hr = ((Enemy *) entity)->line - effect.h_range;
-        br = ((Enemy *) entity)->line + effect.b_range;
-        Enemy * tmp_line = NULL;
-        Enemy * tmp_pos = NULL;
-        // on itère sur les lignes souhaitées
-        for(i = hr; i <= br ; i++){
-            // on récupère la ligne
-            if(!(tmp_line = enemy_get_first_in_line(game.enemies, i)))
-                continue;
-            // on souhaite les "effect.front" premières entités de la ligne de front ennemie
-            tmp_pos = tmp_line;
-            for(j = 0; j < effect.front; j++){
-                if(tmp_pos->line == entity_line && tmp_pos->position == entity_pos){
-                    tmp_pos = tmp_pos->next_line;
+        // ennemis
+        if(effect.target == 0 || effect.target == 2) {
+            etmp = game.enemies;
+            hr = ((Enemy *) entity)->line - effect.h_range;
+            br = ((Enemy *) entity)->line + effect.b_range;
+            Enemy * tmp_line = NULL;
+            Enemy * tmp_pos = NULL;
+            // on itère sur les lignes souhaitées
+            for (i = hr; i <= br; i++) {
+                // on récupère la ligne
+                if (!(tmp_line = enemy_get_first_in_line(game.enemies, i)))
                     continue;
-                }
-                if(!pos[tmp_pos->line][tmp_pos->position]){
-                    cel = alloue_DCellule(&(*tmp_pos));
-                    pos[tmp_pos->line][tmp_pos->position] = 1;
-                    DListe_ajouter_fin(&enemies, cel);
+                // on souhaite les "effect.front" premières entités de la ligne de front ennemie
+                tmp_pos = tmp_line;
+                for (j = 0; j < effect.front; j++) {
+                    if (tmp_pos->line == entity_line && tmp_pos->position == entity_pos) {
+                        tmp_pos = tmp_pos->next_line;
+                        continue;
+                    }
+                    if (!pos[tmp_pos->line][tmp_pos->position]) {
+                        cel = alloue_DCellule(&(*tmp_pos));
+                        pos[tmp_pos->line][tmp_pos->position] = 1;
+                        DListe_ajouter_fin(&enemies, cel);
+                    }
                 }
             }
         }
+
+        //tourelles
+        if(effect.target == 1 || effect.target == 2) {
+            ttmp = game.towers;
+            hr = ((Tower *) entity)->line - effect.h_range;
+            br = ((Tower *) entity)->line + effect.b_range;
+            int tmp_grid[MAX_LINE+1][MAX_LINE_LENGTH+1] = {0};
+            // on itère sur les lignes souhaitées
+            for (i = hr; i <= br; i++) {
+                for (j = 0; j < effect.front; j++) {
+                    tmp_grid[i][j] = 1;
+                }
+            }
+            while(ttmp){
+                if(!tmp_grid[ttmp->line][ttmp->position]){
+                    cel = alloue_DCellule(&(*ttmp));
+                    tmp_grid[ttmp->line][ttmp->position] = 1;
+                    DListe_ajouter_fin(&towers, cel);
+                }
+                ttmp = ttmp->next;
+            }
+        }
+
+
     }else{
         // tourelles
-        ttmp = game.towers;
-
-        while(ttmp){
-            if(ttmp->line == entity_line && ttmp->position == entity_pos){
+        if(effect.target == 1 || effect.target == 2) {
+            ttmp = game.towers;
+            while (ttmp) {
+                if (ttmp->line == entity_line && ttmp->position == entity_pos) {
+                    ttmp = ttmp->next;
+                    continue;
+                }
+                zrange = effect_entity_in_circular_range(
+                        ttmp->line, ttmp->position,
+                        entity_line, entity_pos,
+                        effect);
+                range = effect_entity_in_range(
+                        ttmp->line, ttmp->position,
+                        entity_line, entity_pos,
+                        effect);
+                if (!pos[ttmp->line][ttmp->position] && (zrange || range)) {
+                    cel = alloue_DCellule(&(*ttmp));
+                    pos[ttmp->line][ttmp->position] = 1;
+                    DListe_ajouter_fin(&towers, cel);
+                }
                 ttmp = ttmp->next;
-                continue;
             }
-            zrange = effect_entity_in_circular_range(
-                    ttmp->line, ttmp->position,
-                    entity_line, entity_pos,
-                    effect);
-            range = effect_entity_in_range(
-                    ttmp->line, ttmp->position,
-                    entity_line, entity_pos,
-                    effect);
-            if(!pos[ttmp->line][ttmp->position] && (zrange || range)){
-                cel = alloue_DCellule(&(*ttmp));
-                pos[ttmp->line][ttmp->position] = 1;
-                DListe_ajouter_fin(&towers, cel);
-            }
-            ttmp = ttmp->next;
         }
         // ennemis
-        /*etmp = game.enemies;
-        while(etmp){
-            if(etmp->line == entity_line && etmp->position == entity_pos){
+        if(effect.target == 0 || effect.target == 2){
+            etmp = game.enemies;
+            while(etmp){
+                if(etmp->line == entity_line && etmp->position == entity_pos){
+                    etmp = etmp->next;
+                    continue;
+                }
+                zrange = effect_entity_in_circular_range(
+                        etmp->line, etmp->position,
+                        entity_line, entity_pos,
+                        effect);
+                range = effect_entity_in_range(
+                        etmp->line, etmp->position,
+                        entity_line, entity_pos,
+                        effect);
+                if(!pos[etmp->line][etmp->position] && (zrange || range)){
+                    cel = alloue_DCellule(&(*etmp));
+                    pos[etmp->line][etmp->position] = 1;
+                    DListe_ajouter_fin(&enemies, cel);
+                }
                 etmp = etmp->next;
-                continue;
             }
-            zrange = effect_entity_in_circular_range(
-                    etmp->line, etmp->position,
-                    entity_line, entity_pos,
-                    effect);
-            range = effect_entity_in_range(
-                    etmp->line, etmp->position,
-                    entity_line, entity_pos,
-                    effect);
-            if(!pos[etmp->line][etmp->position] && (zrange || range)){
-                cel = alloue_DCellule(&(*etmp));
-                pos[etmp->line][etmp->position] = 1;
-                DListe_ajouter_fin(&enemies, cel);
-            }
-            etmp = etmp->next;
-        }*/
+        }
+
     }
     /*DListe m = towers;
     while(m){
@@ -291,5 +318,127 @@ int gm_is_game_over(Game game){
         || gm_player_won(game)){
         return 1;
     }
+    return 0;
+}
+
+int gm_level_cli(Enemy ** waiting_enemies, DListe e_types, DListe t_types, int money){
+    Game game = {NULL, NULL, 0, money};
+    // ça râle si on ne crée pas de fenêtre alors qu'on importe libMLV (voir: valgrind ./main
+
+    // affichage du jeu
+    /*  @todo créer une classe game_state pour le tour, les points, les stats, etc...  */
+
+    LEVEL_MENU_ACTION act = 0;
+    DListe tmp = NULL;
+    CLI_clear_screen();
+    CLI_clear_screen();
+    do{
+        CLI_clear_screen();
+        CLI_display_title();printf("\n\n");
+        switch (act) {
+            case SHOW_WAVE:
+                CLI_show_wave(*waiting_enemies);
+                CLI_ask_continue();
+                break;
+            case BUILD_DEFENSE:
+                CLI_build_defense(&game, t_types);
+                break;
+            case ENEMIES_INFO:
+                do{
+                    CLI_clear_screen();
+                    CLI_display_title();printf("\n\n");
+                    if((tmp = CLI_scan_choice_entity_types_menu(&e_types))){
+                        CLI_clear_screen();
+                        CLI_display_title();printf("\n\n");
+                        CLI_entity_type_display_full(*((Entity_type *) tmp->element), ENEMY);
+                        CLI_ask_continue();
+                    }
+                }while(tmp);
+                break;
+            case TOWERS_INFO:
+                do{
+                    CLI_clear_screen();
+                    CLI_display_title();printf("\n\n");
+                    if((tmp = CLI_scan_choice_entity_types_menu(&t_types))){
+                        CLI_clear_screen();
+                        CLI_display_title();printf("\n\n");
+                        CLI_entity_type_display_full(*((Entity_type *) tmp->element), ENEMY);
+                        CLI_ask_continue();
+                    }
+                }while(tmp);
+                break;
+            default:
+                break;
+        }
+        act = 0;
+        CLI_clear_screen();
+        act = CLI_scan_choice_level_menu();
+    }while(act != START_LEVEL && act != LEAVE);
+
+
+    if(act == START_LEVEL){
+        // jouer le niveau
+        clock_t t_1 = clock();
+        clock_t t_2;
+        Enemy * dead_e = NULL;
+        Tower * dead_t = NULL;
+        while(game.turn < MAX_LINE_LENGTH) { // check nombre de tour ici devient caduque maintenant
+            // Si on se renseigne sur time.h (par ex: https://fr.wikipedia.org/wiki/Time.h
+            // on apprend l'existence de clock_t CLOCKS_PER_SEC (nombre de tick d'horloge par seconde).
+            // (ce qu'on préfère, car time_t donné par time(NULL) est trop grand (seconde))
+            // Comme nous souhaitons avoir des millisecondes on multiplie par 1000,
+            // puis par 500 pour la latence souhaitée
+            // Mince, en fait non. Impossible d'obtenir une précision inférieure à la seconde
+            // de plus cela va dépendre de la capacité de la machine à traiter le processus en cours (le jeu)
+            // alternative : utiliser POSIX (clock_gettime())
+            t_2 = clock();
+            if(((unsigned int)(t_2 - t_1) % CLOCKS_PER_SEC) == 0){
+                // retirer les ennemis à court de vies
+                enemy_add(&dead_e,gm_remove_dead_enemies(&game));
+                tower_add(&dead_t,gm_remove_dead_towers(&game));
+                // vérifier si la partie est finie, savoir qui a gagné n'est pas important ici
+
+                //
+                game.turn += 1;
+                // ajouter les ennemis du tour courant (mais d'abord ceux ayants un ou des tours de retard)
+                gm_add_entities(&game, waiting_enemies, ENEMY);
+                CLI_clear_screen();
+                CLI_display_title();printf("\n\n");
+                CLI_display_game(game);printf("\n");
+                // on fait jouer les tourelles
+                gm_entities_play_effects(game, game.towers, TOWER, t_types);
+                // on fait jouer les ennemis
+                gm_entities_play_effects(game, game.enemies, ENEMY, e_types);
+                if(gm_is_game_over(game))
+                    break;
+                // déplacement des ennemis
+                gm_move_all(&game);
+            }
+
+        }
+
+        if(gm_ennemis_won(game)){
+            printf(BORED "Wasted\n" RESET);
+        }else if(gm_player_won(game)){
+            printf(GREEN "You won !\n" RESET);
+        }
+
+        // détail de la partie
+        /*printf("\n┌ Wave recap \n"
+               "▄ Killed enemies: %d\n"
+               "▄ Destroyed towers: %d\n"
+                , enemy_count(dead_e), tower_count(dead_t));*/
+
+        enemy_free_all(&dead_e);
+        tower_free_all(&dead_t);
+        enemy_free_all(&game.enemies);
+        tower_free_all(&game.towers);
+    }
+    return 1;
+}
+
+int gm_level_gui(Enemy ** waiting_enemies, DListe e_types, DListe t_types, int money){
+
+
     return 0;
 }

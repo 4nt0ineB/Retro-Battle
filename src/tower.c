@@ -28,7 +28,7 @@ int init_towers(Tower * towers, DListe tower_types){
             e_type_tmp = e_type_tmp->suivant;
         }
         if(!e_type_tmp){
-            printf(BORED "\nLe type %c n'a pas été définit.\n" RESET
+            printf(BORED "\nUndefined type %c\n" RESET
                     , tmp->type);
             return 0;
         }
@@ -95,7 +95,7 @@ int tower_set_position(Tower * tower, int line, int position){
 char * tower_toString(Tower tower){
     //    printf("{Life:%d,Type:%c,Line:%d,Position:%d}\n", tower.life, (char) tower.type, tower.line, tower.position);
     char * str = (char *) malloc(20 * sizeof(char));
-    sprintf(str, "[%d%c", tower.life, (char) tower.type);
+    sprintf(str, "[%c%d", (char) tower.type, tower.life);
     return str;
 }
 
