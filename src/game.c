@@ -3,8 +3,7 @@
 //
 
 #include "../headers/game.h"
-#include "../headers/enemy.h"
-#include "../headers/cli.h"
+
 
 void * game_get_entity_by_position(Game game, int line, int position, ENTITY * ntt){
     void * entity = NULL;

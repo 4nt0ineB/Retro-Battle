@@ -53,7 +53,12 @@ DListe lire_fichier_types(char * nom_fichier);
  */
 int lire_fichier_effets(char * nom_fichier, DListe types);
 
-
+/**
+ * Lis les option du programme
+ * @param argc
+ * @param argv
+ * @return un tableau des options indexé selon l'énumération GAME_OPTIONS
+ */
 char ** read_options(int argc, char *argv[]);
 
 #endif //L2_PROJET_C_SETTINGS_H

@@ -24,9 +24,6 @@ typedef enum {
     START_LEVEL,
     LEAVE
 } LEVEL_MENU_ACTION;
-//**
-
-
 
 /**
  * Replace l'affichage du terminal en haut
@@ -62,7 +59,6 @@ void CLI_display_full_enemy(Enemy enemy);
 void CLI_enemy_type_display(Entity_type e_type);
 void CLI_tower_type_display(Entity_type e_type);
 
-
 /**
  * Affiche la description du type d'entité
  * @param e_type
@@ -97,8 +93,12 @@ void CLI_show_wave(Enemy * l);
  */
 void CLI_menu_entities_types(DListe entity_types);
 
+/**
+ * Affiche le menu de choix des tourelles
+ * @param entity_type
+ * @return
+ */
 DListe CLI_scan_choice_entity_types_menu(DListe * entity_type);
-
 
 /**
  * Affiche le jeu
@@ -111,16 +111,30 @@ void CLI_display_game(Game game);
  */
 void CLI_display_title();
 
+/**
+ * Affiche la description d'un effet
+ * @param effect
+ */
 void CLI_display_effect(Effect effect);
 
-void CLI_display_entity_type_effects(Entity_type);
+/**
+ * Affiche la description d'un type d'entité
+ * @param ntt_type
+ */
+void CLI_display_entity_type_effects(Entity_type ntt_type);
 
+/**
+ * Demande à l'utilisateur d'entrer 'y' pour poursuivre
+ * @return
+ */
 int CLI_ask_continue();
 
-int CLI_menu_defense();
-
-void CLI_read_input_defense(Game * game, DListe tower_types);
-
+/**
+ * Résolution de commandes utiles à la pose des tourelles
+ * @param game
+ * @param tower_types les types de tourelles
+ * @return
+ */
 int CLI_build_defense(Game * game, DListe tower_types);
 
 #endif //L2_PROJET_C_CLI_H

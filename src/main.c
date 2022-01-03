@@ -50,7 +50,11 @@ int main(int argc, char *argv[]) {
     //printf("\n association des effets aux type de tourelles: \n");
     lire_fichier_effets(nom_fichier, t_types);
 
-    gm_level_cli(&waiting_enemies, types, t_types, money);
+    if(*options[CLI] == CLI)
+        gm_level_cli(&waiting_enemies, types, t_types, money);
+    else if(*options[GUI] == GUI)
+        gm_level_gui(&waiting_enemies, types, t_types, money);
+
 
     // free //
     printf("\n");

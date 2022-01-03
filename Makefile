@@ -1,6 +1,6 @@
 COMP = clang
 FLAG = -Wall -Wfatal-errors -std=c17
-LIB = -lMLV -lrt
+LIB = -lMLV
 OUTPUT = main
 LEVEL_FILE = ./data/level1
 
@@ -17,10 +17,17 @@ SRC_FILES := $(shell find $(SRC_DIR) -name '*.c')
 #SRC = $(addsuffix .c, $(addprefix, $(SRC_DIR)/,$(SRC_FILES)))
 
 build: $(SRC_FILES)
-	$(COMP) $(FLAG) $(SRC_FILES) -o $(OUTPUT)  -g
+	$(COMP) $(FLAG) $(SRC_FILES) -o $(OUTPUT) -g $(LIB)
 
 run: build
 	./$(OUTPUT) $(LEVEL_FILE)
+
+run-cli: build
+	./$(OUTPUT) $(LEVEL_FILE) -a
+
+run-gui: build
+	./$(OUTPUT) $(LEVEL_FILE) -g
+
 
 memleak: clean build
 	valgrind --leak-check=full --track-origins=yes  --show-leak-kinds=all ./$(OUTPUT) $(LEVEL_FILE)

@@ -84,7 +84,8 @@ Effect * effect_alloue(
         int h_range,
         int r_range,
         int b_range,
-        int front);
+        int front
+        );
 
 /**
  * Affiche la description de l'effet
@@ -93,7 +94,8 @@ Effect * effect_alloue(
 void effect_display_full(Effect effect);
 
 /**
- *
+ * Renvoie vrai si un point de coordonnées est dans la zone "range" d'un effet,
+ * pour des coordonnées d'activation donnés
  * @param t_line ligne de la target
  * @param t_pos  position de la target
  * @param e_line ligne de l'entité
@@ -103,6 +105,17 @@ void effect_display_full(Effect effect);
  */
 int effect_entity_in_circular_range(int t_line, int t_pos, int e_line, int e_pos, Effect effect);
 
+/**
+ * Renvoie vrai si un point de coordonnées est
+ * dans la zone des ranges (right range, left range...) d'un effet,
+ * pour des coordonnées d'activation donnés
+ * @param t_line
+ * @param t_pos
+ * @param e_line
+ * @param e_pos
+ * @param effect
+ * @return
+ */
 int effect_entity_in_range(int t_line, int t_pos, int e_line, int e_pos, Effect effect);
 
 #endif //L2_PROJET_C_EFFECT_H

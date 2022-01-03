@@ -123,6 +123,12 @@ Enemy * enemy_find_first_type(Enemy * enemy, int e_type);
  */
 Enemy * enemy_get_by_position(Enemy * enemy, int line, int position);
 
+/**
+ * Renvoie le premier ennemi d'un numéro de ligne donné
+ * @param enemy
+ * @param line
+ * @return
+ */
 Enemy * enemy_get_first_in_line(Enemy * enemy, int line);
 
 /**

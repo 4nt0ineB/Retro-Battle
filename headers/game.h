@@ -4,9 +4,10 @@
 
 #ifndef L2_PROJET_C_GAME_H
 #define L2_PROJET_C_GAME_H
+#include <stdlib.h>
 #include "enemy.h"
 #include "tower.h"
-#include <stdlib.h>
+#include "settings.h"
 
 /**
  * Modélise le jeu
@@ -38,6 +39,13 @@ int game_add_enemy(Game * game, Enemy ** enemy);
  */
 void * game_get_entity_by_position(Game game, int line, int position, ENTITY * ntt);
 
+/**
+ * Ajoute une entité d'un type donné en jeu
+ * @param game
+ * @param entity
+ * @param ntt
+ * @return
+ */
 int game_add_entity(Game * game, void * entity, ENTITY ntt);
 
 /**
@@ -52,6 +60,11 @@ int game_add_entity(Game * game, void * entity, ENTITY ntt);
  */
 int game_move_entity(Game * game, void * entity, ENTITY ntt, int line, int position);
 
+/**
+ * Incrémente l'argent en jeu
+ * @param game
+ * @param money
+ */
 void game_incr_money(Game * game, int money);
 
 //################ Fonctions des effets implémentés ################//
