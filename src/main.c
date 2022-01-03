@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <time.h>
-/*
+
 #include <MLV/MLV_all.h>
-*/
+
 
 #include "../headers/entity_type.h"
 #include "../headers/enemy.h"
@@ -54,9 +54,9 @@ int main(int argc, char *argv[]) {
 
     if(*options[CLI] == CLI)
         gm_level_cli(&waiting_enemies, types, t_types, money);
-    /*else if(*options[GUI] == GUI)
+    else if(*options[GUI] == GUI)
         gm_level_gui(&waiting_enemies, types, t_types, money);
-*/
+
 
     // free //
     printf("\n");

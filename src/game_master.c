@@ -461,7 +461,7 @@ int gm_level_cli(Enemy ** waiting_enemies, DListe e_types, DListe t_types, int m
 }
 
 
-/*
+
 int gm_level_gui(Enemy ** waiting_enemies, DListe e_types, DListe t_types, int money){
 
     Game game = {NULL, NULL, 0, money};
@@ -552,4 +552,4 @@ int gm_level_gui(Enemy ** waiting_enemies, DListe e_types, DListe t_types, int m
     MLV_free_window();
     MLV_free_image( image );
     return 1;
-}*/
+}

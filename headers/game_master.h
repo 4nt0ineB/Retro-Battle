@@ -8,7 +8,7 @@
 #include <time.h>
 
 #include "cli.h"
-/*#include "gui.h"*/
+#include "gui.h"
 #include "game.h"
 #include "DListe.h"
 #include "enemy.h"
