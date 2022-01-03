@@ -38,9 +38,6 @@ void game_board_origin(int * x, int * y){
 }
 
 void GUI_display_game(Game game){
-    int WIDTH, HEIGHT;
-    taille_fenetre(&WIDTH, &HEIGHT);
-    MLV_draw_filled_rectangle(0, 0, WIDTH, HEIGHT, BACKGROUND_COLOR);
 
     char * view[MAX_LINE+1][MAX_LINE_LENGTH+1] = {0};
     int i, j;
@@ -81,10 +78,13 @@ void GUI_display_game(Game game){
             if(*view[i][j] == '['){
                 //printf(BOGREEN" %3s"RESET, &view[i][j][1]);
                 MLV_draw_filled_rectangle(cx, cy, cw, cw, MLV_COLOR_DARK_GREEN);
+                MLV_draw_rectangle(cx, cy, cw, cw, MLV_COLOR_BLACK);
             }else if(*view[i][j] == '('){
                 //printf(BORED" %3s"RESET, &view[i][j][1]);
                 MLV_draw_filled_rectangle(cx, cy, cw, cw, MLV_COLOR_DARK_RED);
+                MLV_draw_rectangle(cx, cy, cw, cw, MLV_COLOR_BLACK);
             }else{
+                MLV_draw_filled_circle(cx+(cw/2), cy+(cw/2), 1, MLV_COLOR_LIGHT_GREEN);
                 //printf(" %3s", view[i][j]);
             }
             cx += cw + CASE_MARGING;

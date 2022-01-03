@@ -467,15 +467,36 @@ int gm_level_gui(Enemy ** waiting_enemies, DListe e_types, DListe t_types, int m
     //
     // Créé une fenetre qui n'est pas en mode plein écran
     //
+    int WIDTH, HEIGHT;
+    MLV_Image *image;
+    int image_width, image_height;
+
+    taille_fenetre(&WIDTH, &HEIGHT);
+
+
     init_fenetre();
+
+    image = MLV_load_image( "./data/img/bg.jpg" );
+    MLV_draw_image( image, 0, 0 );
+    MLV_actualise_window();
+    
     GUI_display_game(game);
-    MLV_wait_mouse(NULL, NULL);
+
+    // Button * btn_tmp = NULL;
+    // header
+    while(1){
+        // GUI_display_header(DListe buttons)
+        // renvoie le button cliqué
+        // DListe * GUI_check_header_action(int x, int y)
+        break;
+    }
+
+
 
     LEVEL_MENU_ACTION act = START_LEVEL;
     if(act == START_LEVEL) {
         // jouer le niveau
-        clock_t t_1 = clock();
-        clock_t t_2;
+
         Enemy *dead_e = NULL;
         Tower *dead_t = NULL;
         while (1) { // check nombre de tour ici devient caduque maintenant
@@ -488,38 +509,42 @@ int gm_level_gui(Enemy ** waiting_enemies, DListe e_types, DListe t_types, int m
             // Rectificatif. Impossible d'obtenir une précision inférieure à la seconde
             // de plus cela va dépendre de la capacité de la machine à traiter le processus en cours (le jeu)
             // alternative : utiliser POSIX (clock_gettime())
-            t_2 = clock();
-            if (((unsigned int) (t_2 - t_1) % CLOCKS_PER_SEC) == 0) {
-                // retirer les ennemis à court de vies
-                enemy_add(&dead_e, gm_remove_dead_enemies(&game));
-                tower_add(&dead_t, gm_remove_dead_towers(&game));
-                // vérifier si la partie est finie, savoir qui a gagné n'est pas important ici
 
-                //
-                game.turn += 1;
-                // ajouter les ennemis du tour courant (mais d'abord ceux ayants un ou des tours de retard)
-                gm_add_entities(&game, waiting_enemies, ENEMY);
-                CLI_clear_screen();
-                CLI_display_title();
-                printf("\n\n");
-                CLI_display_game(game);
-                printf("\n");
-                GUI_display_game(game);
-                // on fait jouer les tourelles
-                gm_entities_play_effects(game, game.towers, TOWER, t_types, e_types);
-                // on fait jouer les ennemis
-                gm_entities_play_effects(game, game.enemies, ENEMY, t_types, e_types);
-                if (gm_is_game_over(game))
-                    break;
-                // déplacement des ennemis
-                gm_move_all(&game);
-            }
+            // retirer les ennemis à court de vies
+            enemy_add(&dead_e, gm_remove_dead_enemies(&game));
+            tower_add(&dead_t, gm_remove_dead_towers(&game));
+            // vérifier si la partie est finie, savoir qui a gagné n'est pas important ici
+
+            //
+            game.turn += 1;
+            // ajouter les ennemis du tour courant (mais d'abord ceux ayants un ou des tours de retard)
+            gm_add_entities(&game, waiting_enemies, ENEMY);
+            CLI_clear_screen();
+            CLI_display_title();
+            printf("\n\n");
+            CLI_display_game(game);
+            printf("\n");
+            MLV_draw_filled_rectangle(0, 0, WIDTH, HEIGHT, BACKGROUND_COLOR);
+            MLV_draw_image( image, 0, 0 );
+            MLV_actualise_window();
+            GUI_display_game(game);
+            // on fait jouer les tourelles
+            gm_entities_play_effects(game, game.towers, TOWER, t_types, e_types);
+            // on fait jouer les ennemis
+            gm_entities_play_effects(game, game.enemies, ENEMY, t_types, e_types);
+            if (gm_is_game_over(game))
+                break;
+            // déplacement des ennemis
+            gm_move_all(&game);
+            MLV_wait_milliseconds(500);
 
         }
     }
+    MLV_wait_mouse(NULL, NULL);
     //
     // Ferme la fenêtre
     //
     MLV_free_window();
+    MLV_free_image( image );
     return 1;
 }
