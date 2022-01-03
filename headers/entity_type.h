@@ -57,6 +57,6 @@ void entity_type_free(Entity_type * e_type);
  */
 void entity_type_dliste_free(DListe * l);
 
-
+Entity_type * entity_type_get(DListe * l, int id);
 
 #endif //L2_PROJET_C_ENTITY_TYPE_H

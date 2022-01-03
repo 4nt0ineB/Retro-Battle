@@ -1,18 +1,18 @@
-A DAMAGE -1 0 0 0 0 0 0 0 1
-X DAMAGE 1 1 1 1 1 1 1 1 1
-P SLOW 0 1 0 0 0 0 0 0 0 1
+A DAMAGE -1 0 0 0 0 0 0 0 0 1
+P SLOW -1 1 0 0 0 0 0 0 0 1
+F DAMAGE -8 0 0 0 0 0 1 0 1 1
+R DAMAGE 0 -1 0 1 0 0 0 1 0 0
+R DAMAGE 0 -1 0 0 0 0 0 1 0 0
 
 
-
-
-# type id | effect name ] increment | set | target | range | l_range | h_range | r_range | b_range | front depth
+# type id | effect name ] increment | set | target | self | range | l_range | h_range | r_range | b_range | front depth
 #
-#
+# [Important: The effect order matter !]
 # type id: defined by user in "enemy_types"
 # effect name: DAMAGE, SPEED, HEAL, FREEZE, SLOW, SWITCHPLACE
 # increment: value to increment
 # set: value to set, make increment is ignored
-# target: 0 (Enemy), 1 (Tower), 2 (Enemy & Tower)
+# target: 0 (Enemy), 1 (Tower), 2 (Enemy & Tower), 3 (Self)
 # range: Circular range
 # left range:
 # range above:

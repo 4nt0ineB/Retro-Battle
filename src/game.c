@@ -72,22 +72,123 @@ int game_move_entity(Game * game, void * entity, ENTITY ntt, int line, int posit
     return 1;
 }
 
+void game_incr_money(Game * game, int money){
+    game->money += money;
+}
 
 //** Fonction des effets implémentés **//
 int game_effect_damage(void * entity, ENTITY ntt, Effect effect){
-    switch (ntt) {
-        case TOWER:
-            ((Tower *) entity)->life += effect.increment;
-            break;
-        case ENEMY:
-            ((Enemy *) entity)->life += effect.increment;
-            break;
-        default:
-            return 0;
+    if(effect.increment < 0){
+        switch (ntt) {
+            case TOWER:
+                ((Tower *) entity)->life += effect.increment;
+                break;
+            case ENEMY:
+                ((Enemy *) entity)->life += effect.increment;
+                break;
+            default:
+                return 0;
+        }
+    }else if(effect.set < 0){
+        switch (ntt) {
+            case TOWER:
+                ((Tower *) entity)->life = effect.set;
+                break;
+            case ENEMY:
+                ((Enemy *) entity)->life = effect.set;
+                break;
+            default:
+                return 0;
+        }
     }
     return 1;
 }
 
-void game_incr_money(Game * game, int money){
-    game->money += money;
+int game_effect_slow(void * entity, ENTITY ntt, Effect effect){
+    if(effect.increment){
+        switch (ntt) {
+            case TOWER:
+                break;
+            case ENEMY:
+                ((Enemy *) entity)->speed += effect.increment;
+                break;
+            default:
+                return 0;
+        }
+    }else if(effect.set){
+        switch (ntt) {
+            case TOWER:
+                break;
+            case ENEMY:
+                ((Enemy *) entity)->speed = effect.set;
+                break;
+            default:
+                return 0;
+        }
+    }
+    return 1;
+}
+
+int game_effect_heal(void  * entity, ENTITY ntt, Effect effect, DListe tower_types, DListe enemy_types){
+    int maxlife = 0;
+    switch (ntt) {
+        case TOWER:
+            maxlife = entity_type_get( &tower_types, ((Enemy *) entity)->type)->v1;
+            break;
+        case ENEMY:
+            maxlife = entity_type_get( &enemy_types, ((Enemy *) entity)->type)->v1;
+            break;
+        default:
+            return 0;
+    }
+    if(effect.increment > 0){
+        switch (ntt) {
+            case TOWER:
+                ((Tower *) entity)->life += effect.increment % maxlife;
+
+                break;
+            case ENEMY:
+                ((Enemy *) entity)->life += effect.increment % maxlife;;
+                break;
+            default:
+                return 0;
+        }
+    }else if(effect.set > 0){
+        switch (ntt) {
+            case TOWER:
+                ((Tower *) entity)->life = effect.set % maxlife;
+                break;
+            case ENEMY:
+                ((Enemy *) entity)->speed = effect.set % maxlife;;
+                break;
+            default:
+                return 0;
+        }
+    }
+    return 1;
+}
+
+int game_effect_speed(void  * entity, ENTITY ntt, Effect effect){
+    if(effect.increment > 0){
+        switch (ntt) {
+            case TOWER:
+                break;
+            case ENEMY:
+                ((Enemy *) entity)->speed += effect.increment;
+                break;
+            default:
+                return 0;
+        }
+    }else if(effect.set > 0){
+        switch (ntt) {
+            case TOWER:
+                break;
+            case ENEMY:
+                ((Enemy *) entity)->speed = effect.set;
+                break;
+            default:
+                return 0;
+        }
+    }
+    return 1;
 }

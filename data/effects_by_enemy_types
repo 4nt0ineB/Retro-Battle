@@ -1,8 +1,13 @@
-D DAMAGE -1 0 1 0 1 0 0 0 0
+E DAMAGE -1 0 1 0 0 1 0 0 0 0
+D DAMAGE -1 0 1 0 0 1 0 0 0 0
+S DAMAGE -1 0 1 0 0 1 0 0 0 0
+M DAMAGE -1 0 1 0 0 1 0 0 0 0
+M HEAL 1 0 0 0 0 1 0 1 0 0
+B DAMAGE -1 0 1 0 0 1 0 0 0 0
+B SPEED 1 0 0 0 0 0 1 0 1 1
 
 
-
-# type id | effect name | increment | set | target | range | l_range | h_range | r_range | b_range | front depth
+# type id | effect name | increment | set | target | self | range | l_range | h_range | r_range | b_range | front depth
 #
 #
 # type id: defined by user in "enemy_types"

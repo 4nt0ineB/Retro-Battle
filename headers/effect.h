@@ -18,8 +18,8 @@ typedef enum{
     , HEAL
     , SLOW
     , SPEED
-    , FREEZE
-    , SWITCHPLACE
+    //, FREEZE
+    //, SWITCHPLACE
 }EFFECT_TYPE;
 
 /**
@@ -49,6 +49,7 @@ typedef struct {
     int increment; ///< valeur à incrémenter/décrémenter
     int set; ///< Valeur à définir != incrémenter
     int target; ///< 0=Enemy, 1=Tower, 2=Tout le monde
+    int self; ///< L'effet est appliqué sur l'entité qui le lance
     int range; ///< portée (zone de rayon range) de l'effet sur les target
     int l_range; ///< portée de l'effet (nombre minimum de targets à toucher si possible (pas de limite de )), à gauche
     int h_range; ///< portée de l'effet (sur les targets), en haut
@@ -63,6 +64,7 @@ typedef struct {
  * @param increment
  * @param set
  * @param target
+ * @param self
  * @param range
  * @param l_range
  * @param h_range
@@ -76,6 +78,7 @@ Effect * effect_alloue(
         int increment,
         int set,
         int target,
+        int self,
         int range,
         int l_range,
         int h_range,

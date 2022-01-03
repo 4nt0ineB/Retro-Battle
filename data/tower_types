@@ -1,7 +1,7 @@
-ALU A 4 5
-PMMU P 2 5
-RAM R 1 2
-PATCH X 3 3
-FIREWALL F 4 4
+ALU A 10 20
+PMMU P 7 20
+RAM R 7 15
+PATCH X 40 35
+FIREWALL F 18 100
 
 # Enemy name | Label | Life | price

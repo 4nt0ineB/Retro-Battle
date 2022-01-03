@@ -52,8 +52,12 @@ int game_add_entity(Game * game, void * entity, ENTITY ntt);
  */
 int game_move_entity(Game * game, void * entity, ENTITY ntt, int line, int position);
 
+void game_incr_money(Game * game, int money);
+
 //################ Fonctions des effets implémentés ################//
 int game_effect_damage(void * entity, ENTITY ntt, Effect effects);
+int game_effect_slow(void * entity, ENTITY ntt, Effect effect);
+int game_effect_heal(void  * entity, ENTITY ntt, Effect effect, DListe tower_types, DListe enemy_types);
+int game_effect_speed(void  * entity, ENTITY ntt, Effect effect);
 
-void game_incr_money(Game * game, int money);
 #endif //L2_PROJET_C_GAME_H

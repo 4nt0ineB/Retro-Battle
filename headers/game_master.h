@@ -47,11 +47,11 @@ int gm_add_entities(Game * game, void * entities, ENTITY ntt);
  * @param ntt
  * @return
  */
-int gm_entity_play_effect(Game game, void * entity, ENTITY ntt, Effect effect);
+int gm_entity_play_effect(Game game, void * entity, ENTITY ntt, Effect effect, DListe tower_types, DListe enemy_types);
 
-int gm_apply_effect_on_entities(DListe entities, ENTITY ntt, Effect effect);
+int gm_apply_effect_on_entities(DListe entities, ENTITY ntt, Effect effect, DListe tower_types, DListe enemy_types);
 
-int gm_apply_effect_on_entity(void * entity, ENTITY ntt, Effect effect);
+int gm_apply_effect_on_entity(void * entity, ENTITY ntt, Effect effect, DListe tower_types, DListe enemy_types);
 
 /**
  *
@@ -60,9 +60,9 @@ int gm_apply_effect_on_entity(void * entity, ENTITY ntt, Effect effect);
  * @param entity_types
  * @return
  */
-int gm_entity_play_effects(Game game, void * entity, ENTITY ntt, DListe entity_types);
+int gm_entity_play_effects(Game game, void * entity, ENTITY ntt, DListe tower_types, DListe enemy_types);
 
-int gm_entities_play_effects(Game game, void * entity, ENTITY ntt, DListe entity_types);
+int gm_entities_play_effects(Game game, void * entity, ENTITY ntt, DListe tower_types, DListe enemy_types);
 
 Enemy * gm_remove_dead_enemies(Game * game);
 

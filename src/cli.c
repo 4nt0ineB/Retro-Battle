@@ -140,9 +140,9 @@ void CLI_show_wave(Enemy * l){
         printf("%d|", i);
         for(j = 1; j <= maxturn; j++){
             if(*view[i][j] == '('){
-                printf(BORED " %2s" RESET, &view[i][j][1]);
+                printf(BORED " %3s" RESET, &view[i][j][1]);
             }else{
-                printf(" %2s", view[i][j]);
+                printf(" %3s", view[i][j]);
             }
         }
         printf("\n");
@@ -270,7 +270,7 @@ void CLI_display_effect(Effect effect){
         strcat(str, "\n├ Target front depth: %d.");
         printf(str
                 , effect_type_toString(effect.type)
-                , (effect.target == 0 ? "Enemies": effect.target == 1 ? "Towers": "Enemies & Towers")
+                , (effect.target == 0 ? "Enemies": effect.target == 1 ? "Towers": effect.target == 2 ? "Enemies & Towers" : "Self")
                 , (effect.set ? effect.set: effect.increment)
                 , effect.front
         );
@@ -290,7 +290,7 @@ void CLI_display_effect(Effect effect){
 
         printf(str
                 , effect_type_toString(effect.type)
-                , (effect.target == 0 ? "Enemies": effect.target == 1 ? "Towers": "Enemies & Towers")
+                , (effect.target == 0 ? "Enemies": effect.target == 1 ? "Towers": effect.target == 2 ? "Enemies & Towers" : "Self")
                 , (effect.set ? effect.set: effect.increment)
                 , effect.range
                 , effect.l_range, effect.r_range, effect.h_range, effect.b_range

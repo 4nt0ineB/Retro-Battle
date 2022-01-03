@@ -154,15 +154,15 @@ int lire_fichier_effets(char * nom_fichier, DListe types){
     char e_type;
     // :/ risque de segfault
     char effect_type[MAX_EFFECT_LIBELLE] = {0};
-    int increment, set, target, range, l_range, h_range, r_range,
+    int increment, set, target, self, range, l_range, h_range, r_range,
     b_range, front;
     EFFECT_TYPE type_effet = 0;
 
     // lecture des effets par type
-    while(fscanf(fichier, "%c %s %d %d %d %d %d %d %d %d %d ",
-                 &e_type, effect_type, &increment, &set, &target, &range, &l_range,
+    while(fscanf(fichier, "%c %s %d %d %d %d %d %d %d %d %d %d ",
+                 &e_type, effect_type, &increment, &set, &target, &self, &range, &l_range,
                  &h_range, &r_range,&b_range, &front
-                 ) == 11){
+                 ) == 12){
         type_effet = string_to_effect_type(effect_type);
         if(!type_effet){
             fprintf(stderr,"Le type d'effet %s n'existe pas.", effect_type);
@@ -170,7 +170,7 @@ int lire_fichier_effets(char * nom_fichier, DListe types){
             return 0;
         }
         effect = effect_alloue(
-                type_effet, increment, set, target, range, l_range, h_range, r_range,
+                type_effet, increment, set, target, self, range, l_range, h_range, r_range,
                 b_range, front
                 );
         if(!effect){

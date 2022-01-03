@@ -57,10 +57,9 @@ int gm_add_entities(Game * game, void * entities, ENTITY ntt){
     return 1;
 }
 
-int gm_entity_play_effect(Game game, void * entity, ENTITY ntt, Effect effect){
-
+int gm_entity_play_effect(Game game, void * entity, ENTITY ntt, Effect effect, DListe tower_types, DListe enemy_types){
     // on récupère les targets
-    if(effect.target < 0 || effect.target > 2) return 0;
+    if(effect.target < 0 || effect.target > 3) return 0;
     int pos[MAX_LINE+1][MAX_LINE_LENGTH+1] = {0};
     DListe towers = NULL;
     DListe enemies = NULL;
@@ -83,7 +82,7 @@ int gm_entity_play_effect(Game game, void * entity, ENTITY ntt, Effect effect){
 
     if(effect.front){ /* @todo détailler pourquoi on a une séparation (profondeur du front etc...)*/
         // ennemis
-        if(effect.target == 0 || effect.target == 2) {
+        if(effect.target == 0 || effect.target == 2){
             etmp = game.enemies;
             hr = ((Enemy *) entity)->line - effect.h_range;
             br = ((Enemy *) entity)->line + effect.b_range;
@@ -111,7 +110,7 @@ int gm_entity_play_effect(Game game, void * entity, ENTITY ntt, Effect effect){
         }
 
         //tourelles
-        if(effect.target == 1 || effect.target == 2) {
+        if(effect.target == 1 || effect.target == 2){
             ttmp = game.towers;
             hr = ((Tower *) entity)->line - effect.h_range;
             br = ((Tower *) entity)->line + effect.b_range;
@@ -135,7 +134,7 @@ int gm_entity_play_effect(Game game, void * entity, ENTITY ntt, Effect effect){
 
     }else{
         // tourelles
-        if(effect.target == 1 || effect.target == 2) {
+        if(effect.target == 1 || effect.target == 2){
             ttmp = game.towers;
             while (ttmp) {
                 if (ttmp->line == entity_line && ttmp->position == entity_pos) {
@@ -184,50 +183,72 @@ int gm_entity_play_effect(Game game, void * entity, ENTITY ntt, Effect effect){
         }
 
     }
-    /*DListe m = towers;
+    /*DListe m = enemies;
     while(m){
         printf("%p->", m->element);
         m = m->suivant;
-    }*/
-    printf("\n");
-    gm_apply_effect_on_entities(enemies, ntt, effect);
-    gm_apply_effect_on_entities(towers, ntt, effect);
+    }
+    printf("\n");*/
+
+
+    if(effect.self){
+        // si self effect et nécessite des target pour s'activer
+        if(effect.target >= 0){
+            if(enemies || towers){
+                cel = alloue_DCellule(entity);
+                gm_apply_effect_on_entities(cel, ntt, effect, tower_types, enemy_types);
+                free(cel);
+            }
+        }else{    // si self effect seulement
+            cel = alloue_DCellule(entity);
+            gm_apply_effect_on_entities(cel, ntt, effect, tower_types, enemy_types);
+            free(cel);
+        }
+    }else if(effect.target >= 0){
+        gm_apply_effect_on_entities(enemies, ENEMY, effect, tower_types, enemy_types);
+        gm_apply_effect_on_entities(towers, TOWER, effect, tower_types, enemy_types);
+    }
 
     free(towers);
     free(enemies);
     return 1;
 }
 
-int gm_apply_effect_on_entities(DListe entities, ENTITY ntt, Effect effect){
+int gm_apply_effect_on_entities(DListe entities, ENTITY ntt, Effect effect, DListe tower_types, DListe enemy_types){
     DListe tmp = entities;
     while(tmp){
-        gm_apply_effect_on_entity(tmp->element, ntt, effect);
+        gm_apply_effect_on_entity(tmp->element, ntt, effect, tower_types, enemy_types);
         tmp = tmp->suivant;
     }
     return 0;
 }
 
-int gm_apply_effect_on_entity(void * entity, ENTITY ntt, Effect effect){
+int gm_apply_effect_on_entity(void * entity, ENTITY ntt, Effect effect, DListe tower_types, DListe enemy_types){
     switch (effect.type) {
         case DAMAGE:
             game_effect_damage(entity, ntt, effect);
             break;
         case HEAL:
+            game_effect_heal(entity, ntt, effect, tower_types, enemy_types);
             break;
         case SLOW:
+            game_effect_slow(entity, ntt, effect);
             break;
         case SPEED:
+            game_effect_speed(entity, ntt, effect);
             break;
-        case FREEZE:
+        /*case FREEZE:
             break;
         case SWITCHPLACE:
-            break;
+            break;*/
+        default:
+            return 0;
     }
     return 1;
 }
 
-int gm_entity_play_effects(Game game, void * entity, ENTITY ntt, DListe entity_types){
-    DListe type = entity_types;
+int gm_entity_play_effects(Game game, void * entity, ENTITY ntt, DListe tower_types, DListe enemy_types){
+    DListe type = ntt == ENEMY ? enemy_types : tower_types;
     DListe effect = NULL;
     int id;
 
@@ -243,17 +264,18 @@ int gm_entity_play_effects(Game game, void * entity, ENTITY ntt, DListe entity_t
     }
     if(!type) return 0;
     effect = ((Entity_type *) type->element)->effects;
+
     while(effect){
-        gm_entity_play_effect(game, entity, ntt, *(Effect *) effect->element);
+        gm_entity_play_effect(game, entity, ntt, *(Effect *) effect->element, tower_types, enemy_types);
         effect = effect->suivant;
     }
     return 1;
 }
 
-int gm_entities_play_effects(Game game, void * entity, ENTITY ntt, DListe entity_types){
+int gm_entities_play_effects(Game game, void * entity, ENTITY ntt, DListe tower_types, DListe enemy_types){
     void * tmp = entity;
     while(tmp){
-        gm_entity_play_effects(game, tmp, ntt, entity_types);
+        gm_entity_play_effects(game, tmp, ntt, tower_types, enemy_types);
         switch (ntt) {
             case TOWER:
                 tmp = ((Tower *) tmp)->next;
@@ -406,9 +428,9 @@ int gm_level_cli(Enemy ** waiting_enemies, DListe e_types, DListe t_types, int m
                 CLI_display_title();printf("\n\n");
                 CLI_display_game(game);printf("\n");
                 // on fait jouer les tourelles
-                gm_entities_play_effects(game, game.towers, TOWER, t_types);
+                gm_entities_play_effects(game, game.towers, TOWER, t_types, e_types);
                 // on fait jouer les ennemis
-                gm_entities_play_effects(game, game.enemies, ENEMY, e_types);
+                gm_entities_play_effects(game, game.enemies, ENEMY, t_types, e_types);
                 if(gm_is_game_over(game))
                     break;
                 // déplacement des ennemis

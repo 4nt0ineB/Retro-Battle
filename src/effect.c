@@ -12,8 +12,8 @@ char * effect_type_toString(EFFECT_TYPE effect){
             , "HEAL"
             , "SLOW"
             , "SPEED"
-            , "FREEZE"
-            , "SWITCHPLACE"
+            /*, "FREEZE"
+            , "SWITCHPLACE"*/
     };
     return libelle[effect];
 
@@ -35,7 +35,7 @@ char * effect_type_toString(EFFECT_TYPE effect){
 
 int string_to_effect_type(char * libelle){
     int i = DAMAGE;
-    for(; i < SWITCHPLACE; i++){
+    for(; i <= SPEED; i++){
         if(strcmp(effect_type_toString(i), libelle) == 0)
             return i;
     }
@@ -47,6 +47,7 @@ Effect * effect_alloue(
         int increment,
         int set,
         int target,
+        int self,
         int range,
         int l_range,
         int h_range,
@@ -61,6 +62,7 @@ Effect * effect_alloue(
                 effect->increment = increment;
                 effect->set = set;
                 effect->target = target;
+                effect->self = self;
                 effect->range = range;
                 effect->l_range = l_range;
                 effect->h_range = h_range;

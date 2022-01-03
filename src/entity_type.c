@@ -18,12 +18,12 @@ Entity_type * entity_type_alloue(char * name, int id, int v1, int v2){
 
 int entity_type_add_effect(Entity_type * e_type, Effect * effect){
     if(!e_type) return 0;
-    DListe effect_tmp = e_type->effects;
-    while(effect_tmp){
+    //DListe effect_tmp = e_type->effects;
+    /*while(effect_tmp){
         if( (*((Effect *) effect_tmp->element)).type == effect->type)
             return 0;
         effect_tmp = effect_tmp->suivant;
-    }
+    }*/
     DListe cel = alloue_DCellule(effect);
     if(!cel)
         return 0;
@@ -49,5 +49,13 @@ void entity_type_dliste_free(DListe * l){
     *l = NULL;
 }
 
-
+Entity_type * entity_type_get(DListe * l, int id){
+    DListe tmp = (*l);
+    while(tmp){
+        if(((Entity_type *) tmp->element)->id == id )
+            return tmp->element;
+        tmp = tmp->suivant;
+    }
+    return NULL;
+}
 
