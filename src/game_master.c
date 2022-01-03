@@ -461,6 +461,7 @@ int gm_level_cli(Enemy ** waiting_enemies, DListe e_types, DListe t_types, int m
 }
 
 
+/*
 int gm_level_gui(Enemy ** waiting_enemies, DListe e_types, DListe t_types, int money){
 
     Game game = {NULL, NULL, 0, money};
@@ -469,7 +470,6 @@ int gm_level_gui(Enemy ** waiting_enemies, DListe e_types, DListe t_types, int m
     //
     int WIDTH, HEIGHT;
     MLV_Image *image;
-    int image_width, image_height;
 
     taille_fenetre(&WIDTH, &HEIGHT);
 
@@ -477,11 +477,16 @@ int gm_level_gui(Enemy ** waiting_enemies, DListe e_types, DListe t_types, int m
     init_fenetre();
 
     image = MLV_load_image( "./data/img/bg.jpg" );
+    MLV_resize_image( image, 1920, 1080);
     MLV_draw_image( image, 0, 0 );
     MLV_actualise_window();
-    
-    GUI_display_game(game);
 
+    GUI_display_game(game);
+    Tower * towers = NULL;
+    Tower * t1 = alloue_tower('F', 10, 3, 1, 0);
+    tower_add(&towers,t1);
+    game_add_entity(&game, &towers, TOWER);
+    gm_add_entities(&game, &towers, TOWER);
     // Button * btn_tmp = NULL;
     // header
     while(1){
@@ -547,4 +552,4 @@ int gm_level_gui(Enemy ** waiting_enemies, DListe e_types, DListe t_types, int m
     MLV_free_window();
     MLV_free_image( image );
     return 1;
-}
+}*/

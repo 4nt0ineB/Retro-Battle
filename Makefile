@@ -17,10 +17,7 @@ SRC_FILES := $(shell find $(SRC_DIR) -name '*.c')
 #SRC = $(addsuffix .c, $(addprefix, $(SRC_DIR)/,$(SRC_FILES)))
 
 build: $(SRC_FILES)
-	$(COMP) $(FLAG) $(SRC_FILES) -o $(OUTPUT) -g $(LIB)
-
-run: build
-	./$(OUTPUT) $(LEVEL_FILE)
+	$(COMP) $(FLAG) $(SRC_FILES) -o $(OUTPUT) -g
 
 run-cli: build
 	./$(OUTPUT) $(LEVEL_FILE) -a
@@ -28,8 +25,11 @@ run-cli: build
 run-gui: build
 	./$(OUTPUT) $(LEVEL_FILE) -g
 
+# Memcheck
+memcheck-cli: clean build
+	valgrind --tool=memcheck --leak-check=full --track-origins=yes  --show-leak-kinds=all ./$(OUTPUT) $(LEVEL_FILE) -a
 
-memleak: clean build
-	valgrind --leak-check=full --track-origins=yes  --show-leak-kinds=all ./$(OUTPUT) $(LEVEL_FILE)
+memcheck-gui: clean build
+	valgrind --leak-check=full --track-origins=yes  --show-leak-kinds=all ./$(OUTPUT) $(LEVEL_FILE) -g
 
-all: run
+all: run-cli
