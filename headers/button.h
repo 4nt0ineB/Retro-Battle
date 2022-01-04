@@ -12,10 +12,13 @@
  * Types des boutons implémentés
  */
 typedef enum {
-    BTN_PICK_TOWER,
+    BTN_PICK_TOWER = 1,
     BTN_SHOW_WAVE,
     BTN_START,
-    BTN_QUIT
+    BTN_QUIT,
+    BTN_INCR_PICK,
+    BTN_DECR_PICK,
+    BTN_BOARD_BOX
 } BTN_TYPE;
 
 /**
@@ -28,6 +31,7 @@ typedef struct {
     MLV_Image * image;
     char * text;
     void * data; ///< une donnée alloué portée par le bouton
+    MLV_Color color;
 } Button;
 
 /**
@@ -40,7 +44,8 @@ typedef struct {
  * @param data
  * @return
  */
-Button * alloue_btn(BTN_TYPE type, Point p1, Point p2, MLV_Image * image, char * text, void * data);
+Button * alloue_btn(BTN_TYPE type, Point p1, Point p2, MLV_Image * image, char * text, void * data, MLV_Color color);
+
 
 int btn_coord_is_over(Button btn, int x, int y);
 

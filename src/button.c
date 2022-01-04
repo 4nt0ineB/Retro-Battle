@@ -5,7 +5,7 @@
 #include "../headers/button.h"
 
 
-Button * alloue_btn(BTN_TYPE type, Point p1, Point p2, MLV_Image * image, char * text, void * data){
+Button * alloue_btn(BTN_TYPE type, Point p1, Point p2, MLV_Image * image, char * text, void * data, MLV_Color color){
     Button * btn = (Button *) malloc(sizeof(Button));
     if(btn){
         btn->type = type;
@@ -14,9 +14,12 @@ Button * alloue_btn(BTN_TYPE type, Point p1, Point p2, MLV_Image * image, char *
         btn->image = image;
         btn->text = text;
         btn->data = data;
+        btn->color = color;
     }
     return btn;
 }
+
+
 
 int btn_coord_is_over(Button btn, int x, int y){
     if(btn.p1.x <= x && x <= btn.p2.x

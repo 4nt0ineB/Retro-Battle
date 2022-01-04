@@ -490,7 +490,7 @@ int gm_level_gui(Enemy ** waiting_enemies, DListe e_types, DListe t_types, int m
     // création de la fenêtre
     init_fenetre();
     // On fice le nombre d'image par seconde
-    MLV_change_frame_rate( 24 );
+    MLV_change_frame_rate( 10 );
     // affichage du fond
     // chargement de la police d'écriture
     float fontsize = 2;
@@ -508,50 +508,129 @@ int gm_level_gui(Enemy ** waiting_enemies, DListe e_types, DListe t_types, int m
     // premier affichage du jeu
     GUI_display_game(game, e_types, enemy_images, t_types, tower_images);
 
-     Tower * towers = NULL;
-     Tower * t1 = alloue_tower('F', 10, 3, 1, 0);
-     tower_add(&towers,t1);
-     game_add_entity(&game, &towers, TOWER);
-     gm_add_entities(&game, &towers, TOWER);
+    Tower * towers = NULL;
+    Tower * t1 = alloue_tower('F', 18, 3, 1, 0);
+    tower_add(&towers,t1);
+    game_add_entity(&game, &towers, TOWER);
+    gm_add_entities(&game, &towers, TOWER);
 
    // ajout du bouton d'affichage de la vague
-    DListe btn_list = NULL;
-    Button * btn_tmp = NULL;
-    float btn_w = 15, btn_h = 7; // en pourcentage des bords de la fenêtre
-    float tmp_x, tmp_y;
+    DListe btn_list = NULL; // liste des boutons dans la fenêtre
+    DListe btn_pick_list = gui_create_tower_selection(t_types, tower_images);
+    DListe btn_box_list =  gui_create_board_box_btns(&btn_list);
 
-    gui_rel_length(&btn_w, &btn_h);
+    Button * btn_tmp = NULL;
+    float tmp_x, tmp_y;
+    float tmp_x2, tmp_y2;
+
+    // bouton quitter
     tmp_x = tmp_y = HEADER_PADDING;
     gui_rel_length(&tmp_x, &tmp_y);
-    Point ptmp1 = {WIDTH - (int) btn_w - (int) tmp_x, (int) tmp_y};
-    Point ptmp2 = { (WIDTH  - (int) tmp_x), (int) (tmp_y + btn_h)};
-    btn_tmp = alloue_btn(BTN_QUIT, ptmp1, ptmp2 , NULL, "Quitter",NULL);
+    tmp_x2 = 15; tmp_y2 = 7;
+    gui_rel_length(&tmp_x2, &tmp_y2);
+    btn_tmp = btn_create_responsive(WIDTH - (int) tmp_x - (int) tmp_x2, (int) tmp_y, 15, 7, BTN_QUIT, NULL, "Quit", NULL, MLV_COLOR_DARK_RED);
     gui_add_btn(&btn_list, btn_tmp);
+    // bouton show wave
+    tmp_x = tmp_y = HEADER_PADDING;
+    gui_rel_length(&tmp_x, &tmp_y);
+    btn_tmp = btn_create_responsive((int) ((float) WIDTH * 0.65) , (int) tmp_y, 15, 7, BTN_SHOW_WAVE, NULL, "Show wave", NULL, MLV_COLOR_GREY);
+    gui_add_btn(&btn_list, btn_tmp);
+    // bouton start
+    tmp_x = tmp_y = HEADER_PADDING;
+    gui_rel_length(&tmp_x, &tmp_y);
+    btn_tmp = btn_create_responsive((int) ((float) WIDTH * 0.55 ), (int) tmp_y, 7, 7, BTN_START, NULL, "Start", NULL, MLV_COLOR_GREY);
+    gui_add_btn(&btn_list, btn_tmp);
+    // bouton decrement
+    tmp_x = tmp_y = HEADER_PADDING;
+    gui_rel_length(&tmp_x, &tmp_y);
+    btn_tmp = btn_create_responsive((int) tmp_x, (int) tmp_y, 2, (float) (w_case()*100)/MAX_H, BTN_DECR_PICK, NULL, "<", NULL, MLV_COLOR_DARK_CYAN);
+    gui_add_btn(&btn_list, btn_tmp);
+    // bouton increment
+    tmp_x = tmp_y = HEADER_PADDING;
+    gui_rel_length(&tmp_x, &tmp_y);
+    btn_tmp = btn_create_responsive((WIDTH * HEADER_PADDING*14.5f)/100, (int) tmp_y, 2, (float) (w_case()*100)/MAX_H, BTN_INCR_PICK, NULL, ">", NULL, MLV_COLOR_DARK_CYAN);
+    gui_add_btn(&btn_list, btn_tmp);
+
     MLV_actualise_window();
     //printf("BTN: x1: %d y1: %d, x2: %d y2: %d\n", btn_tmp->p1.x, btn_tmp->p1.y, btn_tmp->p2.x, btn_tmp->p2.y);
-
 
     // header
     LEVEL_MENU_ACTION act = -1;
     Button * clicked_btn = NULL;
+    Tower * tower_add_tmp = NULL;
+    ENTITY ntt_tmp;
+    int selected_tower_type = -1;
+    int pick_menu_origin = 0;
+    int click_cool_down = 50;
+    int click_t = MLV_get_time();
+
     while(1){
         MLV_draw_image( image, 0, 0 );
         GUI_display_game(game, e_types, enemy_images, t_types, tower_images);
         gui_display_btns(btn_list, font);
-        if(MLV_get_mouse_button_state(MLV_BUTTON_LEFT) == MLV_PRESSED
-            && (clicked_btn = gui_get_clicked_btn(btn_list))
-            ){
-            if(clicked_btn->type == BTN_QUIT){
-                break;
-            }
+        gui_update_tower_selection(btn_pick_list, (WIDTH * HEADER_PADDING*3)/100, (HEIGHT * HEADER_PADDING)/100, pick_menu_origin);
+        gui_display_btns(btn_pick_list, font);
+
+        if((MLV_get_time() - click_t) > click_cool_down){
+            if(MLV_get_mouse_button_state(MLV_BUTTON_LEFT) == MLV_PRESSED) {
+
+                if ((clicked_btn = gui_get_clicked_btn(btn_list))) {
+                    click_t = MLV_get_time();
+                    printf("HEY type: %d\n", clicked_btn->type);
+                    if (clicked_btn->type == BTN_START) {
+                        act = START_LEVEL;
+                        break;
+                    } else if (clicked_btn->type == BTN_QUIT) {
+                        break;
+                    } else if (clicked_btn->type == BTN_INCR_PICK) {
+
+                        pick_menu_origin += 1;
+                    } else if (clicked_btn->type == BTN_DECR_PICK) {
+
+                        pick_menu_origin -= 1;
+                    }
+
+                } else if ((clicked_btn = gui_get_clicked_btn(btn_pick_list))) {
+                    click_t = MLV_get_time();
+                    if (clicked_btn->type == BTN_PICK_TOWER) {
+                        selected_tower_type = *((int *) clicked_btn->data);
+                        printf("SELECTED %d\n", selected_tower_type);
+                    }
+                } else if ((clicked_btn = gui_get_clicked_btn(btn_box_list))) {
+                    click_t = MLV_get_time();
+                    printf("Coordo: %d, %d\n", ((Point *) clicked_btn->data)->x, ((Point *) clicked_btn->data)->y);
+                    tower_add_tmp = alloue_tower(selected_tower_type, 0, ((Point *) clicked_btn->data)->x,
+                                                 ((Point *) clicked_btn->data)->y, 0);
+                    init_towers(tower_add_tmp, t_types);
+                    game_incr_money(&game, -1 * tower_add_tmp->price);
+                    if (!game_add_entity(&game, &tower_add_tmp, TOWER)) {
+                        free(tower_add_tmp);
+                    }
+                }
+            }else if(MLV_get_mouse_button_state(MLV_BUTTON_RIGHT) == MLV_PRESSED){
+
+             if((clicked_btn = gui_get_clicked_btn(btn_box_list))){
+                 click_t = MLV_get_time();
+                 tower_add_tmp = game_get_entity_by_position(game, ((Point *) clicked_btn->data)->x, ((Point *) clicked_btn->data)->y, &ntt_tmp);
+                 tower_extract(&game.towers, tower_add_tmp);
+                 if(tower_add_tmp){
+                     game_incr_money(&game, tower_add_tmp->price);
+                 }
+             }
+
+           }
+
         }
+
+
         gui_enhance_btns_over(btn_list, font);
+        gui_enhance_btns_over(btn_pick_list, font);
         MLV_actualise_window();
         MLV_delay_according_to_frame_rate();
     }
 
 
-    act = START_LEVEL;
+    
     if(act == START_LEVEL) {
         // jouer le niveau
 
@@ -560,7 +639,7 @@ int gm_level_gui(Enemy ** waiting_enemies, DListe e_types, DListe t_types, int m
         int star_t = MLV_get_time();
         while (1) {
 
-            if(MLV_get_time() - star_t >= 700){
+            if(MLV_get_time() - star_t >= 1000){
                 // retirer les ennemis à court de vies
                 enemy_add(&dead_e, gm_remove_dead_enemies(&game));
                 tower_add(&dead_t, gm_remove_dead_towers(&game));
