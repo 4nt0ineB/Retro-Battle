@@ -2,7 +2,7 @@ COMP = clang
 FLAG = -Wall -Wfatal-errors -std=c17
 LIB = -lMLV
 OUTPUT = main
-LEVEL_FILE = ./data/level4
+LEVEL_FILE = ./data/levels/level4
 
 SRC_DIR = src
 .SILENT: clean

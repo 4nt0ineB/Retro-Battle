@@ -506,13 +506,13 @@ int gm_level_gui(Enemy ** waiting_enemies, DListe e_types, DListe t_types, int m
     MLV_draw_image( image, 0, 0 );
     MLV_actualise_window();
     // premier affichage du jeu
-    GUI_display_game(game, enemy_images, tower_images);
+    GUI_display_game(game, e_types, enemy_images, t_types, tower_images);
 
-    /* Tower * towers = NULL;
+     Tower * towers = NULL;
      Tower * t1 = alloue_tower('F', 10, 3, 1, 0);
      tower_add(&towers,t1);
      game_add_entity(&game, &towers, TOWER);
-     gm_add_entities(&game, &towers, TOWER);*/
+     gm_add_entities(&game, &towers, TOWER);
 
    // ajout du bouton d'affichage de la vague
     DListe btn_list = NULL;
@@ -536,7 +536,7 @@ int gm_level_gui(Enemy ** waiting_enemies, DListe e_types, DListe t_types, int m
     Button * clicked_btn = NULL;
     while(1){
         MLV_draw_image( image, 0, 0 );
-        GUI_display_game(game, enemy_images, tower_images);
+        GUI_display_game(game, e_types, enemy_images, t_types, tower_images);
         gui_display_btns(btn_list, font);
         if(MLV_get_mouse_button_state(MLV_BUTTON_LEFT) == MLV_PRESSED
             && (clicked_btn = gui_get_clicked_btn(btn_list))
@@ -560,7 +560,7 @@ int gm_level_gui(Enemy ** waiting_enemies, DListe e_types, DListe t_types, int m
         int star_t = MLV_get_time();
         while (1) {
 
-            if(MLV_get_time() - star_t >= 500){
+            if(MLV_get_time() - star_t >= 700){
                 // retirer les ennemis à court de vies
                 enemy_add(&dead_e, gm_remove_dead_enemies(&game));
                 tower_add(&dead_t, gm_remove_dead_towers(&game));
@@ -574,7 +574,7 @@ int gm_level_gui(Enemy ** waiting_enemies, DListe e_types, DListe t_types, int m
                 //printf("\n");
                 MLV_draw_filled_rectangle(0, 0, WIDTH, HEIGHT, BACKGROUND_COLOR);
                 MLV_draw_image( image, 0, 0 );
-                GUI_display_game(game, enemy_images, tower_images);
+                GUI_display_game(game, e_types, enemy_images, t_types, tower_images);
                 // on fait jouer les tourelles
                 gm_entities_play_effects(game, game.towers, TOWER, t_types, e_types);
                 // on fait jouer les ennemis

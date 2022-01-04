@@ -116,11 +116,31 @@ Button * gui_get_clicked_btn(DListe btn_list){
     return NULL;
 }
 
-void gui_display_entity(void * entity, ENTITY ntt, Entity_img ntt_img){
+void gui_display_entity(void * entity, ENTITY ntt, Entity_type ntt_type, Entity_img ntt_img, int x, int y){
+    MLV_draw_image(ntt_img.image, x, y);
+    int maxlife = ntt_type.v1;
+    int life = 0;
+    float lifebar_h = 0.5; // pourcentages
+    float paddinglife = 0.5;
+    float damaged =
+    gui_rel_length(&paddinglife, &lifebar_h);
+    switch (ntt) {
+        case TOWER:
+            life = ((Tower *) entity)->life;
+            break;
+        case ENEMY:
+            life = ((Enemy *) entity)->life;
+            break;
+    }
+
+    MLV_draw_filled_rectangle(x+paddinglife, y + w_case(), w_case()-paddinglife, lifebar_h, MLV_COLOR_ALICE_BLUE);
+    MLV_draw_filled_rectangle(x+paddinglife, y + w_case(), ((w_case()-paddinglife)*life)/maxlife, lifebar_h, MLV_COLOR_ALICE_BLUE);
 
 }
 
-void GUI_display_game(Game game, DListe enemy_images, DListe tower_images){
+
+
+void GUI_display_game(Game game, DListe e_types, DListe enemy_images, DListe t_types, DListe tower_images){
 
     Enemy * e_view[MAX_LINE+1][MAX_LINE_LENGTH+1] = {0};
     Tower * t_view[MAX_LINE+1][MAX_LINE_LENGTH+1] = {0};
@@ -152,7 +172,11 @@ void GUI_display_game(Game game, DListe enemy_images, DListe tower_images){
         for(j = 1; j <= MAX_LINE_LENGTH; j++){
 
             if(e_view[i][j]){
-                MLV_draw_image(ntt_img_get(&enemy_images, e_view[i][j]->type)->image, cx, cy );
+                gui_display_entity(e_view[i][j], ENEMY,
+                                   *(Entity_type *) entity_type_get(&e_types, e_view[i][j]->type),
+                                   *ntt_img_get(&enemy_images, e_view[i][j]->type),
+                                   cx, cy);
+                //MLV_draw_image(ntt_img_get(&enemy_images, e_view[i][j]->type)->image, cx, cy );
             }else{
                 MLV_draw_filled_circle(cx+(cw/2), cy+(cw/2), 3, MLV_COLOR_LIGHT_GREEN);
             }
@@ -171,8 +195,10 @@ void GUI_display_game(Game game, DListe enemy_images, DListe tower_images){
         for(j = 1; j <= MAX_LINE_LENGTH; j++){
 
             if(t_view[i][j]) {
-                MLV_draw_filled_rectangle(cx, cy, cw, cw, MLV_COLOR_DARK_GREEN);
-                MLV_draw_rectangle(cx, cy, cw, cw, MLV_COLOR_BLACK);
+                gui_display_entity(t_view[i][j], TOWER,
+                                   *(Entity_type *) entity_type_get(&t_types, t_view[i][j]->type),
+                                   *ntt_img_get(&tower_images, t_view[i][j]->type),
+                                   cx, cy);
             }
             cx += cw + CASE_MARGING;
         }

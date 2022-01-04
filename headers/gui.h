@@ -66,12 +66,12 @@ void gui_enhance_btns_over(DListe btn,  MLV_Font *font);
 
 Button * gui_get_clicked_btn(DListe btn_list);
 
-void gui_display_entity(void * entity, ENTITY ntt, Entity_img);
+void gui_display_entity(void * entity, ENTITY ntt, Entity_type ntt_type, Entity_img ntt_img, int x, int y);
 
 /**
  * Affiche le jeu
  * @param game
  */
-void GUI_display_game(Game game, DListe enemy_images, DListe tower_images);
+void GUI_display_game(Game game, DListe e_types, DListe enemy_images, DListe t_types, DListe tower_images);
 
 #endif //L2_PROJET_C_GUI_H
