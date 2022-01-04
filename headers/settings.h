@@ -9,6 +9,8 @@
 #include "entity_type.h"
 #include "DListe.h"
 #include "stdio.h"
+#include "cli_couleurs.h"
+
 
 #define MAX_LINE 7 ///< C'est le nombre max de lignes
 /**
@@ -20,6 +22,7 @@
 #define MAX_LINE_LENGTH 26
 #define GO_BACK 'b'
 #define MAX_OPTIONS 128
+#define IMG_PATH "./data/img/tower_icons/"
 
 typedef enum {
     GUI = 'g',
@@ -60,5 +63,13 @@ int lire_fichier_effets(char * nom_fichier, DListe types);
  * @return un tableau des options indexé selon l'énumération GAME_OPTIONS
  */
 char ** read_options(int argc, char *argv[]);
+
+/**
+ *
+ * @param ntt
+ * @param path
+ * @return
+ */
+DListe read_ntt_images(ENTITY ntt, char * path);
 
 #endif //L2_PROJET_C_SETTINGS_H

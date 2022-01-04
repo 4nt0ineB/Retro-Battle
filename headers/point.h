@@ -6,8 +6,8 @@
 #define L2_PROJET_C_POINT_H
 
 typedef struct{
-    int x;
-    int y;
+    int x; ///< x
+    int y; ///< y
 }Point;
 
 

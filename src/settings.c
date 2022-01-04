@@ -3,6 +3,8 @@
 //
 
 #include "../headers/settings.h"
+#include "../headers/gui.h"
+
 
 Enemy * lire_fichier_niveau(char * nom_fichier, int * money){
     Enemy * enemy_list = NULL;
@@ -249,4 +251,42 @@ char ** read_options(int argc, char *argv[]) {
 
     }
     return options;
+}
+
+
+DListe read_ntt_images(ENTITY ntt, char * path){
+
+    DListe ntt_imgs = NULL;
+    MLV_Image * image = NULL;
+    Entity_img * ntt_img = NULL;
+    FILE * fichier = NULL;
+    if(!(fichier = fopen(path, "r")))
+        return 0;
+
+    char id = '\0';
+    char img_name[150];
+    char img_path[1500];
+    while(fscanf(fichier, " %c %150s", &id, img_name) == 2){
+        strcpy(img_path, IMG_PATH);
+        strcat(img_path, img_name);
+        image = MLV_load_image( img_path);
+        MLV_resize_image_with_proportions (image, w_case(), w_case());
+
+        if(!image){
+            printf(BORED "Could not load image\n" RESET);
+            continue;
+        }
+        ntt_img = alloue_ntt_img(ntt, id, image);
+        if(!ntt_img){
+            printf(BORED "Could not allocate image\n" RESET);
+            continue;
+        }
+        if(!DListe_ajouter_fin(&ntt_imgs, alloue_DCellule(ntt_img))){
+            printf(BORED "Could not allocate image in image list.\n" RESET);
+            continue;
+        }
+    }
+
+    fclose(fichier);
+    return ntt_imgs;
 }

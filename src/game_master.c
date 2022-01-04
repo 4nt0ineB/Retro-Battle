@@ -315,7 +315,7 @@ Enemy * gm_remove_dead_enemies(Game * game){
     //printf("Adresse ennemis fonction: %p\n", &(game->enemies));
     while(tmp){
         tmp_next = tmp->next;
-        if((*tmp).life <= 0 || (*tmp).position <= 1)
+        if((*tmp).life <= 0 || (*tmp).position == 1)
             enemy_add(&dead, enemy_extract(pp, &(*tmp)));
         tmp = tmp_next;
     }
@@ -421,7 +421,7 @@ int gm_level_cli(Enemy ** waiting_enemies, DListe e_types, DListe t_types, int m
         clock_t t_2;
         Enemy * dead_e = NULL;
         Tower * dead_t = NULL;
-        while(1) { // check nombre de tour ici devient caduque maintenant
+        while(1) {
             // ----Si on se renseigne sur time.h (par ex: https://fr.wikipedia.org/wiki/Time.h
             // on apprend l'existence de clock_t CLOCKS_PER_SEC (nombre de tick d'horloge par seconde).
             // (ce qu'on préfère, car time_t donné par time(NULL) est trop grand (seconde))
@@ -482,85 +482,114 @@ int gm_level_cli(Enemy ** waiting_enemies, DListe e_types, DListe t_types, int m
 int gm_level_gui(Enemy ** waiting_enemies, DListe e_types, DListe t_types, int money){
 
     Game game = {NULL, NULL, 0, money};
-    //
-    // Créé une fenetre qui n'est pas en mode plein écran
-    //
     int WIDTH, HEIGHT;
     MLV_Image *image;
-
+    DListe enemy_images = NULL;
+    DListe tower_images = NULL;
     taille_fenetre(&WIDTH, &HEIGHT);
-
-
+    // création de la fenêtre
     init_fenetre();
-
+    // On fice le nombre d'image par seconde
+    MLV_change_frame_rate( 24 );
+    // affichage du fond
+    // chargement de la police d'écriture
+    float fontsize = 2;
+    gui_rel_length(NULL, &fontsize);
+    MLV_Font* font = MLV_load_font( "./data/fonts/Old_R.ttf" , (int) fontsize );
     image = MLV_load_image( "./data/img/bg.jpg" );
+    // chargement des images des entités
+    enemy_images = read_ntt_images(ENEMY, IMG_PATH "enemy_imgs");
+    tower_images = read_ntt_images(ENEMY, IMG_PATH "tower_imgs");
+    //printf("\nIMAGE: %p \n", ((Entity_img *) tower_images)->image);
+
     MLV_resize_image( image, 1920, 1080);
     MLV_draw_image( image, 0, 0 );
     MLV_actualise_window();
+    // premier affichage du jeu
+    GUI_display_game(game, enemy_images, tower_images);
 
-    GUI_display_game(game);
-   /* Tower * towers = NULL;
-    Tower * t1 = alloue_tower('F', 10, 3, 1, 0);
-    tower_add(&towers,t1);
-    game_add_entity(&game, &towers, TOWER);
-    gm_add_entities(&game, &towers, TOWER);*/
+    /* Tower * towers = NULL;
+     Tower * t1 = alloue_tower('F', 10, 3, 1, 0);
+     tower_add(&towers,t1);
+     game_add_entity(&game, &towers, TOWER);
+     gm_add_entities(&game, &towers, TOWER);*/
+
+   // ajout du bouton d'affichage de la vague
+    DListe btn_list = NULL;
     Button * btn_tmp = NULL;
-    btn_tmp = alloue_btn(SHOW_WAVE, {},{})
+    float btn_w = 15, btn_h = 7; // en pourcentage des bords de la fenêtre
+    float tmp_x, tmp_y;
+
+    gui_rel_length(&btn_w, &btn_h);
+    tmp_x = tmp_y = HEADER_PADDING;
+    gui_rel_length(&tmp_x, &tmp_y);
+    Point ptmp1 = {WIDTH - (int) btn_w - (int) tmp_x, (int) tmp_y};
+    Point ptmp2 = { (WIDTH  - (int) tmp_x), (int) (tmp_y + btn_h)};
+    btn_tmp = alloue_btn(BTN_QUIT, ptmp1, ptmp2 , NULL, "Quitter",NULL);
+    gui_add_btn(&btn_list, btn_tmp);
+    MLV_actualise_window();
+    //printf("BTN: x1: %d y1: %d, x2: %d y2: %d\n", btn_tmp->p1.x, btn_tmp->p1.y, btn_tmp->p2.x, btn_tmp->p2.y);
+
+
     // header
+    LEVEL_MENU_ACTION act = -1;
+    Button * clicked_btn = NULL;
     while(1){
-        // GUI_display_header(DListe buttons)
-        // renvoie le button cliqué
-        // DListe * GUI_check_header_action(int x, int y)
-        break;
+        MLV_draw_image( image, 0, 0 );
+        GUI_display_game(game, enemy_images, tower_images);
+        gui_display_btns(btn_list, font);
+        if(MLV_get_mouse_button_state(MLV_BUTTON_LEFT) == MLV_PRESSED
+            && (clicked_btn = gui_get_clicked_btn(btn_list))
+            ){
+            if(clicked_btn->type == BTN_QUIT){
+                break;
+            }
+        }
+        gui_enhance_btns_over(btn_list, font);
+        MLV_actualise_window();
+        MLV_delay_according_to_frame_rate();
     }
 
 
-
-    LEVEL_MENU_ACTION act = START_LEVEL;
+    act = START_LEVEL;
     if(act == START_LEVEL) {
         // jouer le niveau
 
         Enemy *dead_e = NULL;
         Tower *dead_t = NULL;
-        while (1) { // check nombre de tour ici devient caduque maintenant
-            // ----Si on se renseigne sur time.h (par ex: https://fr.wikipedia.org/wiki/Time.h
-            // on apprend l'existence de clock_t CLOCKS_PER_SEC (nombre de tick d'horloge par seconde).
-            // (ce qu'on préfère, car time_t donné par time(NULL) est trop grand (seconde))
-            // Comme nous souhaitons avoir des millisecondes on multiplie par 1000,
-            // puis par 500 pour la latence souhaitée-----
+        int star_t = MLV_get_time();
+        while (1) {
 
-            // Rectificatif. Impossible d'obtenir une précision inférieure à la seconde
-            // de plus cela va dépendre de la capacité de la machine à traiter le processus en cours (le jeu)
-            // alternative : utiliser POSIX (clock_gettime())
+            if(MLV_get_time() - star_t >= 500){
+                // retirer les ennemis à court de vies
+                enemy_add(&dead_e, gm_remove_dead_enemies(&game));
+                tower_add(&dead_t, gm_remove_dead_towers(&game));
+                // vérifier si la partie est finie, savoir qui a gagné n'est pas important ici
 
-            // retirer les ennemis à court de vies
-            enemy_add(&dead_e, gm_remove_dead_enemies(&game));
-            tower_add(&dead_t, gm_remove_dead_towers(&game));
-            // vérifier si la partie est finie, savoir qui a gagné n'est pas important ici
+                //
+                game.turn += 1;
+                // ajouter les ennemis du tour courant (mais d'abord ceux ayants un ou des tours de retard)
+                gm_add_entities(&game, waiting_enemies, ENEMY);
+                //CLI_display_game(game);
+                //printf("\n");
+                MLV_draw_filled_rectangle(0, 0, WIDTH, HEIGHT, BACKGROUND_COLOR);
+                MLV_draw_image( image, 0, 0 );
+                GUI_display_game(game, enemy_images, tower_images);
+                // on fait jouer les tourelles
+                gm_entities_play_effects(game, game.towers, TOWER, t_types, e_types);
+                // on fait jouer les ennemis
+                gm_entities_play_effects(game, game.enemies, ENEMY, t_types, e_types);
+                if (gm_is_game_over(game))
+                    break;
+                // déplacement des ennemis
+                gm_move_all(&game);
+                star_t = MLV_get_time();
+            }
 
-            //
-            game.turn += 1;
-            // ajouter les ennemis du tour courant (mais d'abord ceux ayants un ou des tours de retard)
-            gm_add_entities(&game, waiting_enemies, ENEMY);
-            CLI_clear_screen();
-            CLI_display_title();
-            printf("\n\n");
-            CLI_display_game(game);
-            printf("\n");
-            MLV_draw_filled_rectangle(0, 0, WIDTH, HEIGHT, BACKGROUND_COLOR);
-            MLV_draw_image( image, 0, 0 );
+            gui_display_btns(btn_list, font);
+            gui_enhance_btns_over(btn_list, font);
             MLV_actualise_window();
-            GUI_display_game(game);
-            // on fait jouer les tourelles
-            gm_entities_play_effects(game, game.towers, TOWER, t_types, e_types);
-            // on fait jouer les ennemis
-            gm_entities_play_effects(game, game.enemies, ENEMY, t_types, e_types);
-            if (gm_is_game_over(game))
-                break;
-            // déplacement des ennemis
-            gm_move_all(&game);
-            MLV_wait_milliseconds(500);
-
+            MLV_delay_according_to_frame_rate();
         }
 
         enemy_free_all(&dead_e);
@@ -568,7 +597,8 @@ int gm_level_gui(Enemy ** waiting_enemies, DListe e_types, DListe t_types, int m
         enemy_free_all(&game.enemies);
         tower_free_all(&game.towers);
     }
-    MLV_wait_mouse(NULL, NULL);
+
+    //MLV_wait_mouse(NULL, NULL);
     //
     // Ferme la fenêtre
     //

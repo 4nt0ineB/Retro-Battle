@@ -4,6 +4,7 @@
 
 #ifndef L2_PROJET_C_ENTITY_TYPE_H
 #define L2_PROJET_C_ENTITY_TYPE_H
+#include <MLV/MLV_all.h>
 #include "DListe.h"
 #include "effect.h"
 #include "stdio.h"
@@ -27,6 +28,7 @@ typedef struct{
     int v2; ///< sa vitesse initiale
     DListe effects; ///< la liste des effets
 } Entity_type;
+
 
 /**
  * Alloue un type d'entité
@@ -58,5 +60,18 @@ void entity_type_free(Entity_type * e_type);
 void entity_type_dliste_free(DListe * l);
 
 Entity_type * entity_type_get(DListe * l, int id);
+
+
+typedef struct{
+    ENTITY ntt;
+    int id;
+    MLV_Image * image;
+} Entity_img;
+
+Entity_img * alloue_ntt_img(ENTITY ntt, int id, MLV_Image * image);
+
+Entity_img * ntt_img_get(DListe * l, int id);
+
+void free_ntt_img(Entity_img * ntt_img);
 
 #endif //L2_PROJET_C_ENTITY_TYPE_H

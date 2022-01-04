@@ -59,3 +59,30 @@ Entity_type * entity_type_get(DListe * l, int id){
     return NULL;
 }
 
+//
+Entity_img * alloue_ntt_img(ENTITY ntt, int id, MLV_Image * image){
+    Entity_img * ntt_img = (Entity_img *) malloc(sizeof(Entity_img));
+    if(ntt_img){
+        ntt_img->ntt = ntt;
+        ntt_img->id = id;
+        ntt_img->image = image;
+    }
+    return ntt_img;
+}
+
+Entity_img * ntt_img_get(DListe * l, int id){
+    DListe tmp = (*l);
+    while(tmp){
+        if(((Entity_img *) tmp->element)->id == id )
+            return tmp->element;
+        tmp = tmp->suivant;
+    }
+    return NULL;
+}
+
+void free_ntt_img(Entity_img * ntt_img){
+    if(!ntt_img) return;
+    if(ntt_img->image)
+        MLV_free_image(ntt_img->image);
+    free(ntt_img);
+}

@@ -37,49 +37,113 @@ void game_board_origin(int * x, int * y){
     //printf("CW: %d CH: %d\n", *x, *y);
 }
 
-void gui_add_btn(DListe btn_list, Button btn){
-
+void gui_rel_length(float * width_percent, float * height_percent){
+    int w, h;
+    taille_fenetre(&w, &h);
+    if(width_percent && *width_percent > 0)
+        *width_percent = (*width_percent * (float) w) / 100;
+    if(height_percent && *height_percent > 0)
+        *height_percent = (*height_percent * (float) h) / 100;
 }
 
-void gui_display_btn(Button btn){
-
-}
-
-void gui_display_btns(DListe btn_list){
-
-}
-
-void GUI_display_game(Game game){
-
-    char * view[MAX_LINE+1][MAX_LINE_LENGTH+1] = {0};
-    int i, j;
-    // initialisation de la vue
-    for(i = 1; i <= MAX_LINE; i++){
-        for(j = 1; j <= MAX_LINE_LENGTH; j++){
-            view[i][j] = (char *) malloc(10 * sizeof(char));
-            strcpy(view[i][j], ".");
-        }
+int gui_add_btn(DListe * btn_list, Button * btn){
+    DListe cel = alloue_DCellule(btn);
+    if(cel && DListe_ajouter_fin(btn_list, cel)){
+        return 1;
     }
+    return 0;
+}
+
+void gui_display_btn(Button btn, MLV_Font * font){
+    MLV_draw_filled_rectangle(
+            btn.p1.x,
+            btn.p1.y,
+            btn.p2.x - btn.p1.x,
+            btn.p2.y - btn.p1.y,
+            MLV_COLOR_GREY
+    );
+    int fw, fh ;
+    MLV_get_size_of_text_with_font (btn.text, &fw, &fh, font);
+    MLV_draw_text_with_font(
+            btn.p1.x + (((btn.p2.x - btn.p1.x) - fw) /2),
+            btn.p1.y + (((btn.p2.y - btn.p1.y) - fh) /2),
+            btn.text,
+            font, MLV_COLOR_BLACK
+    );
+}
+
+void gui_display_btns(DListe btn_list,  MLV_Font * font){
+    DListe cel = btn_list;
+    while(cel){
+        gui_display_btn(*(Button *) cel->element, font);
+        cel = cel->suivant;
+    }
+}
+
+void gui_enhance_btn_over(Button btn,  MLV_Font * font){
+    float border_w = 0.2f, border_y = 0.2f;
+    gui_rel_length(&border_w, &border_y);
+    MLV_draw_filled_rectangle(
+            btn.p1.x - (int) border_w,
+            btn.p1.y - (int) border_y,
+            (btn.p2.x - btn.p1.x) + (int) (border_w * 2),
+            (btn.p2.y - btn.p1.y) + (int) (border_y * 3),
+            MLV_COLOR_WHITE
+    );
+    gui_display_btn(btn, font);
+}
+
+void gui_enhance_btns_over(DListe btn_list,  MLV_Font * font){
+    DListe cel = btn_list;
+    int x = 0, y = 0;
+    MLV_get_mouse_position(&x, &y);
+    while(cel){
+        if(btn_coord_is_over(*(Button *) cel->element, x, y))
+            gui_enhance_btn_over(*(Button *) cel->element, font);
+        cel = cel->suivant;
+    }
+}
+
+Button * gui_get_clicked_btn(DListe btn_list){
+    DListe cel = btn_list;
+    int x = 0, y = 0;
+    MLV_get_mouse_position(&x, &y);
+    while(cel){
+        if(btn_coord_is_over(*(Button *) cel->element, x, y))
+            return (Button *) cel->element;
+        cel = cel->suivant;
+    }
+    return NULL;
+}
+
+void gui_display_entity(void * entity, ENTITY ntt, Entity_img ntt_img){
+
+}
+
+void GUI_display_game(Game game, DListe enemy_images, DListe tower_images){
+
+    Enemy * e_view[MAX_LINE+1][MAX_LINE_LENGTH+1] = {0};
+    Tower * t_view[MAX_LINE+1][MAX_LINE_LENGTH+1] = {0};
+    int i, j;
+
     // Ajout des tourelles
     Tower * t_tmp = game.towers;
     while(t_tmp){
-        free(view[t_tmp->line][t_tmp->position]);
-        view[t_tmp->line][t_tmp->position] = tower_toString(*t_tmp);
+        t_view[t_tmp->line][t_tmp->position] = t_tmp;
         t_tmp = t_tmp->next;
     }
 
     // Ajout des ennemis
     Enemy * e_tmp = game.enemies;
     while(e_tmp){
-        free(view[e_tmp->line][e_tmp->position]);
-        view[e_tmp->line][e_tmp->position] = enemy_toString(*e_tmp);
+        e_view[e_tmp->line][e_tmp->position] = e_tmp;
         e_tmp = e_tmp->next;
     }
 
     // origine du plateau de jeu
     int gmb_x = 0, gmb_y = 0;
     game_board_origin(&gmb_x, &gmb_y);
-    // affichage des cases
+    // affichage des enemy
     i = 1;
     j = 1;
     int cw = w_case();
@@ -87,17 +151,28 @@ void GUI_display_game(Game game){
     for(; i <= MAX_LINE; i++){
         for(j = 1; j <= MAX_LINE_LENGTH; j++){
 
-            if(*view[i][j] == '['){
-                //printf(BOGREEN" %3s"RESET, &view[i][j][1]);
-                MLV_draw_filled_rectangle(cx, cy, cw, cw, MLV_COLOR_DARK_GREEN);
-                MLV_draw_rectangle(cx, cy, cw, cw, MLV_COLOR_BLACK);
-            }else if(*view[i][j] == '('){
-                //printf(BORED" %3s"RESET, &view[i][j][1]);
-                MLV_draw_filled_rectangle(cx, cy, cw, cw, MLV_COLOR_DARK_RED);
-                MLV_draw_rectangle(cx, cy, cw, cw, MLV_COLOR_BLACK);
+            if(e_view[i][j]){
+                MLV_draw_image(ntt_img_get(&enemy_images, e_view[i][j]->type)->image, cx, cy );
             }else{
                 MLV_draw_filled_circle(cx+(cw/2), cy+(cw/2), 3, MLV_COLOR_LIGHT_GREEN);
-                //printf(" %3s", view[i][j]);
+            }
+            cx += cw + CASE_MARGING;
+        }
+        cx = gmb_x;
+        cy += cw + CASE_MARGING;
+    }
+
+    // affichage des tourelles
+    i = 1;
+    j = 1;
+    cw = w_case();
+    cx = gmb_x, cy = gmb_y;
+    for(; i <= MAX_LINE; i++){
+        for(j = 1; j <= MAX_LINE_LENGTH; j++){
+
+            if(t_view[i][j]) {
+                MLV_draw_filled_rectangle(cx, cy, cw, cw, MLV_COLOR_DARK_GREEN);
+                MLV_draw_rectangle(cx, cy, cw, cw, MLV_COLOR_BLACK);
             }
             cx += cw + CASE_MARGING;
         }
@@ -106,12 +181,4 @@ void GUI_display_game(Game game){
     }
     MLV_actualise_window();
 
-    // free
-    for(i = 1; i <= MAX_LINE; i++){
-        for(j = 1; j <= MAX_LINE_LENGTH; j++){
-            if(view[i][j]){
-                free(view[i][j]);
-            }
-        }
-    }
 }

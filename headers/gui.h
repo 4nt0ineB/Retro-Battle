@@ -16,8 +16,8 @@
 #define TAILLE_RELATIVE 5
 #define BACKGROUND_COLOR MLV_COLOR_MIDNIGHTBLUE
 
-#define MAX_W 1920
-#define MAX_H 1080
+#define MAX_W 1000
+#define MAX_H 500
 #define HEADER 20
 #define CASE_PADDING 0
 #define CASE_MARGING 0
@@ -48,20 +48,30 @@ void taille_fenetre(int * width, int * height);
  */
 void init_fenetre();
 
+int w_case();
+
 void game_board_origin(int * x, int * y);
 
-int rel_length(int * width, int * height);
+void gui_rel_length(float * width, float * height);
 
-void gui_add_btn(DListe btn_list, Button btn);
+int gui_add_btn(DListe * btn_list, Button * btn);
 
-void gui_display_btn(Button btn);
+void gui_display_btn(Button btn,  MLV_Font *font);
 
-void gui_display_btns(DListe btn_list);
+void gui_display_btns(DListe btn_list,  MLV_Font *font);
+
+void gui_enhance_btn_over(Button btn,  MLV_Font *font);
+
+void gui_enhance_btns_over(DListe btn,  MLV_Font *font);
+
+Button * gui_get_clicked_btn(DListe btn_list);
+
+void gui_display_entity(void * entity, ENTITY ntt, Entity_img);
 
 /**
  * Affiche le jeu
  * @param game
  */
-void GUI_display_game(Game game);
+void GUI_display_game(Game game, DListe enemy_images, DListe tower_images);
 
 #endif //L2_PROJET_C_GUI_H
