@@ -209,8 +209,25 @@ int gm_entity_play_effect(Game game, void * entity, ENTITY ntt, Effect effect, D
         gm_apply_effect_on_entities(towers, TOWER, effect, tower_types, enemy_types);
     }
 
-    free(towers);
-    free(enemies);
+
+
+    DListe tmp = enemies;
+    DListe suivant;
+    while(tmp){
+        suivant = tmp->suivant;
+        free(tmp);
+        tmp = suivant;
+    }
+
+    tmp = towers;
+    while(tmp){
+        suivant = tmp->suivant;
+        free(tmp);
+        tmp = suivant;
+    }
+
+    //free(towers);
+    //free(enemies);
     return 1;
 }
 
@@ -298,7 +315,7 @@ Enemy * gm_remove_dead_enemies(Game * game){
     //printf("Adresse ennemis fonction: %p\n", &(game->enemies));
     while(tmp){
         tmp_next = tmp->next;
-        if((*tmp).life <= 0)
+        if((*tmp).life <= 0 || (*tmp).position <= 1)
             enemy_add(&dead, enemy_extract(pp, &(*tmp)));
         tmp = tmp_next;
     }
@@ -482,12 +499,13 @@ int gm_level_gui(Enemy ** waiting_enemies, DListe e_types, DListe t_types, int m
     MLV_actualise_window();
 
     GUI_display_game(game);
-    Tower * towers = NULL;
+   /* Tower * towers = NULL;
     Tower * t1 = alloue_tower('F', 10, 3, 1, 0);
     tower_add(&towers,t1);
     game_add_entity(&game, &towers, TOWER);
-    gm_add_entities(&game, &towers, TOWER);
-    // Button * btn_tmp = NULL;
+    gm_add_entities(&game, &towers, TOWER);*/
+    Button * btn_tmp = NULL;
+    btn_tmp = alloue_btn(SHOW_WAVE, {},{})
     // header
     while(1){
         // GUI_display_header(DListe buttons)
@@ -544,6 +562,11 @@ int gm_level_gui(Enemy ** waiting_enemies, DListe e_types, DListe t_types, int m
             MLV_wait_milliseconds(500);
 
         }
+
+        enemy_free_all(&dead_e);
+        tower_free_all(&dead_t);
+        enemy_free_all(&game.enemies);
+        tower_free_all(&game.towers);
     }
     MLV_wait_mouse(NULL, NULL);
     //

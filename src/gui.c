@@ -37,6 +37,18 @@ void game_board_origin(int * x, int * y){
     //printf("CW: %d CH: %d\n", *x, *y);
 }
 
+void gui_add_btn(DListe btn_list, Button btn){
+
+}
+
+void gui_display_btn(Button btn){
+
+}
+
+void gui_display_btns(DListe btn_list){
+
+}
+
 void GUI_display_game(Game game){
 
     char * view[MAX_LINE+1][MAX_LINE_LENGTH+1] = {0};

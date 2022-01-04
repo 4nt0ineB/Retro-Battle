@@ -2,7 +2,7 @@ COMP = clang
 FLAG = -Wall -Wfatal-errors -std=c17
 LIB = -lMLV
 OUTPUT = main
-LEVEL_FILE = ./data/level1
+LEVEL_FILE = ./data/level4
 
 SRC_DIR = src
 .SILENT: clean
@@ -26,10 +26,11 @@ run-gui: build
 	./$(OUTPUT) $(LEVEL_FILE) -g
 
 # Memcheck
+# --track-origins=yes --show-leak-kinds=all ////--gen-suppressions=yes
 memcheck-cli: clean build
-	valgrind --tool=memcheck  ./$(OUTPUT) $(LEVEL_FILE) -a
+	valgrind --leak-check=full  ./$(OUTPUT) $(LEVEL_FILE) -a
 
 memcheck-gui: clean build
-	valgrind --leak-check=full --track-origins=yes  --show-leak-kinds=all ./$(OUTPUT) $(LEVEL_FILE) -g
+	valgrind --leak-check=full ./$(OUTPUT) $(LEVEL_FILE) -g
 
 all: run-cli

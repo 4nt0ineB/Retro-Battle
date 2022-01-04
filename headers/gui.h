@@ -9,6 +9,7 @@
 
 #include "settings.h"
 #include "game.h"
+#include "button.h"
 
 // http://www-igm.univ-mlv.fr/~boussica/mlv/api/French/html/index.html
 
@@ -48,6 +49,14 @@ void taille_fenetre(int * width, int * height);
 void init_fenetre();
 
 void game_board_origin(int * x, int * y);
+
+int rel_length(int * width, int * height);
+
+void gui_add_btn(DListe btn_list, Button btn);
+
+void gui_display_btn(Button btn);
+
+void gui_display_btns(DListe btn_list);
 
 /**
  * Affiche le jeu
