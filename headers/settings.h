@@ -22,13 +22,15 @@
 #define MAX_LINE_LENGTH 26
 #define GO_BACK 'b'
 #define MAX_OPTIONS 128
-#define IMG_PATH "./data/img/tower_icons/"
+#define IMG_PATH "./data/img/entity_icons/"
 
 typedef enum {
     GUI = 'g',
     CLI = 'a',
     HELP = 'h',
-    PATH = 'p'
+    PATH = 'p',
+    WIDTH = 'x',
+    HEIGHT = 'y'
 } GAME_OPTIONS;
 
 /**

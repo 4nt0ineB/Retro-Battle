@@ -53,6 +53,16 @@ DListe DListe_extract(DListe * l, DListe DCellule) {
     return DCellule;
 }
 
+int DListe_nbr_elements(DListe l){
+    DListe tmp = l;
+    int count = 0;
+    while(tmp){
+        count += 1;
+        tmp = tmp->suivant;
+    }
+    return count;
+}
+
 void DListe_delete(DListe * l){
     DListe tmp = (*l);
     DListe suivant;

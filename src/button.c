@@ -19,8 +19,6 @@ Button * alloue_btn(BTN_TYPE type, Point p1, Point p2, MLV_Image * image, char *
     return btn;
 }
 
-
-
 int btn_coord_is_over(Button btn, int x, int y){
     if(btn.p1.x <= x && x <= btn.p2.x
        && btn.p1.y <= y && y <= btn.p2.y)
@@ -29,8 +27,8 @@ int btn_coord_is_over(Button btn, int x, int y){
 }
 
 void free_btn(Button * btn){
-    if(btn->image) free(btn->image);
-    if(btn->text) free(btn->text);
-    if(btn->data) free(btn->data);
+
+    if(btn->data)
+        free(btn->data);
     free(btn);
 }

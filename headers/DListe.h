@@ -46,6 +46,7 @@ int DListe_ajouter_fin(DListe * l, DListe cel);
  */
 DListe DListe_extract(DListe * l, DListe cel);
 
+int DListe_nbr_elements(DListe l);
 
 /**
  * Libère toute une liste

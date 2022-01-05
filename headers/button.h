@@ -18,7 +18,7 @@ typedef enum {
     BTN_QUIT,
     BTN_INCR_PICK,
     BTN_DECR_PICK,
-    BTN_BOARD_BOX
+    BTN_BOARD_BOX,
 } BTN_TYPE;
 
 /**

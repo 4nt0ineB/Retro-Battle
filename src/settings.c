@@ -4,7 +4,7 @@
 
 #include "../headers/settings.h"
 #include "../headers/gui.h"
-
+extern struct GUI_dimension G_DIMENSION;
 
 Enemy * lire_fichier_niveau(char * nom_fichier, int * money){
     Enemy * enemy_list = NULL;
@@ -121,7 +121,6 @@ DListe lire_fichier_types(char * nom_fichier){
              }
              e_types_tmp = e_types_tmp->suivant;
          }
-         //            printf("YOLO\n");
          if((enemy_type = entity_type_alloue(alloc_name, type_id, v1, v2))){
              cel = alloue_DCellule(enemy_type);
              if(!cel){
@@ -185,9 +184,6 @@ int lire_fichier_effets(char * nom_fichier, DListe types){
         while(l && ((Entity_type *) l->element)->id != e_type){
             l = l->suivant;
         }
-        /*if(l)
-            CLI_display_entity_type_effects(*((Entity_type *) l->element));
-        printf("\n");*/
         if(!l){
             fprintf(stderr,"Le type %c n'a pas été définit.", e_type);
             free(effect);
@@ -211,13 +207,16 @@ char ** read_options(int argc, char *argv[]) {
     if(!options) return NULL;
     int i = 0;
     for(; i < MAX_OPTIONS; i++){
-        options[i] = (char *) malloc(2 * sizeof(char));
+        options[i] = (char *) malloc(100 * sizeof(char));
         if(!options[i]) return NULL;
     }
     // index de l'argument
     i = 1;
     // pointeur sur la chaine de l'argument
     char *str_option;
+    long tmp_w = MAX_W;
+    long tmp_h = MAX_W;
+    char * reste;
     // iteration sur les arguments
     for (; i < argc; i++) {
         str_option = argv[i];
@@ -227,20 +226,33 @@ char ** read_options(int argc, char *argv[]) {
             // iteration sur la chaine de l'argument
             for (; *str_option; str_option++) {
                 // enregistre choix option
-                switch (*str_option) {
-                    case HELP:
-                        options[HELP][0] = HELP;
+                if(*str_option == HELP){
+                    options[HELP][0] = HELP;
+                }else if(*str_option == GUI){
+                    options[CLI][0] = '\0';
+                    options[GUI][0] = GUI;
+                }else if(*str_option == CLI){
+                    options[GUI][0] = '\0';
+                    options[CLI][0] = CLI;
+                }else if(*str_option == WIDTH){
+                    if(str_option[1] == '='){
+                        strcpy(options[WIDTH],&str_option[2]);
+                        tmp_w = strtol(options[WIDTH],&reste, 10);
+                        if(tmp_w >= 0){
+                            G_DIMENSION.WIDTH = (int) tmp_w;
+                        }
+                    }
+                    break;
+                }else if(*str_option == HEIGHT){
+                    if(str_option[1] == '='){
+                        strcpy(options[HEIGHT],&str_option[2]);
+                        tmp_h = strtol(options[HEIGHT],&reste, 10);
+                        if(tmp_h >= 0){
+                            G_DIMENSION.HEIGHT = (int) tmp_h;
+                        }
+                    }else{
                         break;
-                    case GUI:
-                        options[CLI][0] = '\0';
-                        options[GUI][0] = GUI;
-                        break;
-                    case CLI:
-                        options[GUI][0] = '\0';
-                        options[CLI][0] = CLI;
-                        break;
-                    default:
-                        continue;
+                    }
                 }
             }
         }else{

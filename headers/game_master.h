@@ -16,6 +16,8 @@
 #include "effect.h"
 
 
+extern struct GUI_dimension G_DIMENSION;
+
 /**
  * Déplacement naturelle de l'entité
  * @param game
@@ -140,7 +142,7 @@ int gm_is_game_over(Game game);
  * @param money
  * @return
  */
-int gm_level_cli(Enemy ** waiting_enemies, DListe e_types, DListe t_types, int money);
+int gm_level_cli(char ** options, Enemy ** waiting_enemies, DListe e_types, DListe t_types, int money);
 
 /**
  * Lance le niveau.
@@ -151,6 +153,6 @@ int gm_level_cli(Enemy ** waiting_enemies, DListe e_types, DListe t_types, int m
  * @param money
  * @return
  */
-int gm_level_gui(Enemy ** waiting_enemies, DListe e_types, DListe t_types, int money);
+int gm_level_gui(char ** options, Enemy ** waiting_enemies, DListe e_types, DListe t_types, int money);
 
 #endif //L2_PROJET_C_GAME_MASTER_H

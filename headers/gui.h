@@ -25,6 +25,12 @@
 #define HEADER_PADDING 1
 
 
+struct GUI_dimension {
+    int WIDTH;
+    int HEIGHT;
+};
+
+
 /*
  * |───────────────────────────|
  * |          Header           |
@@ -75,6 +81,12 @@ DListe gui_create_tower_selection(DListe t_types,  DListe ntt_img);
 void gui_update_tower_selection(DListe tower_btn, int x, int y, int pick_menu_origin);
 
 DListe gui_create_board_box_btns();
+
+void gui_free_btn_list(DListe * btns);
+
+void gui_free_img_list(DListe * img_list);
+
+void GUI_display_wave(Game game, Enemy * waiting_enemies, DListe e_types, DListe enemy_images);
 
 /**
  * Affiche le jeu

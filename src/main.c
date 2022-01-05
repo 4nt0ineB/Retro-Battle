@@ -53,9 +53,9 @@ int main(int argc, char *argv[]) {
     lire_fichier_effets(nom_fichier, t_types);
 
     if(*options[CLI] == CLI)
-        gm_level_cli(&waiting_enemies, types, t_types, money);
+        gm_level_cli(options, &waiting_enemies, types, t_types, money);
     else if(*options[GUI] == GUI)
-        gm_level_gui(&waiting_enemies, types, t_types, money);
+        gm_level_gui(options, &waiting_enemies, types, t_types, money);
 
 
     // free //

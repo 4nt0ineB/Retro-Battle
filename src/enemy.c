@@ -67,7 +67,6 @@ int enemy_add_next_line(Enemy ** dest, Enemy * src){
         src->prev_line = (* dest);
         return 1;
     }
-    printf("\n");
     return enemy_add_next_line(&(* dest)->next_line, src);
 }
 
@@ -193,7 +192,6 @@ void enemy_free_all(Enemy ** enemy) {
 }
 
 char * enemy_toString(Enemy enemy){
-    //printf("{Life:%d,Type:%c,Line:%d}", enemy.life, (char) enemy.type, enemy.line);
     char * str = (char *) malloc(20 * sizeof(char));
     sprintf(str, "(%d%c", enemy.life, (char) enemy.type);
     return str;

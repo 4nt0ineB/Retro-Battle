@@ -4,11 +4,16 @@
 
 #include "../headers/gui.h"
 
+
+struct GUI_dimension G_DIMENSION = {
+        .WIDTH = MAX_W,
+        .HEIGHT = MAX_H
+};
+
 void taille_fenetre(int * width, int * height) {
-    unsigned int w, h;
-    MLV_get_desktop_size( &w, &h);
-    *width = w > MAX_W ? MAX_W : (int) w;
-    *height = h > MAX_H ? MAX_H : (int) h;
+    //unsigned int w, h;
+    *width = G_DIMENSION.WIDTH;
+    *height = G_DIMENSION.HEIGHT;
 }
 
 void init_fenetre() {
@@ -23,8 +28,7 @@ int w_case(){
     int WIDTH, HEIGHT;
     taille_fenetre(&WIDTH, &HEIGHT);
     int cw = (WIDTH - (BOARD_PADDING * WIDTH / 100) * 2 - ((CASE_MARGING * WIDTH) / 100) * MAX_LINE_LENGTH * 2) / MAX_LINE_LENGTH;
-    int ch = (HEIGHT - (BOARD_PADDING * HEIGHT / 100) * 2 - ((CASE_MARGING * HEIGHT) / 100) * MAX_LINE_LENGTH * 2) / MAX_LINE;
-    //printf("CW: %d CH: %d\n", cw, ch);
+    int ch = (HEIGHT - (BOARD_PADDING * HEIGHT / 100) * 2 - ((CASE_MARGING * HEIGHT) / 100) * MAX_LINE * 2) / MAX_LINE;
     return cw < ch ? cw : ch;
 }
 
@@ -34,7 +38,6 @@ void game_board_origin(int * x, int * y){
     *x = (BOARD_PADDING * WIDTH) / 100;
     *y = (HEADER * HEIGHT) / 100;
     *y += (BOARD_PADDING * HEIGHT) / 100;
-    //printf("CW: %d CH: %d\n", *x, *y);
 }
 
 void gui_rel_length(float * width_percent, float * height_percent){
@@ -98,16 +101,48 @@ void gui_display_btns(DListe btn_list,  MLV_Font * font){
 }
 
 void gui_enhance_btn_over(Button btn,  MLV_Font * font){
+    MLV_Color c = MLV_COLOR_WHITE;
     float border_w = 0.2f, border_y = 0.2f;
     gui_rel_length(&border_w, &border_y);
+    switch (btn.type) {
+        case BTN_PICK_TOWER:
+            c = MLV_COLOR_CYAN1;
+            MLV_draw_rectangle(
+                    btn.p1.x - (int) border_w,
+                    btn.p1.y - (int) border_y,
+                    (btn.p2.x - btn.p1.x) + (int) (border_w * 2),
+                    (btn.p2.y - btn.p1.y) + (int) (border_y * 3),
+                    c
+            );
+            gui_display_btn(btn, font);
+            return;
+        case BTN_SHOW_WAVE:
+            break;
+        case BTN_START:
+            c = MLV_COLOR_GREEN;
+            break;
+        case BTN_QUIT:
+            break;
+        case BTN_INCR_PICK:
+            c = MLV_COLOR_DARK_CYAN;
+            break;
+        case BTN_DECR_PICK:
+            c = MLV_COLOR_DARK_CYAN;
+            break;
+        case BTN_BOARD_BOX:
+            break;
+        default:
+            break;
+    }
     MLV_draw_filled_rectangle(
             btn.p1.x - (int) border_w,
             btn.p1.y - (int) border_y,
             (btn.p2.x - btn.p1.x) + (int) (border_w * 2),
             (btn.p2.y - btn.p1.y) + (int) (border_y * 3),
-            MLV_COLOR_WHITE
+            c
     );
     gui_display_btn(btn, font);
+
 }
 
 void gui_enhance_btns_over(DListe btn_list,  MLV_Font * font){
@@ -120,8 +155,6 @@ void gui_enhance_btns_over(DListe btn_list,  MLV_Font * font){
         cel = cel->suivant;
     }
 }
-
-
 
 Button * gui_get_clicked_btn(DListe btn_list){
     DListe cel = btn_list;
@@ -168,7 +201,7 @@ DListe gui_create_tower_selection(DListe t_types, DListe ntt_img){
         if(ntt_img_tmp){
             data = (int *) malloc(sizeof(int));
             *data = ntt_img_tmp->id;
-            btn_tmp = btn_create_responsive(0, 0, 0, 0, BTN_PICK_TOWER, ntt_img_tmp->image, NULL, data, MLV_COLOR_GREY);
+            btn_tmp = btn_create_responsive(0, 0, 0, 0, BTN_PICK_TOWER, ntt_img_tmp->image, NULL, data, MLV_ALPHA_TRANSPARENT);
             //(float) (w_case()*100)/MAX_H,             (float) (w_case()*100)/MAX_W,
             gui_add_btn(&l, btn_tmp);
         }
@@ -183,8 +216,12 @@ void gui_update_tower_selection(DListe tower_btn, int x, int y, int pick_menu_or
     Button * btn = NULL;
     while(btn_tmp){
         btn = ((Button *) btn_tmp->element);
-        if(pick_menu_origin < 0){
-            pick_menu_origin++;
+        if(pick_menu_origin > 0){
+            btn->p1.x = 0;
+            btn->p1.y = 0;
+            btn->p2.x = 0;
+            btn->p2.y = 0;
+            pick_menu_origin--;
         }else if (pick_menu_origin < maxdisplayed){
             btn->p1.x = x;
             btn->p1.y = y;
@@ -221,6 +258,82 @@ DListe gui_create_board_box_btns() {
         cy += cw + CASE_MARGING;
     }
     return btn_list;
+}
+
+void gui_free_btn_list(DListe * btns){
+    DListe tmp = (*btns);
+    DListe suivant;
+    while(tmp){
+        suivant = tmp->suivant;
+        free_btn( (Button *) tmp->element);
+        free(tmp);
+        tmp = suivant;
+    }
+    *btns = NULL;
+}
+
+void gui_free_img_list(DListe * img_list){
+    DListe tmp = *img_list;
+    while(tmp){
+        MLV_free_image(((Entity_img *) tmp->element)->image);
+        tmp = tmp->suivant;
+    }
+    DListe_delete(img_list);
+}
+
+void GUI_display_wave(Game game, Enemy * waiting_enemies, DListe e_types, DListe enemy_images){
+
+    int maxturn = 0;
+    Enemy * tmp = waiting_enemies;
+    while(tmp){
+        if(maxturn < tmp->turn)
+            maxturn = tmp->turn;
+        tmp = tmp->next;
+    }
+
+    int WIDTH, HEIGHT;
+    taille_fenetre(&WIDTH, &HEIGHT);
+    int cw_tmp = (WIDTH - (BOARD_PADDING * WIDTH / 100) * 2 - ((CASE_MARGING * WIDTH) / 100) * maxturn * 2) / maxturn;
+    int ch_tmp = (HEIGHT - (BOARD_PADDING * HEIGHT / 100) * 2 - ((CASE_MARGING * HEIGHT) / 100) * MAX_LINE_LENGTH * 2) / MAX_LINE;
+    int taille_case =  cw_tmp < ch_tmp ? cw_tmp : ch_tmp;
+    Enemy ** e_view[MAX_LINE+1] = {0};
+    int i, j;
+    // Ajout des ennemis
+    Enemy * e_tmp = waiting_enemies;
+    while(e_tmp){
+        if(!e_view[e_tmp->line]){
+            e_view[e_tmp->line] = (Enemy **) calloc(maxturn+1, sizeof(Enemy *));
+        }
+        e_view[e_tmp->line][e_tmp->turn] = e_tmp;
+        e_tmp = e_tmp->next;
+    }
+    // origine du plateau de jeu
+    int gmb_x = 0, gmb_y = 0;
+    game_board_origin(&gmb_x, &gmb_y);
+    // affichage des enemy
+    i = 1;
+    j = 1;
+    int cw = taille_case;
+    int cx = gmb_x, cy = gmb_y;
+    for(; i <= MAX_LINE; i++){
+        for(j = 1; j <= maxturn; j++){
+            if(e_view[i][j]){
+                gui_display_entity(e_view[i][j], ENEMY,
+                                   *(Entity_type *) entity_type_get(&e_types, e_view[i][j]->type),
+                                   *ntt_img_get(&enemy_images, e_view[i][j]->type),
+                                   cx, cy);
+                //MLV_draw_image(ntt_img_get(&enemy_images, e_view[i][j]->type)->image, cx, cy );
+            }else{
+                MLV_draw_filled_circle(cx+(cw/2), cy+(cw/2), 3, MLV_COLOR_LIGHT_GREEN);
+            }
+            cx += cw + CASE_MARGING;
+        }
+        cx = gmb_x;
+        cy += cw + CASE_MARGING;
+    }
+    for(; i <= MAX_LINE; i++) {
+        free(e_view[i]);
+    }
 }
 
 void GUI_display_game(Game game, DListe e_types, DListe enemy_images, DListe t_types, DListe tower_images){
