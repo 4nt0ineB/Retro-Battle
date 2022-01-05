@@ -11,3 +11,19 @@
 <img src="data/img/other/gui_view_1.png" width="400">
 <img src="data/img/other/gui_view_2.png" width="400">
 </div>
+
+
+## Help
+-h      display help\
+-a      play with cli interface\
+-g      play with gui interface\
+-x=width    to specify gui width. Default: 1920\
+-y=length   to specify gui length. Default: 1080\
+! any other parameter will be considered as the path to the file level
+
+► 5 Levels are available in ./data/levels/\
+► Add you own tower type in ./data/ntt_definition/tower_type\
+► Add you own enemy type in ./data/ntt_definition/enemy_type\
+► Add you own tower effects in ./data/ntt_definition/effects_by_tower_type\
+► Add you own enemy effects in ./data/ntt_definition/effects_by_enemy_type\
+► Link your entities types to their images in ./data/img/entity_icons/xxx_imgs
