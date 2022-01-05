@@ -76,7 +76,25 @@ void CLI_display_full_enemy(Enemy enemy){
 }
 
 void CLI_display_help(){
-    /* @todo affichage de l'aide  */
+    printf(
+            "\n ┌────────────────────────────┐"
+           "\n  │ Chips vs Virus             │"
+           "\n  │             Info UGE 2022  │"
+           "\n  └────────────────────────────┘"
+           "\n  -h      display help"
+           "\n  -a      play with cli interface"
+           "\n  -g      play with gui interface"
+           "\n  -x=width    to specify gui width. Default: 1920"
+           "\n  -y=length   to specify gui length. Default: 1080"
+           "\n  ! any other parameter will be considered as the path to the file level"
+           "\n  "
+           "\n  5 Levels are available in ./data/levels/ "
+           "\n  Add you own tower type in ./data/ntt_definition/tower_type"
+           "\n  Add you own enemy type in ./data/ntt_definition/enemy_type"
+           "\n  Add you own tower effects in ./data/ntt_definition/effects_by_tower_type"
+           "\n  Add you own enemy effects in ./data/ntt_definition/effects_by_enemy_type"
+           "\n  Link your entities types to their images in ./data/img/entity_icons/xxx_imgs"
+    );
 }
 
 void CLI_display_level_menu(){

@@ -290,11 +290,12 @@ void GUI_display_wave(Game game, Enemy * waiting_enemies, DListe e_types, DListe
             maxturn = tmp->turn;
         tmp = tmp->next;
     }
+    maxturn = maxturn < MAX_LINE_LENGTH ? MAX_LINE_LENGTH : maxturn;
 
     int WIDTH, HEIGHT;
     taille_fenetre(&WIDTH, &HEIGHT);
     int cw_tmp = (WIDTH - (BOARD_PADDING * WIDTH / 100) * 2 - ((CASE_MARGING * WIDTH) / 100) * maxturn * 2) / maxturn;
-    int ch_tmp = (HEIGHT - (BOARD_PADDING * HEIGHT / 100) * 2 - ((CASE_MARGING * HEIGHT) / 100) * MAX_LINE_LENGTH * 2) / MAX_LINE;
+    int ch_tmp = (HEIGHT - (BOARD_PADDING * HEIGHT / 100) * 2 - ((CASE_MARGING * HEIGHT) / 100) * MAX_LINE * 2) / MAX_LINE;
     int taille_case =  cw_tmp < ch_tmp ? cw_tmp : ch_tmp;
     Enemy ** e_view[MAX_LINE+1] = {0};
     int i, j;

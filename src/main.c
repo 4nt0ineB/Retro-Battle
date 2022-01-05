@@ -15,6 +15,9 @@ int main(int argc, char *argv[]) {
         free_string_table(options, MAX_OPTIONS);
         return 0;
     }
+    if(*options[HELP] == HELP){
+        CLI_display_help();
+    }
 
     // Lectures du niveau
     int money = 0;

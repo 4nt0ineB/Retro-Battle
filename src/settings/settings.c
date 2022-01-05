@@ -243,15 +243,18 @@ char ** read_options(int argc, char *argv[]) {
                     }
                     break;
                 }else if(*str_option == HEIGHT){
-                    if(str_option[1] == '='){
-                        strcpy(options[HEIGHT],&str_option[2]);
-                        tmp_h = strtol(options[HEIGHT],&reste, 10);
-                        if(tmp_h >= 0){
+                    if(str_option[1] == '=') {
+                        strcpy(options[HEIGHT], &str_option[2]);
+                        tmp_h = strtol(options[HEIGHT], &reste, 10);
+                        if (tmp_h >= 0) {
                             G_DIMENSION.HEIGHT = (int) tmp_h;
                         }
-                    }else{
-                        break;
                     }
+                    break;
+
+                }else{
+                    printf("\n%c is not a valid option. See -h for help\n", *str_option);
+                    exit(1);
                 }
             }
         }else{

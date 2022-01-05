@@ -95,8 +95,13 @@ int gm_entity_play_effect(Game game, void * entity, ENTITY ntt, Effect effect, D
                     continue;
                 // on souhaite les "effect.front" premières entités de la ligne de front ennemie
                 tmp_pos = tmp_line;
-                for (j = 0; j < effect.front; j++) {
+                for (j = 0; tmp_pos && j < effect.front;) {
                     if (tmp_pos->line == entity_line && tmp_pos->position == entity_pos) {
+                        tmp_pos = tmp_pos->next_line;
+                        continue;
+                    }
+                    // la tourelle ne peut pas attaquer derrières elles
+                    if(ntt == TOWER && tmp_pos->position <= entity_pos){
                         tmp_pos = tmp_pos->next_line;
                         continue;
                     }
@@ -104,6 +109,7 @@ int gm_entity_play_effect(Game game, void * entity, ENTITY ntt, Effect effect, D
                         cel = alloue_DCellule(&(*tmp_pos));
                         pos[tmp_pos->line][tmp_pos->position] = 1;
                         DListe_ajouter_fin(&enemies, cel);
+                        j++;
                     }
                 }
             }
@@ -122,9 +128,12 @@ int gm_entity_play_effect(Game game, void * entity, ENTITY ntt, Effect effect, D
                 }
             }
             while(ttmp){
-                if(!tmp_grid[ttmp->line][ttmp->position]){
+                // l'ennemi ne peut pas attaquer derrières elles
+                if(ntt == ENEMY && ttmp->position >= entity_pos){
+                    // on skip
+                } else if(tmp_grid[ttmp->line][ttmp->position]){
                     cel = alloue_DCellule(&(*ttmp));
-                    tmp_grid[ttmp->line][ttmp->position] = 1;
+                    tmp_grid[ttmp->line][ttmp->position] = 0;
                     DListe_ajouter_fin(&towers, cel);
                 }
                 ttmp = ttmp->next;
@@ -512,7 +521,7 @@ int gm_level_gui(char ** options, Enemy ** waiting_enemies, DListe e_types, DLis
     //
     // music: ref: royalty-free-music-lost-in-paradise-synthwave
     MLV_Music* music = MLV_load_music( "./data/sounds/music/music1.ogg" );
-    MLV_play_music( music, 0.0f, -1 );
+    MLV_play_music( music, 0.5f, -1 );
     MLV_Sound* selector = MLV_load_sound( "./data/sounds/effects/selector.ogg" );
     MLV_Sound* put_tower = MLV_load_sound( "./data/sounds/effects/put_tower.ogg" );
     MLV_Sound* remove_tower = MLV_load_sound( "./data/sounds/effects/remove_tower.ogg" );
@@ -570,7 +579,11 @@ int gm_level_gui(char ** options, Enemy ** waiting_enemies, DListe e_types, DLis
     int max_pick_menu = DListe_nbr_elements(btn_pick_list);
     int click_cool_down = 100;
     int click_t = MLV_get_time();
-    // Contrôles
+
+    //
+    // Avant le lancement du jeu.
+    // Pose de tourelles / voir la vague
+    //
     while(1){
         MLV_draw_image( image, 0, 0 );
         GUI_display_game(game, e_types, enemy_images, t_types, tower_images);
@@ -681,7 +694,9 @@ int gm_level_gui(char ** options, Enemy ** waiting_enemies, DListe e_types, DLis
         MLV_delay_according_to_frame_rate();
     }
 
-
+    //
+    // Lancement du jeu
+    //
     if(act == START_LEVEL) {
         DListe cel_btn = NULL;
         // on enlève le bouton show wave
@@ -741,8 +756,6 @@ int gm_level_gui(char ** options, Enemy ** waiting_enemies, DListe e_types, DLis
                 // retirer les ennemis à court de vies
                 enemy_add(&dead_e, gm_remove_dead_enemies(&game));
                 tower_add(&dead_t, gm_remove_dead_towers(&game));
-                // vérifier si la partie est finie, savoir qui a gagné n'est pas important ici
-
                 //
                 game.turn += 1;
                 // ajouter les ennemis du tour courant (mais d'abord ceux ayants un ou des tours de retard)
@@ -781,34 +794,56 @@ int gm_level_gui(char ** options, Enemy ** waiting_enemies, DListe e_types, DLis
             MLV_delay_according_to_frame_rate();
         }
 
+        //
+        // Fin de partie
+        //
         int txt_w = 0;
         int txt_h = 0;
-        if(gm_ennemis_won(game)){
-            MLV_get_size_of_text_with_font("WASTED", &txt_w, &txt_h, bigger_font);
-            MLV_draw_text_with_font(
-                    WIDTH/2-(txt_w/2),
-                    HEIGHT/4,
-                    "WASTED",
-                    bigger_font, MLV_COLOR_RED
-            );
-        }else if(gm_player_won(game)){
-            MLV_get_size_of_text_with_font("WASTED", &txt_w, &txt_h, bigger_font);
-            MLV_draw_text_with_font(
-                    WIDTH/2-(txt_w/2),
-                    HEIGHT/4,
-                    "You won",
-                    bigger_font, MLV_COLOR_GREEN
-            );
+
+        cel_btn = NULL;
+        // on enlève le bouton à gauche de la selection de tourelles
+        cel_btn = DListe_extract(&btn_list, btn_list->suivant);
+        gui_free_btn_list(&cel_btn);
+        // on enlève le bouton à droite de la selection de tourelles
+        cel_btn = DListe_extract(&btn_list,
+                                 btn_list->suivant);
+        gui_free_btn_list(&cel_btn);
+
+        while(1){
+            MLV_draw_image( image, 0, 0 );
+            GUI_display_game(game, e_types, enemy_images, t_types, tower_images);
+            gui_display_btns(btn_list, font);
+            gui_enhance_btns_over(btn_list, font);
+            if(MLV_get_mouse_button_state(MLV_BUTTON_LEFT) == MLV_PRESSED) {
+                if ((clicked_btn = gui_get_clicked_btn(btn_list))) {
+                    break;
+                }
+            }
+
+            if(gm_ennemis_won(game)){
+                MLV_get_size_of_text_with_font("WASTED", &txt_w, &txt_h, bigger_font);
+                MLV_draw_text_with_font(
+                        WIDTH/2-(txt_w/2),
+                        HEIGHT * 0.10f,
+                        "WASTED",
+                        bigger_font, MLV_COLOR_RED
+                );
+            }else if(gm_player_won(game)){
+                MLV_get_size_of_text_with_font("WASTED", &txt_w, &txt_h, bigger_font);
+                MLV_draw_text_with_font(
+                        WIDTH/2-(txt_w/2),
+                        HEIGHT * 0.10f,
+                        "You won",
+                        bigger_font, MLV_COLOR_GREEN
+                );
+            }
+            MLV_actualise_window();
+            MLV_delay_according_to_frame_rate();
         }
         MLV_actualise_window();
-        MLV_wait_mouse(NULL, NULL);
         enemy_free_all(&dead_e);
         tower_free_all(&dead_t);
-
     }
-
-
-
 
     gui_free_btn_list(&btn_list);
     gui_free_btn_list(&btn_pick_list);

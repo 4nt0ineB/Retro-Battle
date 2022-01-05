@@ -46,7 +46,15 @@ typedef struct {
  */
 Button * alloue_btn(BTN_TYPE type, Point p1, Point p2, MLV_Image * image, char * text, void * data, MLV_Color color);
 
-
+/**
+ * Renvoie vrai un point de coordonnées
+ * (x,y) dans la fenêtre
+ * sont dans la zone du bouton
+ * @param btn
+ * @param x
+ * @param y
+ * @return
+ */
 int btn_coord_is_over(Button btn, int x, int y);
 
 /**

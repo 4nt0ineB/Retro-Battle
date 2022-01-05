@@ -46,6 +46,11 @@ int DListe_ajouter_fin(DListe * l, DListe cel);
  */
 DListe DListe_extract(DListe * l, DListe cel);
 
+/**
+ * Renvoie le nombre d'éléments d'une liste
+ * @param l
+ * @return
+ */
 int DListe_nbr_elements(DListe l);
 
 /**
