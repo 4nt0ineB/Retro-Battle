@@ -25,6 +25,6 @@
 ► 5 Levels are available in ./data/levels/\
 ► Add you own tower type in ./data/ntt_definition/tower_type\
 ► Add you own enemy type in ./data/ntt_definition/enemy_type\
-► Add you own tower effects in ./data/ntt_definition/effects_by_tower_type\
-► Add you own enemy effects in ./data/ntt_definition/effects_by_enemy_type\
+► custom tower effects in ./data/ntt_definition/effects_by_tower_type\
+► custom enemy effects in ./data/ntt_definition/effects_by_enemy_type\
 ► Link your entities types to their images in ./data/img/entity_icons/xxx_imgs
