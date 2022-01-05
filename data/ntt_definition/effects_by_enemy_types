@@ -1,0 +1,23 @@
+E DAMAGE -1 0 1 0 0 1 0 0 0 0
+D DAMAGE -1 0 1 0 0 1 0 0 0 0
+S DAMAGE -1 0 1 0 0 1 0 0 0 0
+M DAMAGE -1 0 1 0 0 1 0 0 0 0
+M HEAL 1 0 0 0 0 1 0 1 0 0
+B DAMAGE -1 0 1 0 0 1 0 0 0 0
+B SPEED 1 0 0 0 0 0 1 0 1 1
+
+
+# type id | effect name | increment | set | target | self | range | l_range | h_range | r_range | b_range | front depth
+#
+#
+# type id: defined by user in "enemy_types"
+# effect name: DAMAGE, SPEED, HEAL, FREEZE, SLOW, SWITCHPLACE
+# increment: value to increment
+# set: value to set, make increment is ignored
+# target: 0 (Enemy), 1 (Tower), 2 (Enemy & Tower)
+# range: Circular range
+# left range:
+# range above:
+# right range:
+# range below:
+# front depth: depth of the target front, use "range above" and "range below"
