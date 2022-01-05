@@ -77,10 +77,12 @@ void CLI_display_full_enemy(Enemy enemy){
 
 void CLI_display_help(){
     printf(
-            "\n ┌────────────────────────────┐"
-           "\n  │ Chips vs Virus             │"
-           "\n  │             Info UGE 2022  │"
-           "\n  └────────────────────────────┘"
+            "\n ┌──────────────────────────────┐"
+           "\n  │ Chips vs Virus               │"
+           "\n  │             		       │"
+           "\n 	│	          Info UGE 2022│"
+           "\n 	│ Antoine Bastos & Ramzi Djadja│"
+           "\n  └──────────────────────────────┘"
            "\n  -h      display help"
            "\n  -a      play with cli interface"
            "\n  -g      play with gui interface"
