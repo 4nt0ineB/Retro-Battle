@@ -15,11 +15,11 @@
 
 ## Help
 ```bash
--h      display help\
--a      play with cli interface\
--g      play with gui interface\
--x=width    to specify gui width. Default: 1920\
--y=length   to specify gui length. Default: 1080\
+-h      display help
+-a      play with cli interface
+-g      play with gui interface
+-x=width    to specify gui width. Default: 1920
+-y=length   to specify gui length. Default: 1080
 ! any other parameter will be considered as the path to the file level
 ```
 ► 5 Levels are available in ./data/levels/\
