@@ -7,10 +7,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "enemy.h"
+#include "../entities/enemy.h"
 
-#include "game.h"
-#include "settings.h"
+#include "../game_obj/game.h"
+#include "../settings/settings.h"
 #include "cli_couleurs.h"
 
 // aide: https://theasciicode.com.ar/

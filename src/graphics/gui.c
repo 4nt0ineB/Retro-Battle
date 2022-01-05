@@ -2,7 +2,7 @@
 // Created by antoine on 03/01/2022.
 //
 
-#include "../headers/gui.h"
+#include "gui.h"
 
 
 struct GUI_dimension G_DIMENSION = {

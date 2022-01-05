@@ -7,9 +7,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include "DListe.h"
+#include "../game_obj/DListe.h"
 #include "entity_type.h"
-#include "cli_couleurs.h"
+#include "../graphics/cli_couleurs.h"
 /**
  * Modélise une tourelle.
  */

@@ -1,18 +1,13 @@
+
 #include <stdio.h>
-#include <time.h>
-
-#include <MLV/MLV_all.h>
-
-
-#include "../headers/entity_type.h"
-#include "../headers/enemy.h"
-#include "../headers/cli.h"
-#include "../headers/game_master.h"
-#include "../headers/game_utils.h"
-
+#include "entities/entity_type.h"
+#include "entities/enemy.h"
+#include "graphics/cli.h"
+#include "game_master.h"
+#include "other/game_utils.h"
 
 int main(int argc, char *argv[]) {
-
+    // lecture des options
     char ** options = NULL;
     options = read_options(argc, argv);
     if(strlen(options[PATH]) == 0){
@@ -20,46 +15,37 @@ int main(int argc, char *argv[]) {
         free_string_table(options, MAX_OPTIONS);
         return 0;
     }
-    //printf("CHEMIN = %s\n", options[PATH]);
-    // test fichier niveau //
-    //printf("\n[#########] ---------- Lectures d'un niveau ---------- [#########]\n");
+
+    // Lectures du niveau
     int money = 0;
-    //char * nom_fichier = "./data/level1";
     char * nom_fichier = NULL;
     Enemy * waiting_enemies = lire_fichier_niveau(options[PATH], &money);
 
-    //printf("\n[#########] ---------- Configuration des ennemis ---------- [#########]\n");
-    // test lecture type enemy //
-    nom_fichier = "./data/enemy_types";
-    //printf("\n lecture fichier types ennemis \n");
+    // ---------- Configuration des ennemis.
+    // Lecture des types d'ennemis //
+    nom_fichier = NTT_DEF_PATH "enemy_types";
     DListe types = lire_fichier_types(nom_fichier);
-
     // association des effets aux types
-    nom_fichier = "./data/effects_by_enemy_types";
+    nom_fichier = NTT_DEF_PATH "effects_by_enemy_types";
     lire_fichier_effets(nom_fichier, types);
-
-    // association des caractéristiques des ennemis par type //
-    //printf("\n initialisation des ennemis d'après leur type\n");
+    // association des caractéristiques des ennemis par type
     init_enemies(waiting_enemies, types);
-    //printf("\n[#########] ---------- Configuration des tourelles ---------- [#########]\n");
-    // test lecture type tower //
-    nom_fichier = "./data/tower_types";
-    //printf("\n Lecture fichier des types de tourelles: \n");
-    DListe t_types = lire_fichier_types(nom_fichier);
 
+    // ---------- Configuration des tourelles.
+    // Lecture des types de tourelles //
+    nom_fichier = NTT_DEF_PATH "tower_types";
+    DListe t_types = lire_fichier_types(nom_fichier);
     // association des effets aux types
-    nom_fichier = "./data/effects_by_tower_types";
-    //printf("\n association des effets aux type de tourelles: \n");
+    nom_fichier = NTT_DEF_PATH "effects_by_tower_types";
     lire_fichier_effets(nom_fichier, t_types);
 
+    // jeu
     if(*options[CLI] == CLI)
         gm_level_cli(options, &waiting_enemies, types, t_types, money);
     else if(*options[GUI] == GUI)
         gm_level_gui(options, &waiting_enemies, types, t_types, money);
 
-
     // free //
-    printf("\n");
     free_string_table(options, MAX_OPTIONS);
     enemy_free_all(&waiting_enemies);
     entity_type_dliste_free(&types);

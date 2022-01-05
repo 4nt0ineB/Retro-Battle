@@ -2,7 +2,7 @@
 // Created by debian on 28/12/2021.
 //
 
-#include "../headers/game_utils.h"
+#include "game_utils.h"
 
 // d'après https://fr.wikipedia.org/wiki/Time.h
 /*

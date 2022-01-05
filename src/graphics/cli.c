@@ -2,7 +2,7 @@
 // Created by antoine on 22/12/2021.
 //
 
-#include "../headers/cli.h"
+#include "cli.h"
 
 void CLI_clear_screen(){
     printf(CLEAR "");

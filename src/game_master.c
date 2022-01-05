@@ -2,7 +2,7 @@
 // Created by antoine on 26/12/2021.
 //
 
-#include "../headers/game_master.h"
+#include "game_master.h"
 
 
 int gm_move(Game * game, void * entity, ENTITY ntt){

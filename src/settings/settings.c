@@ -2,8 +2,10 @@
 // Created by antoine on 22/12/2021.
 //
 
-#include "../headers/settings.h"
-#include "../headers/gui.h"
+#include "settings.h"
+#include "../graphics/gui.h"
+// permet d'inclure une variable déclarée dans un autre fichier
+// ici G_DIMENSION dans gui.h
 extern struct GUI_dimension G_DIMENSION;
 
 Enemy * lire_fichier_niveau(char * nom_fichier, int * money){
@@ -28,9 +30,6 @@ Enemy * lire_fichier_niveau(char * nom_fichier, int * money){
         return NULL;
     // lecture des apparitions d'ennemis dans le niveau
     while(fscanf(fichier, "%d %d %c ", &e_tour, &e_line, &e_type) == 3){
-        /**
-         * @todo à placer dans une fonction de classe de gestions des erreurs ?
-         */
         if(last_tour > e_tour){
             fprintf(stderr
                     , "\nMauvais formatage du niveau:"

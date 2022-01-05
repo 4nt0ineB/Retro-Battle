@@ -2,8 +2,8 @@
 // Created by antoine on 21/12/2021.
 //
 
-#include "../headers/enemy.h"
-#include "../headers/cli.h"
+#include "enemy.h"
+#include "../graphics/cli.h"
 
 Enemy * alloue_enemy(int type, int life, int line, int position, int speed, int turn){
     Enemy * enemy = (Enemy *) malloc(sizeof(Enemy));

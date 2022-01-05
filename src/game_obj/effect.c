@@ -2,7 +2,7 @@
 // Created by antoine on 24/12/2021.
 //
 
-#include "../headers/effect.h"
+#include "effect.h"
 
 char * effect_type_toString(EFFECT_TYPE effect){
     if(effect == 0) return NULL;

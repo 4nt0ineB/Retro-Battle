@@ -2,7 +2,7 @@
 // Created by antoine on 23/12/2021.
 //
 
-#include "../headers/game.h"
+#include "game.h"
 
 
 void * game_get_entity_by_position(Game game, int line, int position, ENTITY * ntt){

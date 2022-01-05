@@ -2,7 +2,7 @@
 // Created by debian on 27/12/2021.
 //
 
-#include "../headers/tower.h"
+#include "tower.h"
 
 Tower * alloue_tower(int type, int life, int line, int position, int price){
     Tower  *t = (Tower *) malloc(sizeof(Tower));

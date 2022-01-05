@@ -7,9 +7,9 @@
 #include <stdio.h>
 #include <MLV/MLV_all.h>
 
-#include "settings.h"
-#include "game.h"
-#include "button.h"
+#include "../settings/settings.h"
+#include "../game_obj/game.h"
+#include "./gui_obj/button.h"
 
 // http://www-igm.univ-mlv.fr/~boussica/mlv/api/French/html/index.html
 

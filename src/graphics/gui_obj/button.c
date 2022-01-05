@@ -2,7 +2,7 @@
 // Created by antoine on 04/01/2022.
 //
 
-#include "../headers/button.h"
+#include "button.h"
 
 
 Button * alloue_btn(BTN_TYPE type, Point p1, Point p2, MLV_Image * image, char * text, void * data, MLV_Color color){

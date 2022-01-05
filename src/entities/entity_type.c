@@ -2,7 +2,7 @@
 // Created by antoine on 24/12/2021.
 //
 
-#include "../headers/entity_type.h"
+#include "entity_type.h"
 
 Entity_type * entity_type_alloue(char * name, int id, int v1, int v2){
     Entity_type * e_type = (Entity_type *) malloc(sizeof(Entity_type));

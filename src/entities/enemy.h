@@ -3,7 +3,7 @@
 #ifndef L2_PROJET_C_ENEMY_H
 #define L2_PROJET_C_ENEMY_H
 #include <stdlib.h>
-#include "effect.h"
+#include "../game_obj/effect.h"
 #include "entity_type.h"
 
 

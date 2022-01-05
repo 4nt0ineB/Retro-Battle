@@ -7,13 +7,13 @@
 #include <stdio.h>
 #include <time.h>
 
-#include "cli.h"
-#include "gui.h"
-#include "game.h"
-#include "DListe.h"
-#include "enemy.h"
-#include "settings.h"
-#include "effect.h"
+#include "graphics/cli.h"
+#include "graphics/gui.h"
+#include "game_obj/game.h"
+#include "game_obj/DListe.h"
+#include "entities/enemy.h"
+#include "settings/settings.h"
+#include "game_obj/effect.h"
 
 
 extern struct GUI_dimension G_DIMENSION;

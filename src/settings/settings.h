@@ -5,11 +5,11 @@
 #ifndef L2_PROJET_C_SETTINGS_H
 #define L2_PROJET_C_SETTINGS_H
 #include <stdlib.h>
-#include "enemy.h"
-#include "entity_type.h"
-#include "DListe.h"
+#include "../entities/enemy.h"
+#include "../entities/entity_type.h"
+#include "../game_obj/DListe.h"
 #include "stdio.h"
-#include "cli_couleurs.h"
+#include "../graphics/cli_couleurs.h"
 
 
 #define MAX_LINE 7 ///< C'est le nombre max de lignes
@@ -23,6 +23,7 @@
 #define GO_BACK 'b'
 #define MAX_OPTIONS 128
 #define IMG_PATH "./data/img/entity_icons/"
+#define NTT_DEF_PATH "./data/ntt_definition/"
 
 typedef enum {
     GUI = 'g',
