@@ -29,6 +29,6 @@ Antoine Bastos et Ramzi Djaja
 ► 5 Levels are available in ./data/levels/<br>
 ► Add you own tower type in ./data/ntt_definition/tower_type<br>
 ► Add you own enemy type in ./data/ntt_definition/enemy_type<br>
-► Add you own tower effects in ./data/ntt_definition/effects_by_tower_type<br>
-► Add you own enemy effects in ./data/ntt_definition/effects_by_enemy_type<br>
+► custom tower effects in ./data/ntt_definition/effects_by_tower_type<br>
+► custom enemy effects in ./data/ntt_definition/effects_by_enemy_type<br>
 ► Link your entities types to their images in ./data/img/entity_icons/xxx_imgs<br>
