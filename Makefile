@@ -28,7 +28,7 @@ build-debug: $(SRC_FILES)
 
 
 # lancer le jeu dans le terminal
-run-cli: num-level build
+run-cli: build
 ifdef l
 	./$(OUTPUT) $(LEVEL_FILE)$(l) -a
 else
