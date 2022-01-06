@@ -641,7 +641,6 @@ int gm_level_gui(char ** options, Enemy ** waiting_enemies, DListe e_types, DLis
                                 MLV_play_sound( selector, 1.0 );
                                 break;
                             }
-
                         }
 
                     }
@@ -760,9 +759,6 @@ int gm_level_gui(char ** options, Enemy ** waiting_enemies, DListe e_types, DLis
                 game.turn += 1;
                 // ajouter les ennemis du tour courant (mais d'abord ceux ayants un ou des tours de retard)
                 gm_add_entities(&game, waiting_enemies, ENEMY);
-                //CLI_display_game(game);
-                //printf("\n");
-
                 // on fait jouer les tourelles
                 gm_entities_play_effects(game, game.towers, TOWER, t_types, e_types);
                 // on fait jouer les ennemis

@@ -19,7 +19,7 @@ void taille_fenetre(int * width, int * height) {
 void init_fenetre() {
     int WIDTH, HEIGHT;
     taille_fenetre(&WIDTH, &HEIGHT);
-    MLV_create_window("Chips vs Virus", "", WIDTH, HEIGHT);
+    MLV_create_window("Retro Battle", "", WIDTH, HEIGHT);
     MLV_draw_filled_rectangle(0, 0, WIDTH, HEIGHT, BACKGROUND_COLOR);
     MLV_actualise_window();
 }
@@ -183,10 +183,8 @@ void gui_display_entity(void * entity, ENTITY ntt, Entity_type ntt_type, Entity_
             life = ((Enemy *) entity)->life;
             break;
     }
-    float pourcent = ((float) life*100)/((float) maxlife);
-    int calc =  (int) ( (float) (w_case()-(int) paddinglife*2) * pourcent) / 100;
     MLV_draw_filled_rectangle(x+(int) paddinglife, y + w_case(), w_case()-(int) paddinglife*2, (int) lifebar_h,  MLV_COLOR_RED2);
-    MLV_draw_filled_rectangle(x+(int) paddinglife, y + w_case(), calc, (int) lifebar_h, MLV_COLOR_GREEN1);
+    MLV_draw_filled_rectangle(x+(int) paddinglife, y + w_case(), (((life*100)/maxlife) * (w_case()-(int) paddinglife*2)) / 100, (int) lifebar_h, MLV_COLOR_GREEN1);
 }
 
 

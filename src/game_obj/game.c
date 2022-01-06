@@ -132,7 +132,7 @@ int game_effect_heal(void  * entity, ENTITY ntt, Effect effect, DListe tower_typ
     int maxlife = 0;
     switch (ntt) {
         case TOWER:
-            maxlife = entity_type_get( &tower_types, ((Enemy *) entity)->type)->v1;
+            maxlife = entity_type_get( &tower_types, ((Tower *) entity)->type)->v1;
             break;
         case ENEMY:
             maxlife = entity_type_get( &enemy_types, ((Enemy *) entity)->type)->v1;
@@ -140,14 +140,15 @@ int game_effect_heal(void  * entity, ENTITY ntt, Effect effect, DListe tower_typ
         default:
             return 0;
     }
+
     if(effect.increment > 0){
         switch (ntt) {
             case TOWER:
-                ((Tower *) entity)->life += effect.increment % maxlife;
+                ((Tower *) entity)->life += (((Tower *) entity)->life + effect.increment > maxlife) ? maxlife - ((Tower *) entity)->life : effect.increment ;
 
                 break;
             case ENEMY:
-                ((Enemy *) entity)->life += effect.increment % maxlife;;
+                ((Enemy *) entity)->life += (((Enemy *) entity)->life + effect.increment > maxlife) ? maxlife - ((Enemy *) entity)->life: effect.increment ;
                 break;
             default:
                 return 0;
@@ -155,15 +156,16 @@ int game_effect_heal(void  * entity, ENTITY ntt, Effect effect, DListe tower_typ
     }else if(effect.set > 0){
         switch (ntt) {
             case TOWER:
-                ((Tower *) entity)->life = effect.set % maxlife;
+                ((Tower *) entity)->life = (effect.set > maxlife) ? maxlife : effect.set ;
                 break;
             case ENEMY:
-                ((Enemy *) entity)->speed = effect.set % maxlife;;
+                ((Enemy *) entity)->life = (effect.set > maxlife) ? maxlife : effect.set ;
                 break;
             default:
                 return 0;
         }
     }
+
     return 1;
 }
 

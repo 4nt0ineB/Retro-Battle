@@ -1,8 +1,8 @@
-A DAMAGE -1 0 0 0 0 0 0 0 0 1
-P SLOW -1 1 0 0 0 0 0 0 0 1
-F DAMAGE -8 0 0 0 0 0 1 0 1 1
-R DAMAGE 0 -1 0 1 0 0 0 1 0 0
-R DAMAGE 0 -1 0 0 0 0 0 1 0 0
+C DAMAGE -1 0 0 0 0 0 0 0 0 1
+I SLOW -1 1 0 0 0 0 0 0 0 1
+N DAMAGE -8 0 0 0 0 0 1 0 1 1
+G DAMAGE 0 -1 0 1 0 0 0 1 0 0
+G DAMAGE 0 -1 0 0 0 0 0 1 0 0
 
 
 # type id | effect name ] increment | set | target | self | range | l_range | h_range | r_range | b_range | front depth

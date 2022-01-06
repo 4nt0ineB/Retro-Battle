@@ -1,7 +1,7 @@
 COMP = clang
 FLAG = -Wall -Wfatal-errors -std=c17
 LIB = -lMLV
-OUTPUT = main
+OUTPUT = game
 LEVEL_FILE = ./data/levels/level
 
 SRC_DIR = src
