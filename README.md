@@ -24,6 +24,11 @@ make run-cli l=levelnumber
 make run-gui l=levelnumber      # (run with 1920x1080 by default)
 ```
 
+## Gui controls
+left click to put a tower\
+right click to remove a tower
+
+
 ## Customization
 
 ► 5 Levels are available in ./data/levels/\
