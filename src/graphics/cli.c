@@ -1,5 +1,5 @@
 //
-// Created by antoine on 22/12/2021.
+// Created by Antoine Bastos on 22/12/2021.
 //
 
 #include "cli.h"
@@ -79,8 +79,8 @@ void CLI_display_help(){
     printf(
             "\n ┌──────────────────────────────┐"
            "\n  │ Chips vs Virus               │"
-           "\n  │             		       │"
-           "\n 	│	          Info UGE 2022│"
+           "\n  │             		           │"
+           "\n 	│	              Info UGE 2022│"
            "\n 	│ Antoine Bastos & Ramzi Djadja│"
            "\n  └──────────────────────────────┘"
            "\n  -h      display help"

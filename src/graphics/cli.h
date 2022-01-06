@@ -1,5 +1,5 @@
 //
-// Created by antoine on 22/12/2021.
+// Created by Antoine Bastos on 22/12/2021.
 //
 
 #ifndef L2_PROJET_C_CLI_H
@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../entities/enemy.h"
+#include "../game_obj/entities/enemy.h"
 
 #include "../game_obj/game.h"
 #include "../settings/settings.h"

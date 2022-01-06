@@ -1,5 +1,5 @@
 //
-// Created by antoine on 03/01/2022.
+// Created by Antoine Bastos on 03/01/2022.
 //
 
 #include "gui.h"
@@ -19,7 +19,7 @@ void taille_fenetre(int * width, int * height) {
 void init_fenetre() {
     int WIDTH, HEIGHT;
     taille_fenetre(&WIDTH, &HEIGHT);
-    MLV_create_window("Attax", "", WIDTH, HEIGHT);
+    MLV_create_window("Chips vs Virus", "", WIDTH, HEIGHT);
     MLV_draw_filled_rectangle(0, 0, WIDTH, HEIGHT, BACKGROUND_COLOR);
     MLV_actualise_window();
 }

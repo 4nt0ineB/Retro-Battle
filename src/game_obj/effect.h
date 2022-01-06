@@ -1,5 +1,5 @@
 //
-// Created by antoine on 24/12/2021.
+// Created by Antoine Bastos on 24/12/2021.
 //
 
 #ifndef L2_PROJET_C_EFFECT_H

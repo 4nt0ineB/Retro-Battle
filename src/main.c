@@ -1,7 +1,7 @@
 
 #include <stdio.h>
-#include "entities/entity_type.h"
-#include "entities/enemy.h"
+#include "./game_obj/entities/entity_type.h"
+#include "./game_obj/entities/enemy.h"
 #include "graphics/cli.h"
 #include "game_master.h"
 #include "other/game_utils.h"

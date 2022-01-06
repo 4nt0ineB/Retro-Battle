@@ -1,5 +1,5 @@
 //
-// Created by antoine on 23/12/2021.
+// Created by Antoine Bastos on 23/12/2021.
 //
 
 #include "game.h"

@@ -1,5 +1,5 @@
 //
-// Created by antoine on 22/12/2021.
+// Created by Antoine Bastos on 22/12/2021.
 //
 
 #include "settings.h"

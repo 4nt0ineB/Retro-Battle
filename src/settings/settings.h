@@ -1,14 +1,14 @@
 //
-// Created by antoine on 22/12/2021.
+// Created by Antoine Bastos on 22/12/2021.
 //
 
 #ifndef L2_PROJET_C_SETTINGS_H
 #define L2_PROJET_C_SETTINGS_H
 #include <stdlib.h>
-#include "../entities/enemy.h"
-#include "../entities/entity_type.h"
-#include "../game_obj/DListe.h"
 #include "stdio.h"
+#include "../game_obj/entities/enemy.h"
+#include "../game_obj/entities/entity_type.h"
+#include "../game_obj/DListe.h"
 #include "../graphics/cli_couleurs.h"
 
 

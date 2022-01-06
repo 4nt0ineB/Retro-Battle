@@ -5,8 +5,8 @@
 #ifndef L2_PROJET_C_GAME_H
 #define L2_PROJET_C_GAME_H
 #include <stdlib.h>
-#include "../entities/enemy.h"
-#include "../entities/tower.h"
+#include "./entities/enemy.h"
+#include "./entities/tower.h"
 #include "../settings/settings.h"
 
 /**

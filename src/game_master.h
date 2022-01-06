@@ -1,5 +1,5 @@
 //
-// Created by antoine on 26/12/2021.
+// Created by Antoine Bastos on 26/12/2021.
 //
 
 #ifndef L2_PROJET_C_GAME_MASTER_H
@@ -11,7 +11,7 @@
 #include "graphics/gui.h"
 #include "game_obj/game.h"
 #include "game_obj/DListe.h"
-#include "entities/enemy.h"
+#include "./game_obj/entities/enemy.h"
 #include "settings/settings.h"
 #include "game_obj/effect.h"
 

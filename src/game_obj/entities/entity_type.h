@@ -1,12 +1,12 @@
 //
-// Created by antoine on 24/12/2021.
+// Created by Antoine Bastos on 24/12/2021.
 //
 
 #ifndef L2_PROJET_C_ENTITY_TYPE_H
 #define L2_PROJET_C_ENTITY_TYPE_H
 #include <MLV/MLV_all.h>
-#include "../game_obj/DListe.h"
-#include "../game_obj/effect.h"
+#include "../DListe.h"
+#include "../effect.h"
 #include "stdio.h"
 
 typedef enum {

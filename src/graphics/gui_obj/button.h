@@ -1,5 +1,5 @@
 //
-// Created by antoine on 04/01/2022.
+// Created by Antoine Bastos on 04/01/2022.
 //
 
 #ifndef L2_PROJET_C_BUTTON_H

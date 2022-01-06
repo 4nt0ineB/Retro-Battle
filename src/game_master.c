@@ -1,5 +1,5 @@
 //
-// Created by antoine on 26/12/2021.
+// Created by Antoine Bastos on 26/12/2021.
 //
 
 #include "game_master.h"
