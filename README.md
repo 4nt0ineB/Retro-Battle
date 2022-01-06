@@ -18,18 +18,18 @@ The mlv library is needed to run the game. See [MLV Library](http://www-igm.univ
 
 ## Help
 ```bash
--h      #display help
--a      #play with cli interface
--g      #play with gui interface
--x=width    #to specify gui width. Default: 1920
--y=length   #to specify gui length. Default: 1080
+-h      # display help
+-a      # play with cli interface
+-g      # play with gui interface
+-x=width    # to specify gui width. Default: 1920
+-y=length   # to specify gui length. Default: 1080
 
-#! any other parameter will be considered as the path to the level file
+# ! any other parameter will be considered as the path to the level file
 ```
 ## Makefile
 ```bash
 make run-cli l=levelnumber
-make run-gui l=levelnumber      #(run with 1920x1080 by default)
+make run-gui l=levelnumber      # (run with 1920x1080 by default)
 ```
 
 ► 5 Levels are available in ./data/levels/\
