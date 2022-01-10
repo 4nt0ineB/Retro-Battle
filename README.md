@@ -18,10 +18,16 @@ The mlv library is needed to run the game. See [MLV Library](http://www-igm.univ
 
 # ! any other parameter will be considered as the path to the level file
 ```
+#### Exemple
+```bash
+./retro-battle -g -x=1280 -y=720 ./data/levels/level2 
+
+```
+
 ## Makefile
 ```bash
 make run-cli l=levelnumber
-make run-gui l=levelnumber      # (run with 1920x1080 by default)
+make run-gui l=levelnumber      # (run with 1920x1080)
 ```
 
 ## Gui controls
